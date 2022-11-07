@@ -1,0 +1,87 @@
+@startuml
+title
+    Calypsonet - Exceptions of calypsonet-terminal-calypso-java-api - 1.1.+ (2022-02-01)
+end title
+
+' == THEME ==
+
+'Couleurs issues de : https://htmlcolorcodes.com/fr/tableau-de-couleur/tableau-de-couleur-design-plat/
+!define C_GREY1 F8F9F9
+!define C_GREY2 F2F3F4
+!define C_GREY3 E5E7E9
+!define C_GREY4 D7DBDD
+!define C_GREY5 CACFD2
+!define C_GREY6 BDC3C7
+!define C_LINK 3498DB
+!define C_USE 27AE60
+
+skinparam Shadowing false
+skinparam ClassFontStyle italic
+skinparam ClassBorderColor #D4AC0D
+skinparam stereotypeABorderColor #A9DCDF
+skinparam stereotypeIBorderColor #B4A7E5
+skinparam stereotypeCBorderColor #ADD1B2
+skinparam stereotypeEBorderColor #EB93DF
+' Red
+skinparam ClassBackgroundColor<<red>> #FDEDEC
+skinparam ClassBorderColor<<red>> #E74C3C
+hide <<red>> stereotype
+' Purple
+skinparam ClassBackgroundColor<<purple>> #F4ECF7
+skinparam ClassBorderColor<<purple>> #8E44AD
+hide <<purple>> stereotype
+' blue
+skinparam ClassBackgroundColor<<blue>> #EBF5FB
+skinparam ClassBorderColor<<blue>> #3498DB
+hide <<blue>> stereotype
+' Green
+skinparam ClassBackgroundColor<<green>> #E9F7EF
+skinparam ClassBorderColor<<green>> #27AE60
+hide <<green>> stereotype
+' Grey
+skinparam ClassBackgroundColor<<grey>> #EAECEE
+skinparam ClassBorderColor<<grey>> #2C3E50
+hide <<grey>> stereotype
+
+' == CONTENT ==
+
+package "org.calypsonet.terminal.calypso" as api {
+
+    package transaction {
+
+        +abstract class "<<RuntimeException>>\nCardTransactionException" as CardTransactionException {
+            #CardTransactionException (String message)
+            #CardTransactionException (String message, Throwable cause)
+        }
+        note bottom of CardTransactionException
+            * **AtomicTransactionException**: Session buffer would overflow for atomic transaction
+            * **AuthenticationNotVerifiedException**: R-APDU of CloseSecureSession eq 9000 but SAM no more available
+            * **CardAnomalyException**: Unexpected Card behaviour
+            * **CardCloseSecureSessionException**: R-APDU of CloseSecureSession != 9000
+            * **CardIOException**
+            * **CardRevokedException**
+            * **DesynchronizedExchangesException**: R-APDU number != C-APDU number
+            * **InconsistencyDataException**: Data read in session != Data read outside session
+            * **SamAnomalyException**: Unexpected SAM behaviour
+            * **SamIOException**
+            * **SamRevokedException**
+            * **SessionAuthenticationException**: R-APDU of DigestAuthenticate eq 6985
+            * **SvAuthenticationException**: R-APDU of SvCheck eq 6985
+            * **UnauthorizedKeyException**
+        end note
+    }
+}
+
+' Associations
+
+' == LAYOUT ==
+
+'CardTransactionException -[hidden]left- AtomicTransactionException
+
+' == STYLE ==
+
+package api #C_GREY1 {}
+package transaction #C_GREY2 {}
+
+
+@enduml

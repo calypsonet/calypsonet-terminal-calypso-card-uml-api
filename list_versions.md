@@ -1,5 +1,7 @@
 | Version | Documents |
 |:---:|---|
+| 1.4.2-SNAPSHOT |[api_class_diagram.svg](1.4.2-SNAPSHOT/api_class_diagram.svg)<br/>|
+| 1.4.1 |[api_class_diagram.svg](1.4.1/api_class_diagram.svg)<br/>|
 | 1.4.1-SNAPSHOT |[api_class_diagram.svg](1.4.1-SNAPSHOT/api_class_diagram.svg)<br/>|
 | 1.4.0 |[api_class_diagram.svg](1.4.0/api_class_diagram.svg)<br/>|
 | 1.3.0 |[api_class_diagram.svg](1.3.0/api_class_diagram.svg)<br/>|

@@ -239,11 +239,12 @@ package "org.calypsonet.terminal.calypso" as api {
             +<back:yellow>CardReader</back> getCardReader ()
             +CalypsoCard getCalypsoCard ()
             +SecuritySetting getSecuritySetting ()
+            +<T extends CardTransactionCryptoExtension> T getCryptoExtension (Class<T> cardTransactionCryptoExtensionClass)
 
             +List<byte[]> getTransactionAuditData ()
 
-            +CardTransactionManager prepareActivateEncryption()
-            +CardTransactionManager prepareDeactivateEncryption()
+            +CardTransactionManager prepareActivateEncryption ()
+            +CardTransactionManager prepareDeactivateEncryption ()
 
             +CardTransactionManager prepareSelectFile (short lid)
             +CardTransactionManager prepareSelectFile (SelectFileControl selectFileControl)
@@ -268,9 +269,9 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardTransactionManager prepareWriteBinary (byte sfi, int offset, byte[] data)
 
             +CardTransactionManager prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
-            +CardTransactionManager prepareIncreaseCounters(byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
+            +CardTransactionManager prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
             +CardTransactionManager prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
-            +CardTransactionManager prepareDecreaseCounters(byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
+            +CardTransactionManager prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
             +CardTransactionManager prepareSetCounter (byte sfi, int counterNumber, int newValue)
 
             +CardTransactionManager prepareSvGet (SvOperation svOperation, SvAction svAction)
@@ -306,27 +307,32 @@ package "org.calypsonet.terminal.calypso" as api {
         +interface SecuritySetting<T extends SecuritySetting<T>> {
             +T enableMultipleSession ()
         }
-        +interface AsymmetricKeySecuritySetting extends SecuritySetting {
+        +interface AsymmetricCryptoSecuritySetting extends SecuritySetting {
+            +AsymmetricCryptoSecuritySetting setCryptoTransactionManager (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+
+            +AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
+            +AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
+            +AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
         }
-        +interface SymmetricKeySecuritySetting extends SecuritySetting {
-            +SymmetricKeySecuritySetting setCryptoResource (CryptoResource cryptoResource)
+        +interface SymmetricCryptoSecuritySetting extends SecuritySetting {
+            +SymmetricCryptoSecuritySetting setCryptoTransactionManager (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
 
-            +SymmetricKeySecuritySetting enableEarlyMutualAuthentication ()
-            +SymmetricKeySecuritySetting enableRatificationMechanism ()
-            +SymmetricKeySecuritySetting enablePinPlainTransmission ()
-            +SymmetricKeySecuritySetting enableSvLoadAndDebitLog ()
-            +SymmetricKeySecuritySetting authorizeSvNegativeBalance ()
-            +SymmetricKeySecuritySetting forceRegularMode ()
+            +SymmetricCryptoSecuritySetting enableEarlyMutualAuthentication ()
+            +SymmetricCryptoSecuritySetting enableRatificationMechanism ()
+            +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
+            +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
+            +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
+            +SymmetricCryptoSecuritySetting forceRegularMode ()
 
-            +SymmetricKeySecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
-            +SymmetricKeySecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
-            +SymmetricKeySecuritySetting assignDefaultKvc (WriteAccessLevel writeAccessLevel, byte kvc)
+            +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
+            +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
+            +SymmetricCryptoSecuritySetting assignDefaultKvc (WriteAccessLevel writeAccessLevel, byte kvc)
 
-            +SymmetricKeySecuritySetting addAuthorizedSessionKey (byte kif, byte kvc)
-            +SymmetricKeySecuritySetting addAuthorizedSvKey (byte kif, byte kvc)
+            +SymmetricCryptoSecuritySetting addAuthorizedSessionKey (byte kif, byte kvc)
+            +SymmetricCryptoSecuritySetting addAuthorizedSvKey (byte kif, byte kvc)
 
-            +SymmetricKeySecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
-            +SymmetricKeySecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+            +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
+            +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
         }
         +interface SearchCommandData {
             +SearchCommandData setSfi (byte sfi)
@@ -355,7 +361,11 @@ package "org.calypsonet.terminal.calypso" as api {
             +**CryptoIOException**
         }
         package spi {
-            +interface CryptoResource {
+            +interface AsymmetricCryptoTransactionManagerFactory {
+            }
+            +interface SymmetricCryptoTransactionManagerFactory {
+            }
+            +interface CardTransactionCryptoExtension {
             }
         }
     }
@@ -376,9 +386,12 @@ CardTransactionManager .up.> GetDataTag #C_USE : use >
 CardTransactionManager .up.> SearchCommandData #C_USE : use >
 CardTransactionManager .right.> CalypsoCard #C_LINK : use and provide up to date content >
 CardTransactionManager ..> SecuritySetting #C_LINK : provide >
+CardTransactionManager ..> CardTransactionCryptoExtension #C_LINK : provide >
 
-SymmetricKeySecuritySetting ..> WriteAccessLevel #C_USE : use >
-SymmetricKeySecuritySetting ..> CryptoResource #C_USE : use >
+AsymmetricCryptoSecuritySetting ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
+
+SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
+SymmetricCryptoSecuritySetting ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
 
 CalypsoCardSelection .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelection .up.> GetDataTag #C_USE : use >

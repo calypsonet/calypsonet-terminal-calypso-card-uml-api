@@ -1,6 +1,6 @@
 @startuml
 title
-    Calypsonet - calypsonet-terminal-calypso-java-api - 2.0.+ (2022-10-31)
+    Calypsonet - calypsonet-terminal-calypso-java-api - 2.0.+ (2022-12-08)
 end title
 
 ' == THEME ==
@@ -79,6 +79,9 @@ package "org.calypsonet.terminal.calypso" as api {
         TRACEABILITY_INFORMATION
     }
     package card {
+        +interface CardSelectionFactory {
+            +CalypsoCardSelection createCardSelection ()
+        }
         +interface "<<<back:yellow>CardSelection</back>>>\nCalypsoCardSelection" as CalypsoCardSelection {
             +CalypsoCardSelection filterByCardProtocol (String cardProtocol)
 
@@ -234,67 +237,85 @@ package "org.calypsonet.terminal.calypso" as api {
         }
     }
     package transaction {
+        +interface CardTransactionManagerFactory {
+            +FreeCardTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
+            +SecureSymmetricStandardCardTransactionManager createSecureSymmetricTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+            +SecureSymmetricExtendedCardTransactionManager createSecureSymmetricExtendedTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+            +SecureAsymmetricCardTransactionManager createSecureAsymmetricTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+        }
         ' Card
-        +interface CardTransactionManager {
-            +<back:yellow>CardReader</back> getCardReader ()
-            +CalypsoCard getCalypsoCard ()
-            +SecuritySetting getSecuritySetting ()
-            +<T extends CardTransactionCryptoExtension> T getCryptoExtension (Class<T> cardTransactionCryptoExtensionClass)
+        together {
+            +interface CardTransactionManager<T extends CardTransactionManager<T>> {
+                +T prepareSelectFile (short lid)
+                +T prepareSelectFile (SelectFileControl selectFileControl)
 
-            +List<byte[]> getTransactionAuditData ()
+                +T prepareGetData (GetDataTag tag)
 
-            +CardTransactionManager prepareActivateEncryption ()
-            +CardTransactionManager prepareDeactivateEncryption ()
+                +T prepareReadRecord (byte sfi, int recordNumber)
+                +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
+                +T prepareReadRecordsPartially (byte sfi, int fromRecordNumber, int toRecordNumber, int offset, int nbBytesToRead)
+                +T prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
+                +T prepareReadCounter (byte sfi, int nbCountersToRead)
 
-            +CardTransactionManager prepareSelectFile (short lid)
-            +CardTransactionManager prepareSelectFile (SelectFileControl selectFileControl)
+                +T prepareSearchRecords (SearchCommandData data)
 
-            +CardTransactionManager prepareGetData (GetDataTag tag)
+                +T prepareCheckPinStatus ()
 
-            +CardTransactionManager prepareReadRecord (byte sfi, int recordNumber)
-            +CardTransactionManager prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
-            +CardTransactionManager prepareReadRecordsPartially (byte sfi, int fromRecordNumber, int toRecordNumber, int offset, int nbBytesToRead)
-            +CardTransactionManager prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
-            +CardTransactionManager prepareReadCounter (byte sfi, int nbCountersToRead)
+                +T prepareAppendRecord (byte sfi, byte[] recordData)
+                +T prepareUpdateRecord (byte sfi, int recordNumber, byte[] recordData)
+                +T prepareWriteRecord (byte sfi, int recordNumber, byte[] recordData)
 
-            +CardTransactionManager prepareSearchRecords (SearchCommandData data)
+                +T prepareUpdateBinary (byte sfi, int offset, byte[] data)
+                +T prepareWriteBinary (byte sfi, int offset, byte[] data)
 
-            +CardTransactionManager prepareCheckPinStatus ()
+                +T prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
+                +T prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
+                +T prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
+                +T prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
+                +T prepareSetCounter (byte sfi, int counterNumber, int newValue)
 
-            +CardTransactionManager prepareAppendRecord (byte sfi, byte[] recordData)
-            +CardTransactionManager prepareUpdateRecord (byte sfi, int recordNumber, byte[] recordData)
-            +CardTransactionManager prepareWriteRecord (byte sfi, int recordNumber, byte[] recordData)
+                +T prepareSvGet (SvOperation svOperation, SvAction svAction)
+                +T prepareSvReadAllLogs ()
 
-            +CardTransactionManager prepareUpdateBinary (byte sfi, int offset, byte[] data)
-            +CardTransactionManager prepareWriteBinary (byte sfi, int offset, byte[] data)
+                +T prepareReleaseCardChannel ()
 
-            +CardTransactionManager prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
-            +CardTransactionManager prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
-            +CardTransactionManager prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
-            +CardTransactionManager prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
-            +CardTransactionManager prepareSetCounter (byte sfi, int counterNumber, int newValue)
+                +T processVerifyPin (byte[] pin)
 
-            +CardTransactionManager prepareSvGet (SvOperation svOperation, SvAction svAction)
-            +CardTransactionManager prepareSvReload (int amount, byte[] date, byte[] time, byte[] free)
-            +CardTransactionManager prepareSvReload (int amount)
-            +CardTransactionManager prepareSvDebit (int amount, byte[] date, byte[] time)
-            +CardTransactionManager prepareSvDebit (int amount)
-            +CardTransactionManager prepareSvReadAllLogs ()
+                +T processCommands ()
 
-            +CardTransactionManager prepareInvalidate ()
-            +CardTransactionManager prepareRehabilitate ()
+                +List<byte[]> getTransactionAuditData ()
+            }
+            +interface FreeCardTransactionManager extends CardTransactionManager {
+            }
+            +interface SecureTransactionManager<T extends SecureTransactionManager<T>> extends CardTransactionManager {
+                +<E extends CardTransactionCryptoExtension> E getCryptoExtension (Class<E> cardTransactionCryptoExtensionClass)
 
-            +CardTransactionManager prepareReleaseCardChannel ()
+                +T processOpening (WriteAccessLevel writeAccessLevel)
+                +T processClosing ()
+                +T processCancel ()
+            }
+            +interface SecureSymmetricCardTransactionManager<T extends SecureSymmetricCardTransactionManager<T>> extends SecureTransactionManager {
+                +T prepareSvReload (int amount, byte[] date, byte[] time, byte[] free)
+                +T prepareSvReload (int amount)
+                +T prepareSvDebit (int amount, byte[] date, byte[] time)
+                +T prepareSvDebit (int amount)
 
-            +CardTransactionManager processVerifyPin (byte[] pin)
-            +CardTransactionManager processChangePin (byte[] newPin)
+                +T prepareInvalidate ()
+                +T prepareRehabilitate ()
 
-            +CardTransactionManager processChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+                +T processChangePin (byte[] newPin)
 
-            +CardTransactionManager processCommands ()
-            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
-            +CardTransactionManager processClosing ()
-            +CardTransactionManager processCancel ()
+                +T processChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+            }
+            +interface SecureSymmetricStandardCardTransactionManager extends SecureSymmetricCardTransactionManager {
+            }
+            +interface SecureSymmetricExtendedCardTransactionManager extends SecureSymmetricCardTransactionManager {
+                +SecureSymmetricExtendedCardTransactionManager prepareEarlyMutualAuthentication ()
+                +SecureSymmetricExtendedCardTransactionManager prepareActivateEncryption ()
+                +SecureSymmetricExtendedCardTransactionManager prepareDeactivateEncryption ()
+            }
+            +interface SecureAsymmetricCardTransactionManager extends SecureTransactionManager {
+            }
         }
         +enum SvOperation {
             RELOAD
@@ -304,25 +325,21 @@ package "org.calypsonet.terminal.calypso" as api {
             DO
             UNDO
         }
-        +interface SecuritySetting<T extends SecuritySetting<T>> {
-            +T enableMultipleSession ()
+        +interface SecuritySettingFactory {
+            +SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+            +AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
         }
-        +interface AsymmetricCryptoSecuritySetting extends SecuritySetting {
-            +AsymmetricCryptoSecuritySetting setCryptoTransactionManager (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-
+        +interface AsymmetricCryptoSecuritySetting {
             +AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
             +AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
             +AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
         }
-        +interface SymmetricCryptoSecuritySetting extends SecuritySetting {
-            +SymmetricCryptoSecuritySetting setCryptoTransactionManager (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-
-            +SymmetricCryptoSecuritySetting enableEarlyMutualAuthentication ()
+        +interface SymmetricCryptoSecuritySetting {
+            +SymmetricCryptoSecuritySetting enableMultipleSession ()
             +SymmetricCryptoSecuritySetting enableRatificationMechanism ()
             +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
             +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
             +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
-            +SymmetricCryptoSecuritySetting forceRegularMode ()
 
             +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
             +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
@@ -333,6 +350,9 @@ package "org.calypsonet.terminal.calypso" as api {
 
             +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
             +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+        }
+        +interface CommandDataFactory {
+            +SearchCommandData createSearchCommandData ()
         }
         +interface SearchCommandData {
             +SearchCommandData setSfi (byte sfi)
@@ -351,10 +371,10 @@ package "org.calypsonet.terminal.calypso" as api {
             +**UnauthorizedKeyException**
             +**CardRevokedException**
             +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
-            +**InvalidSignatureException**: R-APDU of PSO Verify Signature = 6988.
-            +**InvalidCardSignatureException**: R-APDU of DigestAuthenticate = 6988 **or** R-APDU of SvCheck = 6988.
-            +**CardSignatureNotVerifiableException**: R-APDU of CloseSecureSession = 9000 but crypto resource is no more available.
-            +**SelectFileException**: R-APDU of SelectFile = 6A82.
+            +**InvalidSignatureException**
+            +**InvalidCardMacException**
+            +**CardMacNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
+            +**SelectFileException**
             +**UnexpectedCommandStatusException**
             +**ReaderIOException**: Card reader and/or Crypto reader communication is broken.
             +**CardIOException**
@@ -373,28 +393,43 @@ package "org.calypsonet.terminal.calypso" as api {
 
 ' Associations
 
+CardSelectionFactory ..> CalypsoCardSelection #C_LINK : provide >
+
 CalypsoCardSelection +-- FileOccurrence
 CalypsoCardSelection ..> FileOccurrence #C_LINK : provide >
 CalypsoCardSelection +-- FileControlInformation
 CalypsoCardSelection ..> FileControlInformation #C_LINK : provide >
 
-CardTransactionManager ..> WriteAccessLevel #C_USE : use >
-CardTransactionManager ..> SvOperation #C_USE : use >
-CardTransactionManager ..> SvAction #C_USE : use >
-CardTransactionManager .up.> SelectFileControl #C_USE : use >
-CardTransactionManager .up.> GetDataTag #C_USE : use >
-CardTransactionManager .up.> SearchCommandData #C_USE : use >
-CardTransactionManager .right.> CalypsoCard #C_LINK : use and provide up to date content >
-CardTransactionManager ..> SecuritySetting #C_LINK : provide >
-CardTransactionManager ..> CardTransactionCryptoExtension #C_LINK : provide >
+CardTransactionManagerFactory .right.> CalypsoCard #C_USE : use >
+CardTransactionManagerFactory ..> SymmetricCryptoSecuritySetting #C_USE : use >
+CardTransactionManagerFactory ..> AsymmetricCryptoSecuritySetting #C_USE : use >
 
-AsymmetricCryptoSecuritySetting ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
+CardTransactionManagerFactory .up.> FreeCardTransactionManager #C_LINK : provide >
+CardTransactionManagerFactory .up.> SecureSymmetricStandardCardTransactionManager #C_LINK : provide >
+CardTransactionManagerFactory .up.> SecureSymmetricExtendedCardTransactionManager #C_LINK : provide >
+CardTransactionManagerFactory .up.> SecureAsymmetricCardTransactionManager #C_LINK : provide >
+
+CardTransactionManager ..> SelectFileControl #C_USE : use >
+CardTransactionManager .left.> GetDataTag #C_USE : use >
+CardTransactionManager .up.> SvOperation #C_USE : use >
+CardTransactionManager .up.> SvAction #C_USE : use >
+CardTransactionManager .up.> SearchCommandData #C_USE : use >
+
+SecureTransactionManager ..> WriteAccessLevel #C_USE : use >
+SecureTransactionManager ..> CardTransactionCryptoExtension #C_LINK : provide >
+
+SecuritySettingFactory .up.> SymmetricCryptoSecuritySetting #C_LINK : provide >
+SecuritySettingFactory .up.> AsymmetricCryptoSecuritySetting #C_LINK : provide >
+
+SecuritySettingFactory ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
+SecuritySettingFactory ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
 
 SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
-SymmetricCryptoSecuritySetting ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
+
+CommandDataFactory .left.> SearchCommandData #C_LINK : provide >
 
 CalypsoCardSelection .up.> SelectFileControl #C_USE : use >
-CalypsoCardSelection .up.> GetDataTag #C_USE : use >
+CalypsoCardSelection ..> GetDataTag #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -422,5 +457,21 @@ package spi #C_GREY3 {}
 package card #C_GREY2 {}
 package transaction #C_GREY2 {}
 
+interface CardSelectionFactory <<red>>
+interface SecuritySettingFactory <<red>>
+interface CardTransactionManagerFactory <<red>>
+interface CommandDataFactory <<red>>
+
+interface CardTransactionManager <<blue>>
+interface FreeCardTransactionManager <<blue>>
+interface SecureTransactionManager <<blue>>
+interface SecureSymmetricCardTransactionManager <<blue>>
+interface SecureSymmetricStandardCardTransactionManager <<blue>>
+interface SecureSymmetricExtendedCardTransactionManager <<blue>>
+interface SecureAsymmetricCardTransactionManager <<blue>>
+
+interface CalypsoCardSelection <<green>>
+enum FileControlInformation <<green>>
+enum FileOccurrence <<green>>
 
 @enduml

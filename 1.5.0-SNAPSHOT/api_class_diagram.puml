@@ -362,6 +362,8 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardTransactionManager prepareRehabilitate ()
 
             +CardTransactionManager prepareEarlyMutualAuthentication ()
+            +CardTransactionManager prepareActivateEncryption ()
+            +CardTransactionManager prepareDeactivateEncryption ()
 
             +CardTransactionManager prepareReleaseCardChannel ()
 

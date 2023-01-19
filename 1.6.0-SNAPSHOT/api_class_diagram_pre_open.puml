@@ -1,6 +1,6 @@
 @startuml
 title
-    Calypsonet - calypsonet-terminal-calypso-java-api - 1.5.+ (2022-12-20)
+    Calypsonet - calypsonet-terminal-calypso-java-api - 1.6.+ (2023-01-20) WIP
 end title
 
 ' == THEME ==
@@ -106,6 +106,12 @@ package "org.calypsonet.terminal.calypso" as api {
 
             +<s>CalypsoCardSelection prepareReadRecordFile (byte sfi, int recordNumber)</s>
             +CalypsoCardSelection prepareReadRecord (byte sfi, int recordNumber)
+
+            +<color:blue>CalypsoCardSelection preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +<color:blue>CalypsoCardSelection preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +<color:red>CalypsoCardSelection preparePreOpening (WriteAccessLevel writeAccessLevel)
+            +<color:red>CalypsoCardSelection preparePreOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
         }
         +enum FileOccurrence {
             FIRST
@@ -377,6 +383,74 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
             +CardTransactionManager processClosing ()
             +CardTransactionManager processCancel ()
+
+            .. 1 ..
+
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processPreOpenedSecureSession ()
+
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            .. 1 bis ..
+
+            +CardTransactionManager prepareRemoteSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager prepareRemoteSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processRemoteSecureSession ()
+
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            .. 1 ter ..
+
+            +CardTransactionManager prepareStandaloneRemoteSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager prepareStandaloneRemoteSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processStandaloneSecureSession ()
+
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            .. 2 ..
+
+            +CardTransactionManager processPreOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processPreOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processClosing ()
+
+            .. 3 ..
+
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager prepareCloseSecureSession ()
+
+            +CardTransactionManager processCancelSecureSession ()
+
+            +CardTransactionManager processCommands ()
+
+            .. 3 bis ..
+
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager processPreOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
+
+            +CardTransactionManager processCloseSecureSession ()
+
+            +CardTransactionManager processCancelSecureSession ()
+
+            +CardTransactionManager processCommands ()
         }
         +enum SvOperation {
             RELOAD

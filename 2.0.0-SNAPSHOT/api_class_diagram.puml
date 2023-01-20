@@ -290,10 +290,7 @@ package "org.calypsonet.terminal.calypso" as api {
                 +<E extends CCTransactionCryptoExtension> E getCryptoExtension (Class<E> cryptoExtensionClass)
 
                 +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
-                +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
-    
                 +T prepareCloseSecureSession ()
-    
                 +T prepareCancelSecureSession ()
             }
             +interface CCSecureSymmetricTransactionManager<T extends CCSecureSymmetricTransactionManager<T>> extends CCSecureTransactionManager {
@@ -340,6 +337,7 @@ package "org.calypsonet.terminal.calypso" as api {
             +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
             +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
             +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
+            +SymmetricCryptoSecuritySetting disableReadOnSessionOpening ()
 
             +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
             +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)

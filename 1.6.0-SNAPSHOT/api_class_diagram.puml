@@ -380,11 +380,8 @@ package "org.calypsonet.terminal.calypso" as api {
 
             +<s><color:red>CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
             +<color:green>CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
-            +<color:green>CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel, byte sfi, int recordNumber)
-
             +<s><color:red>CardTransactionManager processClosing ()
             +<color:green>CardTransactionManager prepareCloseSecureSession ()
-
             +<s><color:red>CardTransactionManager processCancel ()
             +<color:green>CardTransactionManager prepareCancelSecureSession ()
         }
@@ -404,6 +401,7 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardSecuritySetting enablePinPlainTransmission ()
             +CardSecuritySetting enableSvLoadAndDebitLog ()
             +CardSecuritySetting authorizeSvNegativeBalance ()
+            +<color:green>CardSecuritySetting disableReadOnSessionOpening ()
 
             +CardSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
             +CardSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)

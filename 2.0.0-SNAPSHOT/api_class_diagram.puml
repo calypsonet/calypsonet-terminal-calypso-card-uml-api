@@ -1,6 +1,6 @@
 @startuml
 title
-    Calypsonet - calypsonet-terminal-calypso-java-api - 2.0.+ (2023-01-25)
+    Calypsonet - calypsonet-terminal-calypso-java-api - 2.0.+ (2023-03-08)
 end title
 
 ' == THEME ==
@@ -100,6 +100,10 @@ package "org.calypsonet.terminal.calypso" as api {
             +CalypsoCardSelection prepareGetData (GetDataTag tag)
 
             +CalypsoCardSelection prepareReadRecord (byte sfi, int recordNumber)
+            +CalypsoCardSelection prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
+            +CalypsoCardSelection prepareReadCounter (byte sfi, int nbCountersToRead)
+
+            +CalypsoCardSelection preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
         }
         +enum FileOccurrence {
             FIRST
@@ -429,6 +433,7 @@ CCCommandDataFactory .left.> SearchCommandData #C_LINK : provide >
 
 CalypsoCardSelection .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelection ..> GetDataTag #C_USE : use >
+CalypsoCardSelection .up.> WriteAccessLevel #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -437,7 +442,7 @@ CalypsoCard ..> CardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader ..> WriteAccessLevel #C_USE : use >
+DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
 
 ElementaryFile +-- FileType
 ElementaryFile ..> FileHeader #C_LINK : provide >
@@ -447,7 +452,7 @@ FileHeader .right.> FileType #C_LINK : provide >
 
 ' == LAYOUT ==
 
-'SecuritySetting -[hidden]- CalypsoSam
+'FileOccurrence -[hidden]- WriteAccessLevel
 
 ' == STYLE ==
 

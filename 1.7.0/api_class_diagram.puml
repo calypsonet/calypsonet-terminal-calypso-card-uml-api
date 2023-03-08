@@ -1,6 +1,6 @@
 @startuml
 title
-    Calypsonet - calypsonet-terminal-calypso-java-api - 1.6.+ (2023-01-20)
+    Calypsonet - calypsonet-terminal-calypso-java-api - 1.7.+ (2023-03-01)
 end title
 
 ' == THEME ==
@@ -67,6 +67,11 @@ package "org.calypsonet.terminal.calypso" as api {
         LOAD
         DEBIT
     }
+    +enum "WriteAccessLevel" as WriteAccessLevel2 {
+        PERSONALIZATION
+        LOAD
+        DEBIT
+    }
     +enum SelectFileControl {
         FIRST_EF
         NEXT_EF
@@ -106,6 +111,10 @@ package "org.calypsonet.terminal.calypso" as api {
 
             +<s>CalypsoCardSelection prepareReadRecordFile (byte sfi, int recordNumber)</s>
             +CalypsoCardSelection prepareReadRecord (byte sfi, int recordNumber)
+            +<color:green>CalypsoCardSelection prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
+            +<color:green>CalypsoCardSelection prepareReadCounter (byte sfi, int nbCountersToRead)
+
+            +<color:green>CalypsoCardSelection preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
         }
         +enum FileOccurrence {
             FIRST
@@ -280,8 +289,8 @@ package "org.calypsonet.terminal.calypso" as api {
             +T prepareComputeSignature (CommonSignatureComputationData<?> data)
             +T prepareVerifySignature (CommonSignatureVerificationData<?> data)
 
-            +<s><color:red>T processCommands ()
-            +<color:green>T processCommands (boolean closePhysicalChannel)
+            +<s>T processCommands ()
+            +T processCommands (boolean closePhysicalChannel)
         }
         +interface CommonSignatureComputationData<T extends CommonSignatureComputationData<T>> {
             +T setData (byte[] data, byte kif, byte kvc)
@@ -366,24 +375,24 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardTransactionManager prepareActivateEncryption ()
             +CardTransactionManager prepareDeactivateEncryption ()
 
-            +<s><color:red>CardTransactionManager prepareReleaseCardChannel ()
+            +<s>CardTransactionManager prepareReleaseCardChannel ()
 
             +<s>CardTransactionManager processCardCommands ()
 
-            +<s><color:red>CardTransactionManager processVerifyPin (byte[] pin)
-            +<color:green>CardTransactionManager prepareVerifyPin (byte[] pin)
-            +<s><color:red>CardTransactionManager processChangePin (byte[] newPin)
-            +<color:green>CardTransactionManager prepareChangePin (byte[] newPin)
+            +<s>CardTransactionManager processVerifyPin (byte[] pin)
+            +CardTransactionManager prepareVerifyPin (byte[] pin)
+            +<s>CardTransactionManager processChangePin (byte[] newPin)
+            +CardTransactionManager prepareChangePin (byte[] newPin)
 
-            +<s><color:red>CardTransactionManager processChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
-            +<color:green>CardTransactionManager prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+            +<s>CardTransactionManager processChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+            +CardTransactionManager prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
 
-            +<s><color:red>CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
-            +<color:green>CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
-            +<s><color:red>CardTransactionManager processClosing ()
-            +<color:green>CardTransactionManager prepareCloseSecureSession ()
-            +<s><color:red>CardTransactionManager processCancel ()
-            +<color:green>CardTransactionManager prepareCancelSecureSession ()
+            +<s>CardTransactionManager processOpening (WriteAccessLevel writeAccessLevel)
+            +CardTransactionManager prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
+            +<s>CardTransactionManager processClosing ()
+            +CardTransactionManager prepareCloseSecureSession ()
+            +<s>CardTransactionManager processCancel ()
+            +CardTransactionManager prepareCancelSecureSession ()
         }
         +enum SvOperation {
             RELOAD
@@ -401,7 +410,7 @@ package "org.calypsonet.terminal.calypso" as api {
             +CardSecuritySetting enablePinPlainTransmission ()
             +CardSecuritySetting enableSvLoadAndDebitLog ()
             +CardSecuritySetting authorizeSvNegativeBalance ()
-            +<color:green>CardSecuritySetting disableReadOnSessionOpening ()
+            +CardSecuritySetting disableReadOnSessionOpening ()
 
             +CardSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
             +CardSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
@@ -485,6 +494,7 @@ CalypsoSam ..> SamProductType #C_LINK : provide >
 
 CalypsoCardSelection .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelection .up.> GetDataTag #C_USE : use >
+CalypsoCardSelection .up.> WriteAccessLevel2 #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >

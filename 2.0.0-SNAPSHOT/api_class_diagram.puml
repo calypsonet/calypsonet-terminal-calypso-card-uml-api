@@ -1,6 +1,6 @@
 @startuml
 title
-    Calypsonet - calypsonet-terminal-calypso-java-api - 2.0.+ (2023-03-08)
+    Calypsonet Terminal Calypso API 2.0.+ (2023-06-01)
 end title
 
 ' == THEME ==
@@ -54,358 +54,329 @@ hide <<grey>> stereotype
 legend top
     __Colors legend__ :
     * __External public API references__ :
-    ** <back:yellow>**calypsonet-terminal-reader-java-api**</back>
+    ** <back:yellow>**Calypsonet Terminal Reader API**</back>
 end legend
 
-package "org.calypsonet.terminal.calypso" as api {
-
-    +class "**final** CalypsoApiProperties" as ApiProperties {
-        +{static} **final** String VERSION
++class "**final** CalypsoApiProperties" as ApiProperties {
+    +{static} **final** String VERSION
+}
++enum WriteAccessLevel {
+    PERSONALIZATION
+    LOAD
+    DEBIT
+}
++enum SelectFileControl {
+    FIRST_EF
+    NEXT_EF
+    CURRENT_DF
+}
++enum GetDataTag {
+    FCP_FOR_CURRENT_FILE
+    FCI_FOR_CURRENT_DF
+    EF_LIST
+    TRACEABILITY_INFORMATION
+}
+package "Card" as card {
+    +interface "<color:blue>CalypsoCardSelectionExtensionFactory" as CalypsoCardSelectionExtensionFactory {
+        +<color:blue>CalypsoCardSelectionExtension createCardSelectionExtension ()
     }
-    +enum WriteAccessLevel {
-        PERSONALIZATION
-        LOAD
+    +interface "<<<back:yellow>CardSelectionExtension</back>>>\n<color:blue>CalypsoCardSelectionExtension" as CalypsoCardSelectionExtension {
+        +CalypsoCardSelectionExtension acceptInvalidatedCard ()
+
+        +CalypsoCardSelectionExtension prepareSelectFile (short lid)
+        +CalypsoCardSelectionExtension prepareSelectFile (SelectFileControl selectControl)
+
+        +CalypsoCardSelectionExtension prepareGetData (GetDataTag tag)
+
+        +CalypsoCardSelectionExtension prepareReadRecord (byte sfi, int recordNumber)
+        +CalypsoCardSelectionExtension prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
+        +CalypsoCardSelectionExtension prepareReadCounter (byte sfi, int nbCountersToRead)
+
+        +CalypsoCardSelectionExtension preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+    }
+    +interface "<<<back:yellow>SmartCard</back>>>\nCalypsoCard" as CalypsoCard {
+        +ProductType getProductType ()
+        +boolean isHce ()
+
+        +boolean isDfInvalidated ()
+
+        +byte[] getDfName ()
+        +byte[] getApplicationSerialNumber ()
+
+        +byte[] getStartupInfoRawData ()
+        +byte getPlatform ()
+        +byte getApplicationType ()
+        +byte getApplicationSubtype ()
+        +byte getSoftwareIssuer ()
+        +byte getSoftwareVersion ()
+        +byte getSoftwareRevision ()
+        +byte getSessionModification ()
+
+        +byte[] getTraceabilityInformation ()
+
+        +DirectoryHeader getDirectoryHeader ()
+        +ElementaryFile getFileBySfi (byte sfi)
+        +ElementaryFile getFileByLid (short lid)
+        +Set<ElementaryFile> getFiles ()
+
+        +boolean isDfRatified ()
+        +int getTransactionCounter ()
+
+        +boolean isPkiModeSupported ()
+        +boolean isExtendedModeSupported ()
+        +boolean isRatificationOnDeselectSupported ()
+
+        +boolean isPinFeatureAvailable ()
+        +boolean isPinBlocked ()
+        +int getPinAttemptRemaining ()
+
+        +boolean isSvFeatureAvailable ()
+        +int getSvBalance ()
+        +int getSvLastTNum ()
+        +SvLoadLogRecord getSvLoadLogRecord ()
+        +SvDebitLogRecord getSvDebitLogLastRecord ()
+        +List<SvDebitLogRecord> getSvDebitLogAllRecords ()
+    }
+    +interface DirectoryHeader {
+        +short getLid ()
+        +Byte getDfStatus ()
+
+        +byte[] getAccessConditions ()
+        +byte[] getKeyIndexes ()
+
+        +byte getKif (WriteAccessLevel writeAccessLevel)
+        +byte getKvc (WriteAccessLevel writeAccessLevel)
+    }
+    +interface ElementaryFile {
+        +byte getSfi ()
+        +FileHeader getHeader ()
+        +FileData getData ()
+    }
+    +interface FileHeader {
+        +short getLid ()
+        +byte getDfStatus ()
+        +ElementaryFile.Type getEfType ()
+
+        +int getRecordsNumber ()
+        +int getRecordSize ()
+
+        +byte[] getAccessConditions ()
+        +byte[] getKeyIndexes ()
+
+        +Short getSharedReference ()
+    }
+    +enum "Type" as FileType {
+        LINEAR
+        BINARY
+        CYCLIC
+        COUNTERS
+        SIMULATED_COUNTERS
+    }
+    +interface FileData {
+        +byte[] getContent ()
+        +byte[] getContent (int numRecord)
+        +byte[] getContent (int numRecord, int dataOffset, int dataLength)
+        +SortedMap<Integer, byte[]> getAllRecordsContent ()
+
+        +Integer getContentAsCounterValue (int numCounter)
+        +SortedMap<Integer, Integer> getAllCountersValue ()
+    }
+    +enum "ProductType" as CardProductType {
+        PRIME_REVISION_1
+        PRIME_REVISION_2
+        PRIME_REVISION_3
+        LIGHT
+        BASIC
+        UNKNOWN
+    }
+    +interface SvLoadLogRecord {
+        +byte[] getRawData ()
+
+        +byte[] getLoadDate ()
+        +byte[] getLoadTime ()
+
+        +int getAmount ()
+        +int getBalance ()
+        +byte[] getFreeData ()
+
+        +byte getKvc ()
+        +byte[] getSamId ()
+        +int getSamTNum ()
+        +int getSvTNum ()
+    }
+    +interface SvDebitLogRecord {
+        +byte[] getRawData ()
+
+        +byte[] getDebitDate ()
+        +byte[] getDebitTime ()
+
+        +int getAmount ()
+        +int getBalance ()
+
+        +byte getKvc ()
+        +byte[] getSamId ()
+        +int getSamTNum ()
+        +int getSvTNum ()
+    }
+}
+package "Transaction" as transaction {
+    +interface "<color:blue>CCTransactionManagerFactory" as CCTransactionManagerFactory {
+        +<color:blue>CCFreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
+        +<color:blue>CCSecureStandardTransactionManager createSecureStandardTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+        +<color:blue>CCSecureExtendedTransactionManager createSecureExtendedTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+        +<color:blue>CCSecureAsymmetricTransactionManager createSecureAsymmetricTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    }
+    ' Card
+    together {
+        +interface "<color:blue>CCTransactionManager" as CCTransactionManager<T extends CCTransactionManager<T>> {
+            +T prepareSelectFile (short lid)
+            +T prepareSelectFile (SelectFileControl selectFileControl)
+
+            +T prepareGetData (GetDataTag tag)
+
+            +T prepareReadRecord (byte sfi, int recordNumber)
+            +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
+            +T prepareReadRecordsPartially (byte sfi, int fromRecordNumber, int toRecordNumber, int offset, int nbBytesToRead)
+            +T prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
+            +T prepareReadCounter (byte sfi, int nbCountersToRead)
+
+            +T prepareSearchRecords (SearchCommandData data)
+
+            +T prepareCheckPinStatus ()
+
+            +T prepareAppendRecord (byte sfi, byte[] recordData)
+            +T prepareUpdateRecord (byte sfi, int recordNumber, byte[] recordData)
+            +T prepareWriteRecord (byte sfi, int recordNumber, byte[] recordData)
+
+            +T prepareUpdateBinary (byte sfi, int offset, byte[] data)
+            +T prepareWriteBinary (byte sfi, int offset, byte[] data)
+
+            +T prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
+            +T prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
+            +T prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
+            +T prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
+            +T prepareSetCounter (byte sfi, int counterNumber, int newValue)
+
+            +T prepareSvReadAllLogs ()
+
+            +T prepareVerifyPin (byte[] pin)
+            +T prepareChangePin (byte[] newPin)
+
+            +T processCommands (boolean closePhysicalChannel)
+
+            +List<byte[]> getTransactionAuditData ()
+        }
+        +interface "<color:blue>CCFreeTransactionManager" as CCFreeTransactionManager extends CCTransactionManager {
+        }
+        +interface "<color:blue>CCSecureTransactionManager" as CCSecureTransactionManager<T extends CCSecureTransactionManager<T>> extends CCTransactionManager {
+            +<color:blue><E extends CCTransactionCryptoExtension> E getCryptoExtension (Class<E> cryptoExtensionClass)
+
+            +T prepareCloseSecureSession ()
+            +T prepareCancelSecureSession ()
+        }
+        +interface "<color:blue>CCSecureSymmetricTransactionManager" as CCSecureSymmetricTransactionManager<T extends CCSecureSymmetricTransactionManager<T>> extends CCSecureTransactionManager {
+            +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
+
+            +T prepareSvGet (SvOperation svOperation, SvAction svAction)
+            +T prepareSvReload (int amount, byte[] date, byte[] time, byte[] free)
+            +T prepareSvReload (int amount)
+            +T prepareSvDebit (int amount, byte[] date, byte[] time)
+            +T prepareSvDebit (int amount)
+
+            +T prepareInvalidate ()
+            +T prepareRehabilitate ()
+
+            +T prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+
+            +void initSamContextForNextTransaction ()
+        }
+        +interface "<color:blue>CCSecureStandardTransactionManager" as CCSecureStandardTransactionManager extends CCSecureSymmetricTransactionManager {
+        }
+        +interface "<color:blue>CCSecureExtendedTransactionManager" as CCSecureExtendedTransactionManager extends CCSecureSymmetricTransactionManager {
+            +CCSecureExtendedTransactionManager prepareEarlyMutualAuthentication ()
+            +CCSecureExtendedTransactionManager prepareActivateEncryption ()
+            +CCSecureExtendedTransactionManager prepareDeactivateEncryption ()
+        }
+        +interface "<color:blue>CCSecureAsymmetricTransactionManager" as CCSecureAsymmetricTransactionManager extends CCSecureTransactionManager {
+            +<color:blue>T prepareOpenSecureSession ()
+        }
+    }
+    +enum SvOperation {
+        RELOAD
         DEBIT
     }
-    +enum SelectFileControl {
-        FIRST_EF
-        NEXT_EF
-        CURRENT_DF
+    +enum SvAction {
+        DO
+        UNDO
     }
-    +enum GetDataTag {
-        FCP_FOR_CURRENT_FILE
-        FCI_FOR_CURRENT_DF
-        EF_LIST
-        TRACEABILITY_INFORMATION
+    +interface "<color:blue>CCSecuritySettingFactory" as CCSecuritySettingFactory {
+        +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+        +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
     }
-    package card {
-        +interface CalypsoCardSelectionFactory {
-            +CalypsoCardSelection createCardSelection ()
-        }
-        +interface "<<<back:yellow>CardSelection</back>>>\nCalypsoCardSelection" as CalypsoCardSelection {
-            +CalypsoCardSelection filterByCardProtocol (String cardProtocol)
-
-            +CalypsoCardSelection filterByPowerOnData (String powerOnDataRegex)
-
-            +CalypsoCardSelection filterByDfName (byte[] aid)
-            +CalypsoCardSelection filterByDfName (String aid)
-            +CalypsoCardSelection setFileOccurrence (FileOccurrence fileOccurrence)
-            +CalypsoCardSelection setFileControlInformation (FileControlInformation fileControlInformation)
-
-            +CalypsoCardSelection acceptInvalidatedCard ()
-
-            +CalypsoCardSelection prepareSelectFile (short lid)
-            +CalypsoCardSelection prepareSelectFile (SelectFileControl selectControl)
-
-            +CalypsoCardSelection prepareGetData (GetDataTag tag)
-
-            +CalypsoCardSelection prepareReadRecord (byte sfi, int recordNumber)
-            +CalypsoCardSelection prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
-            +CalypsoCardSelection prepareReadCounter (byte sfi, int nbCountersToRead)
-
-            +CalypsoCardSelection preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
-        }
-        +enum FileOccurrence {
-            FIRST
-            LAST
-            NEXT
-            PREVIOUS
-        }
-        +enum FileControlInformation {
-            FCI
-            NO_RESPONSE
-        }
-        +interface "<<<back:yellow>SmartCard</back>>>\nCalypsoCard" as CalypsoCard {
-            +ProductType getProductType ()
-            +boolean isHce ()
-
-            +boolean isDfInvalidated ()
-
-            +byte[] getDfName ()
-            +byte[] getApplicationSerialNumber ()
-
-            +byte[] getStartupInfoRawData ()
-            +byte getPlatform ()
-            +byte getApplicationType ()
-            +byte getApplicationSubtype ()
-            +byte getSoftwareIssuer ()
-            +byte getSoftwareVersion ()
-            +byte getSoftwareRevision ()
-            +byte getSessionModification ()
-
-            +byte[] getTraceabilityInformation ()
-
-            +DirectoryHeader getDirectoryHeader ()
-            +ElementaryFile getFileBySfi (byte sfi)
-            +ElementaryFile getFileByLid (short lid)
-            +Set<ElementaryFile> getFiles ()
-
-            +boolean isDfRatified ()
-            +int getTransactionCounter ()
-
-            +boolean isPkiModeSupported ()
-            +boolean isExtendedModeSupported ()
-            +boolean isRatificationOnDeselectSupported ()
-
-            +boolean isPinFeatureAvailable ()
-            +boolean isPinBlocked ()
-            +int getPinAttemptRemaining ()
-
-            +boolean isSvFeatureAvailable ()
-            +int getSvBalance ()
-            +int getSvLastTNum ()
-            +SvLoadLogRecord getSvLoadLogRecord ()
-            +SvDebitLogRecord getSvDebitLogLastRecord ()
-            +List<SvDebitLogRecord> getSvDebitLogAllRecords ()
-        }
-        +interface DirectoryHeader {
-            +short getLid ()
-            +Byte getDfStatus ()
-
-            +byte[] getAccessConditions ()
-            +byte[] getKeyIndexes ()
-
-            +byte getKif (WriteAccessLevel writeAccessLevel)
-            +byte getKvc (WriteAccessLevel writeAccessLevel)
-        }
-        +interface ElementaryFile {
-            +byte getSfi ()
-            +FileHeader getHeader ()
-            +FileData getData ()
-        }
-        +interface FileHeader {
-            +short getLid ()
-            +byte getDfStatus ()
-            +ElementaryFile.Type getEfType ()
-
-            +int getRecordsNumber ()
-            +int getRecordSize ()
-
-            +byte[] getAccessConditions ()
-            +byte[] getKeyIndexes ()
-
-            +Short getSharedReference ()
-        }
-        +enum "Type" as FileType {
-            LINEAR
-            BINARY
-            CYCLIC
-            COUNTERS
-            SIMULATED_COUNTERS
-        }
-        +interface FileData {
-            +byte[] getContent ()
-            +byte[] getContent (int numRecord)
-            +byte[] getContent (int numRecord, int dataOffset, int dataLength)
-            +SortedMap<Integer, byte[]> getAllRecordsContent ()
-
-            +Integer getContentAsCounterValue (int numCounter)
-            +SortedMap<Integer, Integer> getAllCountersValue ()
-        }
-        +enum "ProductType" as CardProductType {
-            PRIME_REVISION_1
-            PRIME_REVISION_2
-            PRIME_REVISION_3
-            LIGHT
-            BASIC
-            UNKNOWN
-        }
-        +interface SvLoadLogRecord {
-            +byte[] getRawData ()
-
-            +byte[] getLoadDate ()
-            +byte[] getLoadTime ()
-
-            +int getAmount ()
-            +int getBalance ()
-            +byte[] getFreeData ()
-
-            +byte getKvc ()
-            +byte[] getSamId ()
-            +int getSamTNum ()
-            +int getSvTNum ()
-        }
-        +interface SvDebitLogRecord {
-            +byte[] getRawData ()
-
-            +byte[] getDebitDate ()
-            +byte[] getDebitTime ()
-
-            +int getAmount ()
-            +int getBalance ()
-
-            +byte getKvc ()
-            +byte[] getSamId ()
-            +int getSamTNum ()
-            +int getSvTNum ()
-        }
+    +interface "<color:blue>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting {
+        +<color:blue>AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
+        +<color:blue>AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
+        +<color:blue>AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
     }
-    package transaction {
-        +interface CCTransactionManagerFactory {
-            +CCFreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
-            +CCSecureStandardTransactionManager createSecureStandardTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-            +CCSecureExtendedTransactionManager createSecureExtendedTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-            +CCSecureAsymmetricTransactionManager createSecureAsymmetricTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +interface "<color:blue>SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting {
+        +SymmetricCryptoSecuritySetting enableMultipleSession ()
+        +SymmetricCryptoSecuritySetting enableRatificationMechanism ()
+        +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
+        +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
+        +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
+        +SymmetricCryptoSecuritySetting disableReadOnSessionOpening ()
+
+        +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
+        +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
+        +SymmetricCryptoSecuritySetting assignDefaultKvc (WriteAccessLevel writeAccessLevel, byte kvc)
+
+        +SymmetricCryptoSecuritySetting addAuthorizedSessionKey (byte kif, byte kvc)
+        +SymmetricCryptoSecuritySetting addAuthorizedSvKey (byte kif, byte kvc)
+
+        +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
+        +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+    }
+    +interface "<color:blue>CCCommandDataFactory" as CCCommandDataFactory {
+        +<color:blue>SearchCommandData createSearchCommandData ()
+    }
+    +interface SearchCommandData {
+        +SearchCommandData setSfi (byte sfi)
+        +SearchCommandData startAtRecord (int recordNumber)
+        +SearchCommandData setOffset (int offset)
+        +SearchCommandData enableRepeatedOffset ()
+        +SearchCommandData setSearchData (byte[] data)
+        +SearchCommandData setMask (byte[] mask)
+        +SearchCommandData fetchFirstMatchingResult ()
+
+        +List<Integer> getMatchingRecordNumbers ()
+    }
+    ' Exceptions
+    +class "<<RuntimeException>>" as RuntimeException {
+        +**SessionBufferOverflowException**: Session buffer would overflow for atomic session.
+        +**UnauthorizedKeyException**
+        +**CardRevokedException**
+        +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
+        +<color:blue>**InvalidCardMacException**
+        +<color:blue>**CardMacNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
+        +**SelectFileException**
+        +**UnexpectedCommandStatusException**
+        +**ReaderIOException**: Card reader and/or Crypto reader communication is broken.
+        +**CardIOException**
+        +<color:blue>**CryptoIOException**
+    }
+    package "SPI" as spi {
+        +interface "<color:blue>AsymmetricCryptoTransactionManagerFactory" as AsymmetricCryptoTransactionManagerFactory {
         }
-        ' Card
-        together {
-            +interface CCTransactionManager<T extends CCTransactionManager<T>> {
-                +T prepareSelectFile (short lid)
-                +T prepareSelectFile (SelectFileControl selectFileControl)
-
-                +T prepareGetData (GetDataTag tag)
-
-                +T prepareReadRecord (byte sfi, int recordNumber)
-                +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
-                +T prepareReadRecordsPartially (byte sfi, int fromRecordNumber, int toRecordNumber, int offset, int nbBytesToRead)
-                +T prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
-                +T prepareReadCounter (byte sfi, int nbCountersToRead)
-
-                +T prepareSearchRecords (SearchCommandData data)
-
-                +T prepareCheckPinStatus ()
-
-                +T prepareAppendRecord (byte sfi, byte[] recordData)
-                +T prepareUpdateRecord (byte sfi, int recordNumber, byte[] recordData)
-                +T prepareWriteRecord (byte sfi, int recordNumber, byte[] recordData)
-
-                +T prepareUpdateBinary (byte sfi, int offset, byte[] data)
-                +T prepareWriteBinary (byte sfi, int offset, byte[] data)
-
-                +T prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
-                +T prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
-                +T prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
-                +T prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
-                +T prepareSetCounter (byte sfi, int counterNumber, int newValue)
-
-                +T prepareSvReadAllLogs ()
-
-                +T prepareVerifyPin (byte[] pin)
-                +T prepareChangePin (byte[] newPin)
-
-                +T processCommands (boolean closePhysicalChannel)
-
-                +List<byte[]> getTransactionAuditData ()
-            }
-            +interface CCFreeTransactionManager extends CCTransactionManager {
-            }
-            +interface CCSecureTransactionManager<T extends CCSecureTransactionManager<T>> extends CCTransactionManager {
-                +<E extends CCTransactionCryptoExtension> E getCryptoExtension (Class<E> cryptoExtensionClass)
-
-                +T prepareCloseSecureSession ()
-                +T prepareCancelSecureSession ()
-            }
-            +interface CCSecureSymmetricTransactionManager<T extends CCSecureSymmetricTransactionManager<T>> extends CCSecureTransactionManager {
-                +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
-
-                +T prepareSvGet (SvOperation svOperation, SvAction svAction)
-                +T prepareSvReload (int amount, byte[] date, byte[] time, byte[] free)
-                +T prepareSvReload (int amount)
-                +T prepareSvDebit (int amount, byte[] date, byte[] time)
-                +T prepareSvDebit (int amount)
-
-                +T prepareInvalidate ()
-                +T prepareRehabilitate ()
-
-                +T prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
-
-                +void initSamContextForNextTransaction ()
-            }
-            +interface CCSecureStandardTransactionManager extends CCSecureSymmetricTransactionManager {
-            }
-            +interface CCSecureExtendedTransactionManager extends CCSecureSymmetricTransactionManager {
-                +CCSecureExtendedTransactionManager prepareEarlyMutualAuthentication ()
-                +CCSecureExtendedTransactionManager prepareActivateEncryption ()
-                +CCSecureExtendedTransactionManager prepareDeactivateEncryption ()
-            }
-            +interface CCSecureAsymmetricTransactionManager extends CCSecureTransactionManager {
-                +T prepareOpenSecureSession ()
-            }
+        +interface "<color:blue>SymmetricCryptoTransactionManagerFactory" as SymmetricCryptoTransactionManagerFactory {
         }
-        +enum SvOperation {
-            RELOAD
-            DEBIT
-        }
-        +enum SvAction {
-            DO
-            UNDO
-        }
-        +interface CCSecuritySettingFactory {
-            +SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-            +AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-        }
-        +interface AsymmetricCryptoSecuritySetting {
-            +AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
-            +AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
-            +AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
-        }
-        +interface SymmetricCryptoSecuritySetting {
-            +SymmetricCryptoSecuritySetting enableMultipleSession ()
-            +SymmetricCryptoSecuritySetting enableRatificationMechanism ()
-            +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
-            +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
-            +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
-            +SymmetricCryptoSecuritySetting disableReadOnSessionOpening ()
-
-            +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
-            +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
-            +SymmetricCryptoSecuritySetting assignDefaultKvc (WriteAccessLevel writeAccessLevel, byte kvc)
-
-            +SymmetricCryptoSecuritySetting addAuthorizedSessionKey (byte kif, byte kvc)
-            +SymmetricCryptoSecuritySetting addAuthorizedSvKey (byte kif, byte kvc)
-
-            +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
-            +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
-        }
-        +interface CCCommandDataFactory {
-            +SearchCommandData createSearchCommandData ()
-        }
-        +interface SearchCommandData {
-            +SearchCommandData setSfi (byte sfi)
-            +SearchCommandData startAtRecord (int recordNumber)
-            +SearchCommandData setOffset (int offset)
-            +SearchCommandData enableRepeatedOffset ()
-            +SearchCommandData setSearchData (byte[] data)
-            +SearchCommandData setMask (byte[] mask)
-            +SearchCommandData fetchFirstMatchingResult ()
-
-            +List<Integer> getMatchingRecordNumbers ()
-        }
-        ' Exceptions
-        +class "<<RuntimeException>>" as RuntimeException {
-            +**SessionBufferOverflowException**: Session buffer would overflow for atomic session.
-            +**UnauthorizedKeyException**
-            +**CardRevokedException**
-            +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
-            +**InvalidCardMacException**
-            +**CardMacNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
-            +**SelectFileException**
-            +**UnexpectedCommandStatusException**
-            +**ReaderIOException**: Card reader and/or Crypto reader communication is broken.
-            +**CardIOException**
-            +**CryptoIOException**
-        }
-        package spi {
-            +interface AsymmetricCryptoTransactionManagerFactory {
-            }
-            +interface SymmetricCryptoTransactionManagerFactory {
-            }
-            +interface CCTransactionCryptoExtension {
-            }
+        +interface "<color:blue>CCTransactionCryptoExtension" as CCTransactionCryptoExtension {
         }
     }
 }
 
 ' Associations
 
-CalypsoCardSelectionFactory ..> CalypsoCardSelection #C_LINK : provide >
-
-CalypsoCardSelection +-- FileOccurrence
-CalypsoCardSelection ..> FileOccurrence #C_LINK : provide >
-CalypsoCardSelection +-- FileControlInformation
-CalypsoCardSelection ..> FileControlInformation #C_LINK : provide >
-
-CCTransactionManagerFactory .right.> CalypsoCard #C_USE : use >
+CCTransactionManagerFactory ..> CalypsoCard #C_USE : use >
 CCTransactionManagerFactory ..> SymmetricCryptoSecuritySetting #C_USE : use >
 CCTransactionManagerFactory ..> AsymmetricCryptoSecuritySetting #C_USE : use >
 
@@ -415,7 +386,7 @@ CCTransactionManagerFactory .up.> CCSecureExtendedTransactionManager #C_LINK : p
 CCTransactionManagerFactory .up.> CCSecureAsymmetricTransactionManager #C_LINK : provide >
 
 CCTransactionManager ..> SelectFileControl #C_USE : use >
-CCTransactionManager .left.> GetDataTag #C_USE : use >
+CCTransactionManager ..> GetDataTag #C_USE : use >
 CCTransactionManager .up.> SvOperation #C_USE : use >
 CCTransactionManager .up.> SvAction #C_USE : use >
 CCTransactionManager .up.> SearchCommandData #C_USE : use >
@@ -433,9 +404,11 @@ SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
 
 CCCommandDataFactory .left.> SearchCommandData #C_LINK : provide >
 
-CalypsoCardSelection .up.> SelectFileControl #C_USE : use >
-CalypsoCardSelection ..> GetDataTag #C_USE : use >
-CalypsoCardSelection .up.> WriteAccessLevel #C_USE : use >
+CalypsoCardSelectionExtensionFactory .left.> CalypsoCardSelectionExtension #C_LINK : provide >
+
+CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
+CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
+CalypsoCardSelectionExtension .up.> WriteAccessLevel #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -444,40 +417,39 @@ CalypsoCard ..> CardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
+DirectoryHeader ..> WriteAccessLevel #C_USE : use >
 
 ElementaryFile +-- FileType
 ElementaryFile ..> FileHeader #C_LINK : provide >
 ElementaryFile ..> FileData #C_LINK : provide >
 
-FileHeader .right.> FileType #C_LINK : provide >
+FileHeader .left.> FileType #C_LINK : provide >
 
 ' == LAYOUT ==
 
-'FileOccurrence -[hidden]- WriteAccessLevel
+'CalypsoCardSelectionExtension -[hidden]left- CalypsoCard
+
+AsymmetricCryptoTransactionManagerFactory -[hidden]- RuntimeException
 
 ' == STYLE ==
 
-package api #C_GREY1 {}
-package api.card #C_GREY2 {}
-package api.transaction #C_GREY2 {}
-package api.transaction.spi #C_GREY3 {}
+package card #C_GREY1 {}
+package transaction #C_GREY1 {}
+package transaction.spi #C_GREY2 {}
 
-interface api.card.CalypsoCardSelectionFactory <<red>>
-interface api.transaction.CCSecuritySettingFactory <<red>>
-interface api.transaction.CCTransactionManagerFactory <<red>>
-interface api.transaction.CCCommandDataFactory <<red>>
+interface card.CalypsoCardSelectionExtensionFactory <<red>>
+interface transaction.CCSecuritySettingFactory <<red>>
+interface transaction.CCTransactionManagerFactory <<red>>
+interface transaction.CCCommandDataFactory <<red>>
 
-interface api.transaction.CCTransactionManager <<blue>>
-interface api.transaction.CCFreeTransactionManager <<blue>>
-interface api.transaction.CCSecureTransactionManager <<blue>>
-interface api.transaction.CCSecureSymmetricTransactionManager <<blue>>
-interface api.transaction.CCSecureStandardTransactionManager <<blue>>
-interface api.transaction.CCSecureExtendedTransactionManager <<blue>>
-interface api.transaction.CCSecureAsymmetricTransactionManager <<blue>>
+interface transaction.CCTransactionManager <<blue>>
+interface transaction.CCFreeTransactionManager <<blue>>
+interface transaction.CCSecureTransactionManager <<blue>>
+interface transaction.CCSecureSymmetricTransactionManager <<blue>>
+interface transaction.CCSecureStandardTransactionManager <<blue>>
+interface transaction.CCSecureExtendedTransactionManager <<blue>>
+interface transaction.CCSecureAsymmetricTransactionManager <<blue>>
 
-interface api.card.CalypsoCardSelection <<green>>
-enum api.card.FileControlInformation <<green>>
-enum api.card.FileOccurrence <<green>>
+interface card.CalypsoCardSelectionExtension <<green>>
 
 @enduml

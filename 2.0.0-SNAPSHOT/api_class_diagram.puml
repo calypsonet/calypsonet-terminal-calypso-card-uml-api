@@ -1,6 +1,8 @@
 @startuml
 title
-    Calypsonet Terminal Calypso API 2.0.+ (2023-06-01)
+    <img:../assets/logo.png>
+
+    Terminal Calypso Card API 2.0.+ (2023-06-01)
 end title
 
 ' == THEME ==
@@ -57,6 +59,8 @@ legend top
     ** <back:yellow>**Calypsonet Terminal Reader API**</back>
 end legend
 
+package "calypso.card" as calypsoCard {
+
 +class "**final** CalypsoApiProperties" as ApiProperties {
     +{static} **final** String VERSION
 }
@@ -76,7 +80,7 @@ end legend
     EF_LIST
     TRACEABILITY_INFORMATION
 }
-package "Card" as card {
+package "card" as card {
     +interface "<color:blue>CalypsoCardSelectionExtensionFactory" as CalypsoCardSelectionExtensionFactory {
         +<color:blue>CalypsoCardSelectionExtension createCardSelectionExtension ()
     }
@@ -219,7 +223,7 @@ package "Card" as card {
         +int getSvTNum ()
     }
 }
-package "Transaction" as transaction {
+package "transaction" as transaction {
     +interface "<color:blue>CCTransactionManagerFactory" as CCTransactionManagerFactory {
         +<color:blue>CCFreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
         +<color:blue>CCSecureStandardTransactionManager createSecureStandardTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
@@ -364,7 +368,7 @@ package "Transaction" as transaction {
         +**CardIOException**
         +<color:blue>**CryptoIOException**
     }
-    package "SPI" as spi {
+    package "spi" as spi {
         +interface "<color:blue>AsymmetricCryptoTransactionManagerFactory" as AsymmetricCryptoTransactionManagerFactory {
         }
         +interface "<color:blue>SymmetricCryptoTransactionManagerFactory" as SymmetricCryptoTransactionManagerFactory {
@@ -372,6 +376,8 @@ package "Transaction" as transaction {
         +interface "<color:blue>CCTransactionCryptoExtension" as CCTransactionCryptoExtension {
         }
     }
+}
+
 }
 
 ' Associations
@@ -400,7 +406,7 @@ CCSecuritySettingFactory .up.> AsymmetricCryptoSecuritySetting #C_LINK : provide
 CCSecuritySettingFactory ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
 CCSecuritySettingFactory ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
 
-SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
+SymmetricCryptoSecuritySetting .right.> WriteAccessLevel #C_USE : use >
 
 CCCommandDataFactory .left.> SearchCommandData #C_LINK : provide >
 
@@ -408,7 +414,7 @@ CalypsoCardSelectionExtensionFactory .left.> CalypsoCardSelectionExtension #C_LI
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
-CalypsoCardSelectionExtension .up.> WriteAccessLevel #C_USE : use >
+CalypsoCardSelectionExtension .left.> WriteAccessLevel #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -417,7 +423,7 @@ CalypsoCard ..> CardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader ..> WriteAccessLevel #C_USE : use >
+DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
 
 ElementaryFile +-- FileType
 ElementaryFile ..> FileHeader #C_LINK : provide >
@@ -433,23 +439,24 @@ AsymmetricCryptoTransactionManagerFactory -[hidden]- RuntimeException
 
 ' == STYLE ==
 
-package card #C_GREY1 {}
-package transaction #C_GREY1 {}
-package transaction.spi #C_GREY2 {}
+package calypsoCard #C_GREY1 {}
+package calypsoCard.card #C_GREY2 {}
+package calypsoCard.transaction #C_GREY2 {}
+package calypsoCard.transaction.spi #C_GREY3 {}
 
-interface card.CalypsoCardSelectionExtensionFactory <<red>>
-interface transaction.CCSecuritySettingFactory <<red>>
-interface transaction.CCTransactionManagerFactory <<red>>
-interface transaction.CCCommandDataFactory <<red>>
+interface calypsoCard.card.CalypsoCardSelectionExtensionFactory <<red>>
+interface calypsoCard.transaction.CCSecuritySettingFactory <<red>>
+interface calypsoCard.transaction.CCTransactionManagerFactory <<red>>
+interface calypsoCard.transaction.CCCommandDataFactory <<red>>
 
-interface transaction.CCTransactionManager <<blue>>
-interface transaction.CCFreeTransactionManager <<blue>>
-interface transaction.CCSecureTransactionManager <<blue>>
-interface transaction.CCSecureSymmetricTransactionManager <<blue>>
-interface transaction.CCSecureStandardTransactionManager <<blue>>
-interface transaction.CCSecureExtendedTransactionManager <<blue>>
-interface transaction.CCSecureAsymmetricTransactionManager <<blue>>
+interface calypsoCard.transaction.CCTransactionManager <<blue>>
+interface calypsoCard.transaction.CCFreeTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureSymmetricTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureStandardTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureExtendedTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureAsymmetricTransactionManager <<blue>>
 
-interface card.CalypsoCardSelectionExtension <<green>>
+interface calypsoCard.card.CalypsoCardSelectionExtension <<green>>
 
 @enduml

@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.png>
 
-    Terminal Calypso Card API 2.0.+ (2023-06-01)
+    Terminal Calypso Card API 2.0.+ (2023-06-08)
 end title
 
 ' == THEME ==
@@ -98,7 +98,7 @@ package "card" as card {
 
         +CalypsoCardSelectionExtension preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
     }
-    +interface "<<<back:yellow>SmartCard</back>>>\nCalypsoCard" as CalypsoCard {
+    +interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
         +ProductType getProductType ()
         +boolean isHce ()
 
@@ -226,9 +226,9 @@ package "card" as card {
 package "transaction" as transaction {
     +interface "<color:blue>CCTransactionManagerFactory" as CCTransactionManagerFactory {
         +<color:blue>CCFreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
-        +<color:blue>CCSecureStandardTransactionManager createSecureStandardTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-        +<color:blue>CCSecureExtendedTransactionManager createSecureExtendedTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-        +<color:blue>CCSecureAsymmetricTransactionManager createSecureAsymmetricTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+        +<color:blue>CCSecureStandardModeTransactionManager createSecureStandardModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+        +<color:blue>CCSecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+        +<color:blue>CCSecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
     }
     ' Card
     together {
@@ -278,7 +278,7 @@ package "transaction" as transaction {
             +T prepareCloseSecureSession ()
             +T prepareCancelSecureSession ()
         }
-        +interface "<color:blue>CCSecureSymmetricTransactionManager" as CCSecureSymmetricTransactionManager<T extends CCSecureSymmetricTransactionManager<T>> extends CCSecureTransactionManager {
+        +interface "<color:blue>CCSecureSymmetricCryptoTransactionManager" as CCSecureSymmetricCryptoTransactionManager<T extends CCSecureSymmetricCryptoTransactionManager<T>> extends CCSecureTransactionManager {
             +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
 
             +T prepareSvGet (SvOperation svOperation, SvAction svAction)
@@ -294,15 +294,15 @@ package "transaction" as transaction {
 
             +void initSamContextForNextTransaction ()
         }
-        +interface "<color:blue>CCSecureStandardTransactionManager" as CCSecureStandardTransactionManager extends CCSecureSymmetricTransactionManager {
+        +interface "<color:blue>CCSecureStandardModeTransactionManager" as CCSecureStandardModeTransactionManager extends CCSecureSymmetricCryptoTransactionManager {
         }
-        +interface "<color:blue>CCSecureExtendedTransactionManager" as CCSecureExtendedTransactionManager extends CCSecureSymmetricTransactionManager {
-            +CCSecureExtendedTransactionManager prepareEarlyMutualAuthentication ()
-            +CCSecureExtendedTransactionManager prepareActivateEncryption ()
-            +CCSecureExtendedTransactionManager prepareDeactivateEncryption ()
+        +interface "<color:blue>CCSecureExtendedModeTransactionManager" as CCSecureExtendedModeTransactionManager extends CCSecureSymmetricCryptoTransactionManager {
+            +CCSecureExtendedModeTransactionManager prepareEarlyMutualAuthentication ()
+            +CCSecureExtendedModeTransactionManager prepareActivateEncryption ()
+            +CCSecureExtendedModeTransactionManager prepareDeactivateEncryption ()
         }
-        +interface "<color:blue>CCSecureAsymmetricTransactionManager" as CCSecureAsymmetricTransactionManager extends CCSecureTransactionManager {
-            +<color:blue>T prepareOpenSecureSession ()
+        +interface "<color:blue>CCSecurePkiModeTransactionManager" as CCSecurePkiModeTransactionManager extends CCSecureTransactionManager {
+            +<color:blue>CCSecurePkiModeTransactionManager prepareOpenSecureSession ()
         }
     }
     +enum SvOperation {
@@ -387,9 +387,9 @@ CCTransactionManagerFactory ..> SymmetricCryptoSecuritySetting #C_USE : use >
 CCTransactionManagerFactory ..> AsymmetricCryptoSecuritySetting #C_USE : use >
 
 CCTransactionManagerFactory .up.> CCFreeTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecureStandardTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecureExtendedTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecureAsymmetricTransactionManager #C_LINK : provide >
+CCTransactionManagerFactory .up.> CCSecureStandardModeTransactionManager #C_LINK : provide >
+CCTransactionManagerFactory .up.> CCSecureExtendedModeTransactionManager #C_LINK : provide >
+CCTransactionManagerFactory .up.> CCSecurePkiModeTransactionManager #C_LINK : provide >
 
 CCTransactionManager ..> SelectFileControl #C_USE : use >
 CCTransactionManager ..> GetDataTag #C_USE : use >
@@ -452,10 +452,10 @@ interface calypsoCard.transaction.CCCommandDataFactory <<red>>
 interface calypsoCard.transaction.CCTransactionManager <<blue>>
 interface calypsoCard.transaction.CCFreeTransactionManager <<blue>>
 interface calypsoCard.transaction.CCSecureTransactionManager <<blue>>
-interface calypsoCard.transaction.CCSecureSymmetricTransactionManager <<blue>>
-interface calypsoCard.transaction.CCSecureStandardTransactionManager <<blue>>
-interface calypsoCard.transaction.CCSecureExtendedTransactionManager <<blue>>
-interface calypsoCard.transaction.CCSecureAsymmetricTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureSymmetricCryptoTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureStandardModeTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecureExtendedModeTransactionManager <<blue>>
+interface calypsoCard.transaction.CCSecurePkiModeTransactionManager <<blue>>
 
 interface calypsoCard.card.CalypsoCardSelectionExtension <<green>>
 

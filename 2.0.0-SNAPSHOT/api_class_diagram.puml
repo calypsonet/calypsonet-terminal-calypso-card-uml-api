@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.png>
 
-    Terminal Calypso Card API 2.0.+ (2023-06-08)
+    Terminal Calypso Card API 2.0.+ (2023-06-13)
 end title
 
 ' == THEME ==
@@ -55,6 +55,7 @@ hide <<grey>> stereotype
 
 legend top
     __Colors legend__ :
+    * <color:grey>WIP (work in progress...)
     * __External public API references__ :
     ** <back:yellow>**Calypsonet Terminal Reader API**</back>
 end legend
@@ -97,6 +98,7 @@ package "card" as card {
         +CalypsoCardSelectionExtension prepareReadCounter (byte sfi, int nbCountersToRead)
 
         +CalypsoCardSelectionExtension preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+        +<color:grey>CalypsoCardSelectionExtension preparePreOpenSecureSessionInPkiMode ()
     }
     +interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
         +ProductType getProductType ()
@@ -292,7 +294,7 @@ package "transaction" as transaction {
 
             +T prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
 
-            +void initSamContextForNextTransaction ()
+            +<color:blue>void initCryptoContextForNextTransaction ()
         }
         +interface "<color:blue>CCSecureStandardModeTransactionManager" as CCSecureStandardModeTransactionManager extends CCSecureSymmetricCryptoTransactionManager {
         }
@@ -317,10 +319,10 @@ package "transaction" as transaction {
         +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
         +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
     }
-    +interface "<color:blue>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting {
-        +<color:blue>AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
-        +<color:blue>AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
-        +<color:blue>AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
+    +interface "<color:grey>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting {
+        +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
+        +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
+        +<color:grey>AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
     }
     +interface "<color:blue>SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting {
         +SymmetricCryptoSecuritySetting enableMultipleSession ()

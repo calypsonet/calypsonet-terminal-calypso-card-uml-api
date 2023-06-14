@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.png>
 
-    Terminal Calypso Card API 2.0.+ (2023-06-13)
+    Terminal Calypso Card API 2.0.+ (2023-06-14)
 end title
 
 ' == THEME ==
@@ -65,6 +65,19 @@ package "calypso.card" as calypsoCard {
 +class "**final** CalypsoApiProperties" as ApiProperties {
     +{static} **final** String VERSION
 }
++interface "<color:blue>CalypsoApiFactory" as CalypsoApiFactory {
+    +<color:blue>CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
+
+    +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+    +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+
+    +<color:blue>CCFreeTransactionManager createCCFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
+    +<color:blue>CCSecureStandardModeTransactionManager createCCSecureStandardModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>CCSecureExtendedModeTransactionManager createCCSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>CCSecurePkiModeTransactionManager createCCSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+
+    +<color:blue>SearchCommandData createSearchCommandData ()
+}
 +enum WriteAccessLevel {
     PERSONALIZATION
     LOAD
@@ -82,9 +95,6 @@ package "calypso.card" as calypsoCard {
     TRACEABILITY_INFORMATION
 }
 package "card" as card {
-    +interface "<color:blue>CalypsoCardSelectionExtensionFactory" as CalypsoCardSelectionExtensionFactory {
-        +<color:blue>CalypsoCardSelectionExtension createCardSelectionExtension ()
-    }
     +interface "<<<back:yellow>CardSelectionExtension</back>>>\n<color:blue>CalypsoCardSelectionExtension" as CalypsoCardSelectionExtension {
         +CalypsoCardSelectionExtension acceptInvalidatedCard ()
 
@@ -226,12 +236,6 @@ package "card" as card {
     }
 }
 package "transaction" as transaction {
-    +interface "<color:blue>CCTransactionManagerFactory" as CCTransactionManagerFactory {
-        +<color:blue>CCFreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
-        +<color:blue>CCSecureStandardModeTransactionManager createSecureStandardModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-        +<color:blue>CCSecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-        +<color:blue>CCSecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
-    }
     ' Card
     together {
         +interface "<color:blue>CCTransactionManager" as CCTransactionManager<T extends CCTransactionManager<T>> {
@@ -315,10 +319,7 @@ package "transaction" as transaction {
         DO
         UNDO
     }
-    +interface "<color:blue>CCSecuritySettingFactory" as CCSecuritySettingFactory {
-        +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-        +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-    }
+    together {
     +interface "<color:grey>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting {
         +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
         +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
@@ -342,8 +343,6 @@ package "transaction" as transaction {
         +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
         +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
     }
-    +interface "<color:blue>CCCommandDataFactory" as CCCommandDataFactory {
-        +<color:blue>SearchCommandData createSearchCommandData ()
     }
     +interface SearchCommandData {
         +SearchCommandData setSfi (byte sfi)
@@ -384,39 +383,36 @@ package "transaction" as transaction {
 
 ' Associations
 
-CCTransactionManagerFactory ..> CalypsoCard #C_USE : use >
-CCTransactionManagerFactory ..> SymmetricCryptoSecuritySetting #C_USE : use >
-CCTransactionManagerFactory ..> AsymmetricCryptoSecuritySetting #C_USE : use >
+CalypsoApiFactory ..> CalypsoCard #C_USE : use >
+CalypsoApiFactory ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
+CalypsoApiFactory ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
+CalypsoApiFactory ..> SymmetricCryptoSecuritySetting #C_USE : use >
+CalypsoApiFactory ..> AsymmetricCryptoSecuritySetting #C_USE : use >
 
-CCTransactionManagerFactory .up.> CCFreeTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecureStandardModeTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecureExtendedModeTransactionManager #C_LINK : provide >
-CCTransactionManagerFactory .up.> CCSecurePkiModeTransactionManager #C_LINK : provide >
+CalypsoApiFactory ..> CalypsoCardSelectionExtension #C_LINK : provide >
+CalypsoApiFactory ..> SymmetricCryptoSecuritySetting #C_LINK : provide >
+CalypsoApiFactory ..> AsymmetricCryptoSecuritySetting #C_LINK : provide >
+CalypsoApiFactory ..> CCFreeTransactionManager #C_LINK : provide >
+CalypsoApiFactory ..> CCSecureStandardModeTransactionManager #C_LINK : provide >
+CalypsoApiFactory ..> CCSecureExtendedModeTransactionManager #C_LINK : provide >
+CalypsoApiFactory ..> CCSecurePkiModeTransactionManager #C_LINK : provide >
+CalypsoApiFactory ..> SearchCommandData #C_LINK : provide >
 
 CCTransactionManager ..> SelectFileControl #C_USE : use >
 CCTransactionManager ..> GetDataTag #C_USE : use >
-CCTransactionManager .up.> SvOperation #C_USE : use >
-CCTransactionManager .up.> SvAction #C_USE : use >
-CCTransactionManager .up.> SearchCommandData #C_USE : use >
+CCTransactionManager .right.> SearchCommandData #C_USE : use >
 
-CCSecureTransactionManager ..> WriteAccessLevel #C_USE : use >
-CCSecureTransactionManager ..> CCTransactionCryptoExtension #C_LINK : provide >
+CCSecureTransactionManager .up.> CCTransactionCryptoExtension #C_LINK : provide >
 
-CCSecuritySettingFactory .up.> SymmetricCryptoSecuritySetting #C_LINK : provide >
-CCSecuritySettingFactory .up.> AsymmetricCryptoSecuritySetting #C_LINK : provide >
+CCSecureSymmetricCryptoTransactionManager ..> WriteAccessLevel #C_USE : use >
+CCSecureSymmetricCryptoTransactionManager ..> SvOperation #C_USE : use >
+CCSecureSymmetricCryptoTransactionManager ..> SvAction #C_USE : use >
 
-CCSecuritySettingFactory ..> SymmetricCryptoTransactionManagerFactory #C_USE : use >
-CCSecuritySettingFactory ..> AsymmetricCryptoTransactionManagerFactory #C_USE : use >
-
-SymmetricCryptoSecuritySetting .right.> WriteAccessLevel #C_USE : use >
-
-CCCommandDataFactory .left.> SearchCommandData #C_LINK : provide >
-
-CalypsoCardSelectionExtensionFactory .left.> CalypsoCardSelectionExtension #C_LINK : provide >
+SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
-CalypsoCardSelectionExtension .left.> WriteAccessLevel #C_USE : use >
+CalypsoCardSelectionExtension .up.> WriteAccessLevel #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -425,7 +421,7 @@ CalypsoCard ..> CardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
+DirectoryHeader ..> WriteAccessLevel #C_USE : use >
 
 ElementaryFile +-- FileType
 ElementaryFile ..> FileHeader #C_LINK : provide >
@@ -435,9 +431,9 @@ FileHeader .left.> FileType #C_LINK : provide >
 
 ' == LAYOUT ==
 
-'CalypsoCardSelectionExtension -[hidden]left- CalypsoCard
-
-AsymmetricCryptoTransactionManagerFactory -[hidden]- RuntimeException
+CCSecureStandardModeTransactionManager -[hidden]- RuntimeException
+'SymmetricCryptoTransactionManagerFactory -[hidden]- SymmetricCryptoSecuritySetting
+'AsymmetricCryptoTransactionManagerFactory -[hidden]- AsymmetricCryptoSecuritySetting
 
 ' == STYLE ==
 
@@ -446,10 +442,7 @@ package calypsoCard.card #C_GREY2 {}
 package calypsoCard.transaction #C_GREY2 {}
 package calypsoCard.transaction.spi #C_GREY3 {}
 
-interface calypsoCard.card.CalypsoCardSelectionExtensionFactory <<red>>
-interface calypsoCard.transaction.CCSecuritySettingFactory <<red>>
-interface calypsoCard.transaction.CCTransactionManagerFactory <<red>>
-interface calypsoCard.transaction.CCCommandDataFactory <<red>>
+interface calypsoCard.CalypsoApiFactory <<red>>
 
 interface calypsoCard.transaction.CCTransactionManager <<blue>>
 interface calypsoCard.transaction.CCFreeTransactionManager <<blue>>

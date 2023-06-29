@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.0.+ (2023-06-14)
+    Terminal Calypso Card API 2.0.+ (2023-06-29)
 end title
 
 ' == THEME ==
@@ -72,10 +72,10 @@ package "calypso.card" as calypsoCard {
     +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
     +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
 
-    +<color:blue>CCFreeTransactionManager createCCFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
-    +<color:blue>CCSecureRegularModeTransactionManager createCCSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +<color:blue>CCSecureExtendedModeTransactionManager createCCSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +<color:blue>CCSecurePkiModeTransactionManager createCCSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
+    +<color:blue>SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
 
     +<color:blue>SearchCommandData createSearchCommandData ()
 }
@@ -238,7 +238,7 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    +interface "<color:blue>CCTransactionManager" as CCTransactionManager<T extends CCTransactionManager<T>> {
+    +interface "<color:blue>TransactionManager" as TransactionManager<T extends TransactionManager<T>> {
         +T prepareSelectFile (short lid)
         +T prepareSelectFile (SelectFileControl selectFileControl)
 
@@ -280,15 +280,15 @@ package "transaction" as transaction {
         <color:blue>KEEP_OPEN
         <color:blue>CLOSE_AFTER
     }
-    +interface "<color:blue>CCFreeTransactionManager" as CCFreeTransactionManager <<blue>> extends CCTransactionManager {
+    +interface "<color:blue>FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
-    +interface "<color:blue>CCSecureTransactionManager" as CCSecureTransactionManager<T extends CCSecureTransactionManager<T>> extends CCTransactionManager {
+    +interface "<color:blue>SecureTransactionManager" as SecureTransactionManager<T extends SecureTransactionManager<T>> extends TransactionManager {
         +<color:blue><E extends CardTransactionCryptoExtension> E getCryptoExtension (Class<E> cryptoExtensionClass)
 
         +T prepareCloseSecureSession ()
         +T prepareCancelSecureSession ()
     }
-    +interface "<color:blue>CCSecureSymmetricCryptoTransactionManager" as CCSecureSymmetricCryptoTransactionManager<T extends CCSecureSymmetricCryptoTransactionManager<T>> extends CCSecureTransactionManager {
+    +interface "<color:blue>SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
         +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
 
         +T prepareSvGet (SvOperation svOperation, SvAction svAction)
@@ -304,15 +304,15 @@ package "transaction" as transaction {
 
         +<color:blue>void initCryptoContextForNextTransaction ()
     }
-    +interface "<color:blue>CCSecureRegularModeTransactionManager" as CCSecureRegularModeTransactionManager <<blue>> extends CCSecureSymmetricCryptoTransactionManager {
+    +interface "<color:blue>SecureRegularModeTransactionManager" as SecureRegularModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
     }
-    +interface "<color:blue>CCSecureExtendedModeTransactionManager" as CCSecureExtendedModeTransactionManager <<blue>> extends CCSecureSymmetricCryptoTransactionManager {
-        +CCSecureExtendedModeTransactionManager prepareEarlyMutualAuthentication ()
-        +CCSecureExtendedModeTransactionManager prepareActivateEncryption ()
-        +CCSecureExtendedModeTransactionManager prepareDeactivateEncryption ()
+    +interface "<color:blue>SecureExtendedModeTransactionManager" as SecureExtendedModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
+        +SecureExtendedModeTransactionManager prepareEarlyMutualAuthentication ()
+        +SecureExtendedModeTransactionManager prepareActivateEncryption ()
+        +SecureExtendedModeTransactionManager prepareDeactivateEncryption ()
     }
-    +interface "<color:blue>CCSecurePkiModeTransactionManager" as CCSecurePkiModeTransactionManager <<blue>> extends CCSecureTransactionManager {
-        +<color:blue>CCSecurePkiModeTransactionManager prepareOpenSecureSession ()
+    +interface "<color:blue>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
+        +<color:blue>SecurePkiModeTransactionManager prepareOpenSecureSession ()
     }
 
     +enum SvOperation <<green>> {
@@ -388,16 +388,16 @@ package "transaction" as transaction {
 
 ' Associations
 
-CCTransactionManager .up.> SelectFileControl #C_USE : use >
-CCTransactionManager .up.> GetDataTag #C_USE : use >
-CCTransactionManager .left.> ChannelControl #C_USE : use >
-CCTransactionManager .right.> SearchCommandData #C_USE : use >
+TransactionManager .up.> SelectFileControl #C_USE : use >
+TransactionManager .up.> GetDataTag #C_USE : use >
+TransactionManager .left.> ChannelControl #C_USE : use >
+TransactionManager .right.> SearchCommandData #C_USE : use >
 
-CCSecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
+SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 
-CCSecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
-CCSecureSymmetricCryptoTransactionManager .left.> SvOperation #C_USE : use >
-CCSecureSymmetricCryptoTransactionManager .left.> SvAction #C_USE : use >
+SecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
+SecureSymmetricCryptoTransactionManager .left.> SvOperation #C_USE : use >
+SecureSymmetricCryptoTransactionManager .left.> SvAction #C_USE : use >
 
 SymmetricCryptoSecuritySetting .up.> WriteAccessLevel #C_USE : use >
 

@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.0.+ (2023-06-29)
+    Terminal Calypso Card API 2.0.+ (2023-09-21)
 end title
 
 ' == THEME ==
@@ -70,12 +70,12 @@ package "calypso.card" as calypsoCard {
     +<color:blue>CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
 
     +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-    +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
 
     +<color:blue>FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
     +<color:blue>SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
     +<color:blue>SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +<color:blue>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +<color:grey>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
 
     +<color:blue>SearchCommandData createSearchCommandData ()
 }
@@ -311,8 +311,8 @@ package "transaction" as transaction {
         +SecureExtendedModeTransactionManager prepareActivateEncryption ()
         +SecureExtendedModeTransactionManager prepareDeactivateEncryption ()
     }
-    +interface "<color:blue>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
-        +<color:blue>SecurePkiModeTransactionManager prepareOpenSecureSession ()
+    +interface "<color:grey>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
+        +<color:grey>SecurePkiModeTransactionManager prepareOpenSecureSession ()
     }
 
     +enum SvOperation <<green>> {

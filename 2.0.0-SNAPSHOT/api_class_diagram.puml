@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.0.+ (2023-09-21)
+    Terminal Calypso Card API 2.0.+ (2023-10-11)
 end title
 
 ' == THEME ==
@@ -301,8 +301,6 @@ package "transaction" as transaction {
         +T prepareRehabilitate ()
 
         +T prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
-
-        +<color:blue>void initCryptoContextForNextTransaction ()
     }
     +interface "<color:blue>SecureRegularModeTransactionManager" as SecureRegularModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
     }
@@ -346,6 +344,8 @@ package "transaction" as transaction {
 
         +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
         +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+
+        +<color:blue>void initCryptoContextForNextTransaction ()
     }
     }
     +interface SearchCommandData <<blue>> {

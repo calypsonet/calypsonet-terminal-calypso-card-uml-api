@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.0.+ (2023-10-11)
+    Terminal Calypso Card API 2.0.+ (2023-10-17)
 end title
 
 ' == THEME ==
@@ -372,6 +372,7 @@ package "transaction" as transaction {
         +**UnexpectedCommandStatusException**
         +**ReaderIOException**: Card reader and/or Crypto reader communication is broken.
         +**CardIOException**
+        +<color:blue>**CryptoException**
         +<color:blue>**CryptoIOException**
     }
     package "spi" as spi {

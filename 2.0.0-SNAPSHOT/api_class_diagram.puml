@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.0.+ (2023-10-17)
+    Terminal Calypso Card API 2.0.+ (2023-11-06)
 end title
 
 ' == THEME ==
@@ -69,8 +69,8 @@ package "calypso.card" as calypsoCard {
 +interface "<color:blue>CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
     +<color:blue>CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
 
-    +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
-    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoTransactionManagerFactory cryptoTransactionManagerFactory)
+    +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
+    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
 
     +<color:blue>FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
     +<color:blue>SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
@@ -366,6 +366,7 @@ package "transaction" as transaction {
         +**<color:blue>InvalidPinException**
         +**CardRevokedException**
         +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
+        +<color:blue>**InvalidCardPkiSignatureException**
         +<color:blue>**InvalidCardMacException**
         +<color:blue>**CardMacNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
         +**SelectFileException**
@@ -376,9 +377,9 @@ package "transaction" as transaction {
         +<color:blue>**CryptoIOException**
     }
     package "spi" as spi {
-        +interface "<color:blue>AsymmetricCryptoTransactionManagerFactory" as AsymmetricCryptoTransactionManagerFactory <<red>> {
+        +interface "<color:blue>AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "<color:blue>SymmetricCryptoTransactionManagerFactory" as SymmetricCryptoTransactionManagerFactory <<red>> {
+        +interface "<color:blue>SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
         +interface "<color:blue>CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
         }

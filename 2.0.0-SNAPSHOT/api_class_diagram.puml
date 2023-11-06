@@ -366,9 +366,8 @@ package "transaction" as transaction {
         +**<color:blue>InvalidPinException**
         +**CardRevokedException**
         +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
-        +<color:blue>**InvalidCardPkiSignatureException**
-        +<color:blue>**InvalidCardMacException**
-        +<color:blue>**CardMacNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
+        +**InvalidCardSignatureException**
+        +**CardSignatureNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
         +**SelectFileException**
         +**UnexpectedCommandStatusException**
         +**ReaderIOException**: Card reader and/or Crypto reader communication is broken.

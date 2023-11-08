@@ -69,8 +69,8 @@ package "calypso.card" as calypsoCard {
 +interface "<color:blue>CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
     +<color:blue>CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
 
-    +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory factory)
-    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory factory)
+    +<color:blue>SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
+    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
 
     +<color:blue>FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
     +<color:blue>SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)

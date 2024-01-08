@@ -364,7 +364,6 @@ package "transaction" as transaction {
         +**SessionBufferOverflowException**: Session buffer would overflow for atomic session.
         +**UnauthorizedKeyException**
         +**InvalidPinException**
-        +**CardRevokedException**
         +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
         +**InvalidCardSignatureException**
         +**CardSignatureNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.

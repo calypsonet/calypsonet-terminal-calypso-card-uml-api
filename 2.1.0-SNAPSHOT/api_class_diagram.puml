@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.1.+ (2023-11-06)
+    Terminal Calypso Card API 2.1.+ (2024-01-16)
 end title
 
 ' == THEME ==
@@ -70,14 +70,16 @@ package "calypso.card" as calypsoCard {
     +CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
 
     +SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
-    +<color:grey>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
+    +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
 
     +FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
     +SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
     +SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +<color:grey>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +<color:blue>PkiPersonalizationTransactionManager createPkiPersonalizationTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
 
     +SearchCommandData createSearchCommandData ()
+    +<color:blue>CardCertParams createCardCertParams ()
 }
 +enum WriteAccessLevel <<green>> {
     PERSONALIZATION
@@ -94,6 +96,9 @@ package "calypso.card" as calypsoCard {
     FCI_FOR_CURRENT_DF
     EF_LIST
     TRACEABILITY_INFORMATION
+    <color:blue>CARD_PUB ???
+    <color:blue>CARD_CERT ???
+    <color:blue>CA_CERT ???
 }
 package "card" as card {
     +interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
@@ -130,6 +135,10 @@ package "card" as card {
         +byte getSessionModification ()
 
         +byte[] getTraceabilityInformation ()
+
+        +<color:blue>byte[] getCardPublicKey () ???
+        +<color:blue>byte[] getCardCert () ???
+        +<color:blue>byte[] getCaCert () ???
 
         +DirectoryHeader getDirectoryHeader ()
         +ElementaryFile getFileBySfi (byte sfi)
@@ -288,6 +297,24 @@ package "transaction" as transaction {
         +T prepareCloseSecureSession ()
         +T prepareCancelSecureSession ()
     }
+    +interface "<color:blue>PkiPersonalizationTransactionManager" as PkiPersonalizationTransactionManager <<blue>> extends TransactionManager {
+        +<color:blue>PkiPersonalizationTransactionManager prepareGenerateAsymmetricKeyPair ()
+        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCardCert (CardCertParams params)
+        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCaCert (byte[] caCert)
+    }
+    +interface "<color:blue>CardCertParams" as CardCertParams <<blue>> {
+        +<color:blue>CardCertParams useExternalSigner (CardCertProviderSpi cardCertProviderSpi)
+        +<color:blue>CardCertParams useInternalSigner (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory, byte[] issuerKeyPriv, byte[] issuerKeyReference)
+
+        +<color:blue>CardCertParams useExistingCardKeyPair ()
+        +<color:blue>CardCertParams generateCardKeyPair ()
+        +<color:blue>CardCertParams useSpecificKeyPair (byte[] cardPriv, byte[] cardPub)
+
+        +<color:blue>CardCertParams setCardAidSize (int aidSize)
+        +<color:blue>CardCertParams setCardIndex (int cardIndex) ???
+        +<color:blue>CardCertParams setStartDate (int year, int month, int day)
+        +<color:blue>CardCertParams setEndDate (int year, int month, int day)
+    }
     +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
         +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
 
@@ -309,8 +336,8 @@ package "transaction" as transaction {
         +SecureExtendedModeTransactionManager prepareActivateEncryption ()
         +SecureExtendedModeTransactionManager prepareDeactivateEncryption ()
     }
-    +interface "<color:grey>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
-        +<color:grey>SecurePkiModeTransactionManager prepareOpenSecureSession ()
+    +interface "<color:blue>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
+        +<color:blue>SecurePkiModeTransactionManager prepareOpenSecureSession ()
     }
 
     +enum SvOperation <<green>> {
@@ -322,10 +349,12 @@ package "transaction" as transaction {
         UNDO
     }
     together {
-    +interface "<color:grey>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
-        +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityPublicKey (byte[] publicKey)
-        +<color:grey>AsymmetricCryptoSecuritySetting setAuthorityCertificate (X509Certificate certificate)
-        +<color:grey>AsymmetricCryptoSecuritySetting enableUnsignedPublicKeyUsage ()
+    +interface "<color:blue>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
+        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityCertificate (String certificateAlias, byte[] pcaPubRef)
+        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityCertificate (X509Certificate certificate, byte[] pcaPubRef)
+        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityPublicKey (byte[] pcaPub, byte[] pcaPubRef)
+
+        +<color:blue>AsymmetricCryptoSecuritySetting enableCacheForCertificationAuthority ()
     }
     +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +SymmetricCryptoSecuritySetting enableMultipleSession ()
@@ -381,6 +410,11 @@ package "transaction" as transaction {
         }
         +interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
         }
+        +interface "<color:blue>CardCertProviderSpi" as CardCertProviderSpi <<red>> {
+            +<color:blue>byte[] getIssuerKeyReference ()
+            +<color:blue>byte[] createCardCert (byte[] allData) ???
+            +<color:blue>byte[] createCardCert (byte[] data, byte[] recoverableData) ???
+        }
     }
 }
 
@@ -392,6 +426,11 @@ TransactionManager .up.> SelectFileControl #C_USE : use >
 TransactionManager .up.> GetDataTag #C_USE : use >
 TransactionManager .left.> ChannelControl #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
+
+PkiPersonalizationTransactionManager ..> CardCertParams #C_USE : use >
+
+CardCertParams ..> CardCertProviderSpi #C_USE : use >
+CardCertParams ..> AsymmetricCryptoCardTransactionManagerFactory #C_USE : use >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 

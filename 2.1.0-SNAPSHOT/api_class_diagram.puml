@@ -79,7 +79,6 @@ package "calypso.card" as calypsoCard {
     +<color:blue>PkiPersonalizationTransactionManager createPkiPersonalizationTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
 
     +SearchCommandData createSearchCommandData ()
-    +<color:blue>CardCertParams createCardCertParams ()
 }
 +enum WriteAccessLevel <<green>> {
     PERSONALIZATION
@@ -302,19 +301,6 @@ package "transaction" as transaction {
         +<color:blue>PkiPersonalizationTransactionManager prepareLoadCardCert (byte[] cardCert)
         +<color:blue>PkiPersonalizationTransactionManager prepareLoadCaCert (byte[] caCert)
     }
-    +interface "<color:blue>CardCertParams" as CardCertParams <<blue>> {
-        +<color:blue>CardCertParams useExternalSigner (CardCertProviderSpi cardCertProviderSpi)
-        +<color:blue>CardCertParams useInternalSigner (CardCertificateFactory cardCertificateFactory, byte[] issuerKeyPriv, byte[] issuerKeyReference)
-
-        +<color:blue>CardCertParams useExistingCardKeyPair ()
-        +<color:blue>CardCertParams generateCardKeyPair ()
-        +<color:blue>CardCertParams useSpecificKeyPair (byte[] cardPriv, byte[] cardPub)
-
-        +<color:blue>CardCertParams setCardAidSize (int aidSize)
-        +<color:blue>CardCertParams setCardIndex (int cardIndex) ???
-        +<color:blue>CardCertParams setStartDate (int year, int month, int day)
-        +<color:blue>CardCertParams setEndDate (int year, int month, int day)
-    }
     +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
         +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
 
@@ -416,11 +402,6 @@ package "transaction" as transaction {
         }
         +interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
         }
-        +interface "<color:blue>CardCertProviderSpi" as CardCertProviderSpi <<red>> {
-            +<color:blue>byte[] getIssuerKeyReference ()
-            +<color:blue>byte[] createCardCert (byte[] allData) ???
-            +<color:blue>byte[] createCardCert (byte[] data, byte[] recoverableData) ???
-        }
     }
 }
 
@@ -432,11 +413,6 @@ TransactionManager .up.> SelectFileControl #C_USE : use >
 TransactionManager .up.> GetDataTag #C_USE : use >
 TransactionManager .left.> ChannelControl #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
-
-PkiPersonalizationTransactionManager ..> CardCertParams #C_USE : use >
-
-CardCertParams ..> CardCertProviderSpi #C_USE : use >
-CardCertParams ..> CardCertificateFactory #C_USE : use >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 
@@ -473,12 +449,12 @@ FileHeader .up.> FileType #C_LINK : provide >
 ' == LAYOUT ==
 
 'SymmetricCryptoSecuritySetting -[hidden]- AsymmetricCryptoSecuritySetting
-AsymmetricCryptoSecuritySetting -[hidden]---- RuntimeException
+AsymmetricCryptoSecuritySetting -[hidden]left- RuntimeException
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
-PcaCertificate -[hidden]- CaCertificate
-CaCertificate -[hidden]- CaCertificateFactory
-CaCertificateFactory -[hidden]- CardCertificateFactory
+PcaCertificate -[hidden]right- CaCertificate
+CaCertificate -[hidden]right- CaCertificateFactory
+CaCertificateFactory -[hidden]right- CardCertificateFactory
 
 ' == STYLE ==
 

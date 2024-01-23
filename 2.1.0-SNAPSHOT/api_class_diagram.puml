@@ -96,9 +96,9 @@ package "calypso.card" as calypsoCard {
     FCI_FOR_CURRENT_DF
     EF_LIST
     TRACEABILITY_INFORMATION
-    <color:blue>CARD_PUB ???
-    <color:blue>CARD_CERT ???
-    <color:blue>CA_CERT ???
+    <color:blue>CARD_PUBLIC_KEY
+    <color:blue>CARD_CERTIFICATE
+    <color:blue>CA_CERTIFICATE
 }
 package "card" as card {
     +interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
@@ -136,9 +136,9 @@ package "card" as card {
 
         +byte[] getTraceabilityInformation ()
 
-        +<color:blue>byte[] getCardPublicKey () ???
-        +<color:blue>byte[] getCardCert () ???
-        +<color:blue>byte[] getCaCert () ???
+        +<color:blue>byte[] getCardPublicKey ()
+        +<color:blue>byte[] getCardCertificate ()
+        +<color:blue>byte[] getCaCertificate ()
 
         +DirectoryHeader getDirectoryHeader ()
         +ElementaryFile getFileBySfi (byte sfi)
@@ -299,12 +299,12 @@ package "transaction" as transaction {
     }
     +interface "<color:blue>PkiPersonalizationTransactionManager" as PkiPersonalizationTransactionManager <<blue>> extends TransactionManager {
         +<color:blue>PkiPersonalizationTransactionManager prepareGenerateAsymmetricKeyPair ()
-        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCardCert (CardCertParams params)
+        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCardCert (byte[] cardCert)
         +<color:blue>PkiPersonalizationTransactionManager prepareLoadCaCert (byte[] caCert)
     }
     +interface "<color:blue>CardCertParams" as CardCertParams <<blue>> {
         +<color:blue>CardCertParams useExternalSigner (CardCertProviderSpi cardCertProviderSpi)
-        +<color:blue>CardCertParams useInternalSigner (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory, byte[] issuerKeyPriv, byte[] issuerKeyReference)
+        +<color:blue>CardCertParams useInternalSigner (CardCertificateFactory cardCertificateFactory, byte[] issuerKeyPriv, byte[] issuerKeyReference)
 
         +<color:blue>CardCertParams useExistingCardKeyPair ()
         +<color:blue>CardCertParams generateCardKeyPair ()
@@ -348,13 +348,12 @@ package "transaction" as transaction {
         DO
         UNDO
     }
-    together {
     +interface "<color:blue>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
-        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityCertificate (String certificateAlias, byte[] pcaPubRef)
-        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityCertificate (X509Certificate certificate, byte[] pcaPubRef)
-        +<color:blue>AsymmetricCryptoSecuritySetting addPrimaryCertificationAuthorityPublicKey (byte[] pcaPub, byte[] pcaPubRef)
+        +<color:blue>AsymmetricCryptoSecuritySetting addPcaCertificate (PcaCertificate pcaCertificate)
+        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificate (CaCertificate caCertificate)
 
-        +<color:blue>AsymmetricCryptoSecuritySetting enableCacheForCertificationAuthority ()
+        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificateFactory (CaCertificateFactory caCertificateFactory)
+        +<color:blue>AsymmetricCryptoSecuritySetting addCardCertificateFactory (CardCertificateFactory cardCertificateFactory)
     }
     +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +SymmetricCryptoSecuritySetting enableMultipleSession ()
@@ -375,7 +374,6 @@ package "transaction" as transaction {
         +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
 
         +void initCryptoContextForNextTransaction ()
-    }
     }
     +interface SearchCommandData <<blue>> {
         +SearchCommandData setSfi (byte sfi)
@@ -406,6 +404,14 @@ package "transaction" as transaction {
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
+        +interface "CaCertificateFactory" as CaCertificateFactory <<red>> {
+        }
+        +interface "CardCertificateFactory" as CardCertificateFactory <<red>> {
+        }
+        +interface "PcaCertificate" as PcaCertificate <<red>> {
+        }
+        +interface "CaCertificate" as CaCertificate <<red>> {
+        }
         +interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
         +interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
@@ -430,7 +436,7 @@ TransactionManager .right.> SearchCommandData #C_USE : use >
 PkiPersonalizationTransactionManager ..> CardCertParams #C_USE : use >
 
 CardCertParams ..> CardCertProviderSpi #C_USE : use >
-CardCertParams ..> AsymmetricCryptoCardTransactionManagerFactory #C_USE : use >
+CardCertParams ..> CardCertificateFactory #C_USE : use >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 
@@ -439,6 +445,11 @@ SecureSymmetricCryptoTransactionManager .left.> SvOperation #C_USE : use >
 SecureSymmetricCryptoTransactionManager .left.> SvAction #C_USE : use >
 
 SymmetricCryptoSecuritySetting .up.> WriteAccessLevel #C_USE : use >
+
+AsymmetricCryptoSecuritySetting .up.> PcaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySetting .up.> CaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySetting .up.> CaCertificateFactory #C_USE : use >
+AsymmetricCryptoSecuritySetting .up.> CardCertificateFactory #C_USE : use >
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
@@ -461,8 +472,13 @@ FileHeader .up.> FileType #C_LINK : provide >
 
 ' == LAYOUT ==
 
-SymmetricCryptoSecuritySetting -[hidden]- AsymmetricCryptoSecuritySetting
+'SymmetricCryptoSecuritySetting -[hidden]- AsymmetricCryptoSecuritySetting
 AsymmetricCryptoSecuritySetting -[hidden]---- RuntimeException
+
+AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
+PcaCertificate -[hidden]- CaCertificate
+CaCertificate -[hidden]- CaCertificateFactory
+CaCertificateFactory -[hidden]- CardCertificateFactory
 
 ' == STYLE ==
 

@@ -17,7 +17,7 @@ activate app
 app -> setting : addPcaCertificate (pcaCertificate)
 activate setting
 
-setting -> pca : getPublicKey ()
+setting -> pca : checkCertificateAndGetPublicKey ()
 activate pca
 setting <-- pca : publicKeySpi
 deactivate pca
@@ -42,7 +42,7 @@ deactivate ca
 
 setting -> setting : issuerPublicKey := findPublicKey (issuerPublicKeyReference)
 
-setting -> ca : getPublicKey (issuerPublicKey.getPublicKey ())
+setting -> ca : checkCertificateAndGetPublicKey (issuerPublicKey.checkCertificateAndGetPublicKey ())
 activate ca
 setting <-- ca : publicKeySpi
 deactivate ca

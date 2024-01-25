@@ -76,7 +76,6 @@ package "calypso.card" as calypsoCard {
     +SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
     +SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
     +<color:blue>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
-    +<color:blue>PkiPersonalizationTransactionManager createPkiPersonalizationTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
 
     +SearchCommandData createSearchCommandData ()
 }
@@ -96,6 +95,11 @@ package "calypso.card" as calypsoCard {
     EF_LIST
     TRACEABILITY_INFORMATION
     <color:blue>CARD_PUBLIC_KEY
+    <color:blue>CARD_CERTIFICATE
+    <color:blue>CA_CERTIFICATE
+}
++enum "<color:blue>PutDataTag" as PutDataTag <<green>> {
+    <color:blue>CARD_KEY_PAIR
     <color:blue>CARD_CERTIFICATE
     <color:blue>CA_CERTIFICATE
 }
@@ -251,6 +255,7 @@ package "transaction" as transaction {
         +T prepareSelectFile (SelectFileControl selectFileControl)
 
         +T prepareGetData (GetDataTag tag)
+        +<color:blue>T preparePutData (PutDataTag tag, byte[] data)
 
         +T prepareReadRecord (byte sfi, int recordNumber)
         +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
@@ -280,6 +285,8 @@ package "transaction" as transaction {
         +T prepareVerifyPin (byte[] pin)
         +T prepareChangePin (byte[] newPin)
 
+        +<color:blue>T prepareGenerateAsymmetricKeyPair ()
+
         +T processCommands (ChannelControl channelControl)
 
         +List<byte[]> getTransactionAuditData ()
@@ -295,11 +302,6 @@ package "transaction" as transaction {
 
         +T prepareCloseSecureSession ()
         +T prepareCancelSecureSession ()
-    }
-    +interface "<color:blue>PkiPersonalizationTransactionManager" as PkiPersonalizationTransactionManager <<blue>> extends TransactionManager {
-        +<color:blue>PkiPersonalizationTransactionManager prepareGenerateAsymmetricKeyPair ()
-        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCardCert (byte[] cardCert)
-        +<color:blue>PkiPersonalizationTransactionManager prepareLoadCaCert (byte[] caCert)
     }
     +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
         +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
@@ -412,14 +414,15 @@ package "transaction" as transaction {
 
 TransactionManager .up.> SelectFileControl #C_USE : use >
 TransactionManager .up.> GetDataTag #C_USE : use >
+TransactionManager .up.> PutDataTag #C_USE : use >
 TransactionManager .left.> ChannelControl #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 
 SecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
-SecureSymmetricCryptoTransactionManager .left.> SvOperation #C_USE : use >
-SecureSymmetricCryptoTransactionManager .left.> SvAction #C_USE : use >
+SecureSymmetricCryptoTransactionManager .right.> SvOperation #C_USE : use >
+SecureSymmetricCryptoTransactionManager .right.> SvAction #C_USE : use >
 
 SymmetricCryptoSecuritySetting .up.> WriteAccessLevel #C_USE : use >
 

@@ -117,7 +117,7 @@ package "card" as card {
         +CalypsoCardSelectionExtension prepareReadCounter (byte sfi, int nbCountersToRead)
 
         +CalypsoCardSelectionExtension preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
-        +<color:grey>CalypsoCardSelectionExtension preparePreOpenSecureSessionInPkiMode ()
+        +<color:blue>CalypsoCardSelectionExtension preparePreOpenSecureSessionInPkiMode ()
     }
     +interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
         +ProductType getProductType ()

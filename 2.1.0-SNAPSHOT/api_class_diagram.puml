@@ -341,6 +341,10 @@ package "transaction" as transaction {
 
         +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificateFactory (CaCertificateFactory caCertificateFactory)
         +<color:blue>AsymmetricCryptoSecuritySetting addCardCertificateFactory (CardCertificateFactory cardCertificateFactory)
+
+        +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
+        +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
+        +<color:grey>AsymmetricCryptoSecuritySetting revokeCa (byte[] targetExcludedCaPlublicKeyReference)
     }
     +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +SymmetricCryptoSecuritySetting enableMultipleSession ()

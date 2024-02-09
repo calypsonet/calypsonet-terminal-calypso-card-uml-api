@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.1.+ (2024-01-16)
+    Terminal Calypso Card API 2.1.+ (2024-02-09)
 end title
 
 ' == THEME ==
@@ -339,8 +339,8 @@ package "transaction" as transaction {
         +<color:blue>AsymmetricCryptoSecuritySetting addPcaCertificate (PcaCertificate pcaCertificate)
         +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificate (CaCertificate caCertificate)
 
-        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificateFactory (CaCertificateFactory caCertificateFactory)
-        +<color:blue>AsymmetricCryptoSecuritySetting addCardCertificateFactory (CardCertificateFactory cardCertificateFactory)
+        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
+        +<color:blue>AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
 
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
@@ -396,9 +396,9 @@ package "transaction" as transaction {
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "CaCertificateFactory" as CaCertificateFactory <<red>> {
+        +interface "CaCertificateParser" as CaCertificateParser <<red>> {
         }
-        +interface "CardCertificateFactory" as CardCertificateFactory <<red>> {
+        +interface "CardCertificateParser" as CardCertificateParser <<red>> {
         }
         +interface "PcaCertificate" as PcaCertificate <<red>> {
         }
@@ -431,8 +431,8 @@ SymmetricCryptoSecuritySetting .up.> WriteAccessLevel #C_USE : use >
 
 AsymmetricCryptoSecuritySetting .up.> PcaCertificate #C_USE : use >
 AsymmetricCryptoSecuritySetting .up.> CaCertificate #C_USE : use >
-AsymmetricCryptoSecuritySetting .up.> CaCertificateFactory #C_USE : use >
-AsymmetricCryptoSecuritySetting .up.> CardCertificateFactory #C_USE : use >
+AsymmetricCryptoSecuritySetting .up.> CaCertificateParser #C_USE : use >
+AsymmetricCryptoSecuritySetting .up.> CardCertificateParser #C_USE : use >
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
@@ -460,8 +460,8 @@ AsymmetricCryptoSecuritySetting -[hidden]left- RuntimeException
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
 PcaCertificate -[hidden]right- CaCertificate
-CaCertificate -[hidden]right- CaCertificateFactory
-CaCertificateFactory -[hidden]right- CardCertificateFactory
+CaCertificate -[hidden]right- CaCertificateParser
+CaCertificateParser -[hidden]right- CardCertificateParser
 
 ' == STYLE ==
 

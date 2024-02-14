@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.1.+ (2024-02-09)
+    Terminal Calypso Card API 2.1.+ (2024-02-14)
 end title
 
 ' == THEME ==
@@ -396,13 +396,15 @@ package "transaction" as transaction {
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "CaCertificateParser" as CaCertificateParser <<red>> {
+        +interface "<color:blue>CaCertificateParser" as CaCertificateParser <<red>> {
         }
-        +interface "CardCertificateParser" as CardCertificateParser <<red>> {
+        +interface "<color:blue>CardCertificateParser" as CardCertificateParser <<red>> {
         }
-        +interface "PcaCertificate" as PcaCertificate <<red>> {
+        +interface "<color:blue>PcaCertificate" as PcaCertificate <<red>> {
         }
-        +interface "CaCertificate" as CaCertificate <<red>> {
+        +interface "<color:blue>CaCertificate" as CaCertificate <<red>> {
+        }
+        +interface "<color:blue>CardCertificate" as CardCertificate <<red>> {
         }
         +interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
@@ -460,7 +462,8 @@ AsymmetricCryptoSecuritySetting -[hidden]left- RuntimeException
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
 PcaCertificate -[hidden]right- CaCertificate
-CaCertificate -[hidden]right- CaCertificateParser
+CaCertificate -[hidden]right- CardCertificate
+CardCertificate -[hidden]right- CaCertificateParser
 CaCertificateParser -[hidden]right- CardCertificateParser
 
 ' == STYLE ==

@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    AsymmetricSecuritySetting (2024-01-23)
+    AsymmetricSecuritySetting (2024-02-16)
 end title
 
 participant "App" as app
@@ -17,14 +17,14 @@ activate app
 app -> setting : addPcaCertificate (pcaCertificate)
 activate setting
 
-setting -> pca : checkCertificateAndGetPublicKey ()
+setting -> pca : checkCertificateAndGetContent ()
 activate pca
-setting <-- pca : publicKeySpi
+setting <-- pca : caCertificateContentSpi
 deactivate pca
 
-setting -> setting : savePublicKey (publicKeySpi)
+setting -> setting : saveCaCertificateContent (caCertificateContentSpi)
 note right
-    map.put(publicKeySpi.getReference(), publicKeySpi.getValue())
+    map.put(caCertificateContentSpi.getPublicKeyReference(), caCertificateContentSpi)
 end note
 
 app <-- setting
@@ -40,16 +40,16 @@ activate ca
 setting <-- ca : issuerPublicKeyReference
 deactivate ca
 
-setting -> setting : issuerPublicKey := findPublicKey (issuerPublicKeyReference)
+setting -> setting : issuerCaCertificateContentSpi := findCaCertificateContentSpi (issuerPublicKeyReference)
 
-setting -> ca : checkCertificateAndGetPublicKey (issuerPublicKey.checkCertificateAndGetPublicKey ())
+setting -> ca : checkCertificateAndGetContent (issuerCaCertificateContentSpi)
 activate ca
-setting <-- ca : publicKeySpi
+setting <-- ca : caCertificateContentSpi
 deactivate ca
 
-setting -> setting : savePublicKey (publicKeySpi)
+setting -> setting : saveCaCertificateContent (caCertificateContentSpi)
 note right
-    map.put(publicKeySpi.getReference(), publicKeySpi.getValue())
+    map.put(caCertificateContentSpi.getPublicKeyReference(), caCertificateContentSpi)
 end note
 
 app <-- setting

@@ -1,7 +1,8 @@
 | Version | Documents |
 |:---:|---|
+| 2.2.0-SNAPSHOT | [api_class_diagram.svg](2.2.0-SNAPSHOT/api_class_diagram.svg)<br/> |
 | **2.1.2 (latest stable)** | [api_class_diagram.svg](latest-stable/api_class_diagram.svg)<br/> |
-| 2.1.0 | [api_sequence_diagram_asymmetric_security_setting.svg](2.1.0/api_sequence_diagram_asymmetric_security_setting.svg)<br/>[api_class_diagram.svg](2.1.0/api_class_diagram.svg)<br/> |
+| 2.1.0 | [api_class_diagram.svg](2.1.0/api_class_diagram.svg)<br/> |
 | 2.0.0 | [api_class_diagram.svg](2.0.0/api_class_diagram.svg)<br/> |
 | 1.8.0 | [api_class_diagram.svg](1.8.0/api_class_diagram.svg)<br/> |
 | 1.7.0 | [api_class_diagram.svg](1.7.0/api_class_diagram.svg)<br/> |

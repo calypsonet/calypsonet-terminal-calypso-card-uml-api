@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.2.+ (2025-11-06)
+    Terminal Calypso Card API 2.2.+ (2025-11-10)
 end title
 
 ' == THEME ==
@@ -387,9 +387,9 @@ package "transaction" as transaction {
         +**InvalidCardSignatureException**
         +**CardSignatureNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
         +**SelectFileException**
-        +**UnexpectedCommandStatusException**
-        +**ReaderIOException**: Card reader communication is broken.
-        +**CardIOException**
+        +<color:red><s>**UnexpectedCommandStatusException**
+        +<color:red><s>**ReaderIOException**: Card reader communication is broken.
+        +<color:red><s>**CardIOException**
         +**CryptoException**
         +**CryptoIOException**: Crypto reader or Crypto card communication is broken.
     }

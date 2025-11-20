@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.1.+ (2024-02-14)
+    Terminal Calypso Card API 2.2.+ (2025-11-19)
 end title
 
 ' == THEME ==
@@ -70,12 +70,12 @@ package "calypso.card" as calypsoCard {
     +CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
 
     +SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
-    +<color:blue>AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
+    +AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
 
     +FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
     +SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
     +SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +<color:blue>SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
 
     +SearchCommandData createSearchCommandData ()
 }
@@ -94,14 +94,14 @@ package "calypso.card" as calypsoCard {
     FCI_FOR_CURRENT_DF
     EF_LIST
     TRACEABILITY_INFORMATION
-    <color:blue>CARD_PUBLIC_KEY
-    <color:blue>CARD_CERTIFICATE
-    <color:blue>CA_CERTIFICATE
+    CARD_PUBLIC_KEY
+    CARD_CERTIFICATE
+    CA_CERTIFICATE
 }
-+enum "<color:blue>PutDataTag" as PutDataTag <<green>> {
-    <color:blue>CARD_KEY_PAIR
-    <color:blue>CARD_CERTIFICATE
-    <color:blue>CA_CERTIFICATE
++enum "PutDataTag" as PutDataTag <<green>> {
+    CARD_KEY_PAIR
+    CARD_CERTIFICATE
+    CA_CERTIFICATE
 }
 package "card" as card {
     +interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
@@ -138,9 +138,9 @@ package "card" as card {
 
         +byte[] getTraceabilityInformation ()
 
-        +<color:blue>byte[] getCardPublicKey ()
-        +<color:blue>byte[] getCardCertificate ()
-        +<color:blue>byte[] getCaCertificate ()
+        +byte[] getCardPublicKey ()
+        +byte[] getCardCertificate ()
+        +byte[] getCaCertificate ()
 
         +DirectoryHeader getDirectoryHeader ()
         +ElementaryFile getFileBySfi (byte sfi)
@@ -249,12 +249,12 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    +interface "TransactionManager" as TransactionManager<T extends TransactionManager<T>> {
+    +interface "<color:blue><<<back:yellow>CardTransactionManager</back>>></color>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
         +T prepareSelectFile (short lid)
         +T prepareSelectFile (SelectFileControl selectFileControl)
 
         +T prepareGetData (GetDataTag tag)
-        +<color:blue>T preparePutData (PutDataTag tag, byte[] data)
+        +T preparePutData (PutDataTag tag, byte[] data)
 
         +T prepareReadRecord (byte sfi, int recordNumber)
         +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
@@ -284,15 +284,15 @@ package "transaction" as transaction {
         +T prepareVerifyPin (byte[] pin)
         +T prepareChangePin (byte[] newPin)
 
-        +<color:blue>T prepareGenerateAsymmetricKeyPair ()
+        +T prepareGenerateAsymmetricKeyPair ()
 
-        +T processCommands (ChannelControl channelControl)
+        +<color:red><s>T processCommands (ChannelControl channelControl)
 
         +List<byte[]> getTransactionAuditData ()
     }
-    +enum "ChannelControl" as ChannelControl <<green>> {
-        KEEP_OPEN
-        CLOSE_AFTER
+    +enum "<color:red><s>ChannelControl" as ChannelControl <<green>> {
+        <color:red><s>KEEP_OPEN
+        <color:red><s>CLOSE_AFTER
     }
     +interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
@@ -323,8 +323,8 @@ package "transaction" as transaction {
         +SecureExtendedModeTransactionManager prepareActivateEncryption ()
         +SecureExtendedModeTransactionManager prepareDeactivateEncryption ()
     }
-    +interface "<color:blue>SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
-        +<color:blue>SecurePkiModeTransactionManager prepareOpenSecureSession ()
+    +interface "SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
+        +SecurePkiModeTransactionManager prepareOpenSecureSession ()
     }
 
     +enum SvOperation <<green>> {
@@ -335,12 +335,12 @@ package "transaction" as transaction {
         DO
         UNDO
     }
-    +interface "<color:blue>AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
-        +<color:blue>AsymmetricCryptoSecuritySetting addPcaCertificate (PcaCertificate pcaCertificate)
-        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificate (CaCertificate caCertificate)
+    +interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
+        +AsymmetricCryptoSecuritySetting addPcaCertificate (PcaCertificate pcaCertificate)
+        +AsymmetricCryptoSecuritySetting addCaCertificate (CaCertificate caCertificate)
 
-        +<color:blue>AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
-        +<color:blue>AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
+        +AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
+        +AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
 
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
@@ -382,29 +382,29 @@ package "transaction" as transaction {
         +**SessionBufferOverflowException**: Session buffer would overflow for atomic session.
         +**UnauthorizedKeyException**
         +**InvalidPinException**
-        +<color:blue>**InvalidCertificateException**
+        +**InvalidCertificateException**
         +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
         +**InvalidCardSignatureException**
         +**CardSignatureNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
         +**SelectFileException**
-        +**UnexpectedCommandStatusException**
-        +**ReaderIOException**: Card reader communication is broken.
-        +**CardIOException**
+        +<color:red><s>**UnexpectedCommandStatusException**
+        +<color:red><s>**ReaderIOException**: Card reader communication is broken.
+        +<color:red><s>**CardIOException**
         +**CryptoException**
         +**CryptoIOException**: Crypto reader or Crypto card communication is broken.
     }
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "<color:blue>CaCertificateParser" as CaCertificateParser <<red>> {
+        +interface "CaCertificateParser" as CaCertificateParser <<red>> {
         }
-        +interface "<color:blue>CardCertificateParser" as CardCertificateParser <<red>> {
+        +interface "CardCertificateParser" as CardCertificateParser <<red>> {
         }
-        +interface "<color:blue>PcaCertificate" as PcaCertificate <<red>> {
+        +interface "PcaCertificate" as PcaCertificate <<red>> {
         }
-        +interface "<color:blue>CaCertificate" as CaCertificate <<red>> {
+        +interface "CaCertificate" as CaCertificate <<red>> {
         }
-        +interface "<color:blue>CardCertificate" as CardCertificate <<red>> {
+        +interface "CardCertificate" as CardCertificate <<red>> {
         }
         +interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
         }

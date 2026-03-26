@@ -56,18 +56,18 @@ hide <<grey>> stereotype
 
 legend top
     __Colors legend__ :
-    * <color:grey>Work in progress...
     * __External public API references__ :
     ** <back:yellow>**Calypsonet Terminal Reader API**</back>
-    * __Element colors__ :
+    * __Text style__ :
+    ** <color:blue>A new element added since the last version
+    ** <color:red><s>An element marked as deprecated since the last version
+    ** <s>An element marked as deprecated
+    ** <color:grey>Work in progress...
+    * __Object color__ :
     ** <back:#EBF5FB><color:#3498DB><b>The factory interface or an interface provided by the factory
     ** <back:#FEFECE><color:#D4AC0D><b>An interface that cannot be instantiated directly by the factory
+    ** <back:#FDEDEC><color:#E74C3C><b>An SPI (Service Provider Interface) to be provided by the end-user
     ** <back:#E9F7EF><color:#27AE60><b>A public class, enum or exception
-    ** <back:#FDEDEC><color:#E74C3C><b>An SPI interface to be implemented by a system integrator or via an extension module
-    * __Text colors__ :
-    ** <color:blue>A new element added since the last release
-    ** <color:red><s>An element marked as deprecated since the last release
-    ** <s>An element marked as deprecated
 end legend
 
 package "calypso.card" as calypsoCard {

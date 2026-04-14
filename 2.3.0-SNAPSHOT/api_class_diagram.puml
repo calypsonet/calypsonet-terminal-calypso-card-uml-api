@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.3.+ (2026-03-25)
+    Terminal Calypso Card API 2.3.+ (2026-04-14)
 end title
 
 ' == THEME ==
@@ -360,6 +360,8 @@ package "transaction" as transaction {
         +AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
         +AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
 
+		+<color:blue>AsymmetricCryptoSecuritySetting setOpenSecureSessionMaxDuration (NavigableMap<Long, Long> csnMinToDurationMap)
+
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
         +<color:grey>AsymmetricCryptoSecuritySetting revokeCa (byte[] targetExcludedCaPlublicKeyReference)
@@ -381,6 +383,8 @@ package "transaction" as transaction {
 
         +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
         +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+
+		+<color:blue>SymmetricCryptoSecuritySetting setOpenSecureSessionMaxDuration (NavigableMap<Long, Long> csnMinToDurationMap)
 
         +void initCryptoContextForNextTransaction ()
     }

@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 2.3.+ (2026-04-14)
+    Terminal Calypso Card API 2.3.+ (2026-04-15)
 end title
 
 ' == THEME ==
@@ -360,7 +360,8 @@ package "transaction" as transaction {
         +AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
         +AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
 
-		+<color:blue>AsymmetricCryptoSecuritySetting setOpenSecureSessionMaxDuration (NavigableMap<Long, Long> csnMinToDurationMap)
+		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, byte[] dfName, long maxDuration)
+		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, long maxDuration)
 
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
         +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
@@ -384,7 +385,10 @@ package "transaction" as transaction {
         +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
         +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
 
-		+<color:blue>SymmetricCryptoSecuritySetting setOpenSecureSessionMaxDuration (NavigableMap<Long, Long> csnMinToDurationMap)
+		+<color:blue>SymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, byte[] dfName, long maxDuration)
+		+<color:blue>SymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, long maxDuration)
+		+<color:blue>SymmetricCryptoSecuritySetting assignSvOperationMaxDuration (long csnMin, byte[] dfName, long maxDuration)
+		+<color:blue>SymmetricCryptoSecuritySetting assignSvOperationMaxDuration (long csnMin, long maxDuration)
 
         +void initCryptoContextForNextTransaction ()
     }

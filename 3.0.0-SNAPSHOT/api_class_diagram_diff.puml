@@ -3,6 +3,7 @@ title
     <img:../assets/logo.svg{scale=0.2}>
 
     Terminal Calypso Card API 3.0.+ (2026-04-27)
+    DIFF with 2.2
 end title
 
 ' == THEME ==
@@ -294,6 +295,8 @@ package "transaction" as transaction {
 
         +T prepareGenerateAsymmetricKeyPair ()
 
+        +<s>T processCommands (ChannelControl channelControl)
+
         +<color:blue>SecureSessionStatus getSecureSessionStatus ()
         +List<byte[]> getTransactionAuditData ()
 
@@ -307,6 +310,10 @@ package "transaction" as transaction {
     +enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
         <color:blue>SYMMETRIC
         <color:blue>ASYMMETRIC
+    }
+    +enum "<s>ChannelControl" as ChannelControl <<green>> {
+        <s>KEEP_OPEN
+        <s>CLOSE_AFTER
     }
     +interface "<<<back:yellow>MultichannelCardTransactionManager</back>>>\n<color:blue>MultichannelTransactionManager" as MultichannelTransactionManager {
     }
@@ -360,6 +367,10 @@ package "transaction" as transaction {
 
 		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, byte[] dfName, long maxDuration)
 		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, long maxDuration)
+
+        +<color:grey>AsymmetricCryptoSecuritySetting authorizeAllTrustedCa ()
+        +<color:grey>AsymmetricCryptoSecuritySetting authorizeOnlyConfiguredCa ()
+        +<color:grey>AsymmetricCryptoSecuritySetting revokeCa (byte[] targetExcludedCaPlublicKeyReference)
     }
     +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +SymmetricCryptoSecuritySetting enableMultipleSession ()
@@ -440,6 +451,7 @@ package "transaction" as transaction {
 TransactionManager .up.> SelectFileControl #C_USE : use >
 TransactionManager .up.> GetDataTag #C_USE : use >
 TransactionManager .up.> PutDataTag #C_USE : use >
+TransactionManager .left.> ChannelControl #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
 TransactionManager .right.> SecureSessionStatus #C_LINK : provide >
 TransactionManager ..> MultichannelTransactionManager #C_LINK : provide >

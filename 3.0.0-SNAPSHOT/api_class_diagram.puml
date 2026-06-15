@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 3.0.+ (2026-04-27)
+    Terminal Calypso Card API 3.0.+ (2026-06-15)
 end title
 
 ' == THEME ==
@@ -257,7 +257,7 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    +interface "<<<back:yellow>CardTransactionManager</back>>>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
+    +interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
         +T prepareSelectFile (short lid)
         +T prepareSelectFile (SelectFileControl selectFileControl)
 
@@ -296,8 +296,6 @@ package "transaction" as transaction {
 
         +<color:blue>SecureSessionStatus getSecureSessionStatus ()
         +List<byte[]> getTransactionAuditData ()
-
-        +<color:blue>MultichannelTransactionManager getLogicalChannelSupport ()
     }
     +interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
         +<color:blue>boolean isOpen ()
@@ -307,8 +305,6 @@ package "transaction" as transaction {
     +enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
         <color:blue>SYMMETRIC
         <color:blue>ASYMMETRIC
-    }
-    +interface "<<<back:yellow>MultichannelCardTransactionManager</back>>>\n<color:blue>MultichannelTransactionManager" as MultichannelTransactionManager {
     }
     +interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
@@ -442,7 +438,6 @@ TransactionManager .up.> GetDataTag #C_USE : use >
 TransactionManager .up.> PutDataTag #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
 TransactionManager .right.> SecureSessionStatus #C_LINK : provide >
-TransactionManager ..> MultichannelTransactionManager #C_LINK : provide >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 

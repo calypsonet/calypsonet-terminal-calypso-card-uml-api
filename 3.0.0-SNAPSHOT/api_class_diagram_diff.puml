@@ -2,7 +2,7 @@
 title
     <img:../assets/logo.svg{scale=0.2}>
 
-    Terminal Calypso Card API 3.0.+ (2026-04-27)
+    Terminal Calypso Card API 3.0.+ (2026-06-15)
     DIFF with 2.2
 end title
 
@@ -258,7 +258,7 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    +interface "<<<back:yellow>CardTransactionManager</back>>>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
+    +interface "<<<back:yellow><color:red><s>CardTransactionManager</color></back>>>\n<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
         +T prepareSelectFile (short lid)
         +T prepareSelectFile (SelectFileControl selectFileControl)
 
@@ -299,8 +299,6 @@ package "transaction" as transaction {
 
         +<color:blue>SecureSessionStatus getSecureSessionStatus ()
         +List<byte[]> getTransactionAuditData ()
-
-        +<color:blue>MultichannelTransactionManager getLogicalChannelSupport ()
     }
     +interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
         +<color:blue>boolean isOpen ()
@@ -314,8 +312,6 @@ package "transaction" as transaction {
     +enum "<s>ChannelControl" as ChannelControl <<green>> {
         <s>KEEP_OPEN
         <s>CLOSE_AFTER
-    }
-    +interface "<<<back:yellow>MultichannelCardTransactionManager</back>>>\n<color:blue>MultichannelTransactionManager" as MultichannelTransactionManager {
     }
     +interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
@@ -454,7 +450,6 @@ TransactionManager .up.> PutDataTag #C_USE : use >
 TransactionManager .left.> ChannelControl #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
 TransactionManager .right.> SecureSessionStatus #C_LINK : provide >
-TransactionManager ..> MultichannelTransactionManager #C_LINK : provide >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 

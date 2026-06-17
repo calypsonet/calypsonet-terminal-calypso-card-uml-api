@@ -1,6 +1,6 @@
 = Terminal Calypso Card API -- Technical Specification
 Calypso Networks Association <https://calypsonet.org>
-v2.2.0-SNAPSHOT, {docdate}
+v3.0.0-SNAPSHOT, {docdate}
 :doctype: book
 :toc: left
 :toclevels: 4
@@ -28,7 +28,7 @@ v2.2.0-SNAPSHOT, {docdate}
 :short-name: CNA
 :spec-name: Terminal Calypso Card API
 :spec-id: CNA-TCC-API
-:spec-version: 2.2.0-SNAPSHOT
+:spec-version: 3.0.0-SNAPSHOT
 
 [abstract]
 == Abstract
@@ -49,23 +49,15 @@ operation to a symmetric ([CNA-TCCS-API]) or asymmetric ([CNA-TCCA-API]) crypto 
 |===
 | Specification ID    | {spec-id}
 | Version             | {spec-version}
-| Status              | Working Draft
+| Status              | Working Draft -- submitted to the CNA TC Terminal for validation
 | Editor              | {organization}
 | Reference model     | link:api_class_diagram.puml[`api_class_diagram.puml`] / link:api_class_diagram.svg[`api_class_diagram.svg`]
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===
 
-[discrete]
-== Revision History
-
-[cols="1,2,2,5", options="header"]
-|===
-| Version | Date | Editor | Description
-| 1.x            | _TBC_ | CNA  | Original Calypso Card API releases.
-| 2.0.0          | _TBC_ | CNA  | Introduction of the `CalypsoCardApiFactory` and the family of transaction managers (Free / Secure Regular / Secure Extended).
-| 2.1.0          | _TBC_ | CNA  | Introduction of the PKI mode (`SecurePkiModeTransactionManager`, `AsymmetricCryptoSecuritySetting`, `Put Data`, asymmetric key-pair generation and certificates).
-| {spec-version} | _TBD_ | CNA  | _Working draft._
-|===
+NOTE: The present document specifies the {spec-version} of the {spec-name} as an *initial release*, without
+historical reference to earlier drafts. It defines a single, coherent baseline against which conforming
+implementations are evaluated.
 
 // =============================================================================
 == Introduction
@@ -111,9 +103,12 @@ A software product conforms to this specification if and only if:
 . it raises exceptions exclusively of the types defined in <<sec_exceptions>> for the situations described,
 . it preserves the structural and behavioural relationships described in <<sec_architecture>>.
 
-Throughout this specification, the key words **MUST**, **MUST NOT**, **SHALL**, **SHALL NOT**, **SHOULD**,
-**SHOULD NOT**, **RECOMMENDED**, **MAY** and **OPTIONAL** are to be interpreted as described in **RFC 2119** and
-**RFC 8174** when, and only when, they appear in all capitals.
+Throughout this specification, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,
+**MAY** and **OPTIONAL** are to be interpreted as described in **RFC 2119** and **RFC 8174** when, and only when,
+they appear in all capitals.
+
+In conformance with RFC 2119, **SHALL** is equivalent to **MUST**; this specification uses **MUST** exclusively in
+order to avoid ambiguity.
 
 === Document Conventions
 
@@ -137,7 +132,7 @@ Throughout this specification, the key words **MUST**, **MUST NOT**, **SHALL**, 
 
 === References
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
 | Reference | Identifier | Title
 
@@ -243,7 +238,7 @@ TR   --> RC  : drives
 
 === Logical packages
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
 | Package                                  | Role     | Summary
 
@@ -282,14 +277,13 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Final class
 | Package  | `calypso.card`
-| Since    | 1.0.0
 | Purpose  | Exposes the immutable properties of the {spec-name}.
 |===
 
-[cols="1,1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Name      | Type     | Since  | Description
-| `VERSION` | `string` | 1.0.0  | String representation of the API version (e.g. `"2.2"`).
+| Name      | Type     | Description
+| `VERSION` | `string` | String representation of the API version (e.g. `"3.0"`).
 |===
 
 [[type_CalypsoCardApiFactory]]
@@ -299,7 +293,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card`
-| Since    | 2.0.0
 | Purpose  | Factory used to obtain instances of every public type provided by the API.
 |===
 
@@ -308,14 +301,12 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createCalypsoCardSelectionExtension() -> CalypsoCardSelectionExtension`
-| Since       | 2.0.0
 | Description | Returns a new <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
-| Since       | 2.0.0
 | Description | Returns a new <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is `null` or invalid.
 |===
@@ -323,7 +314,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
-| Since       | 2.1.0
 | Description | Returns a new <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is `null` or invalid.
 |===
@@ -331,7 +321,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
-| Since       | 2.0.0
 | Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -339,7 +328,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
-| Since       | 2.0.0
 | Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -347,7 +335,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
-| Since       | 2.0.0
 | Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -355,7 +342,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
-| Since       | 2.1.0
 | Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -363,7 +349,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `createSearchCommandData() -> SearchCommandData`
-| Since       | 2.0.0
 | Description | Returns a new <<type_SearchCommandData,`SearchCommandData`>>.
 |===
 
@@ -374,20 +359,19 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card`
-| Since    | 1.0.0
 | Purpose  | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
 |===
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Value                       | Since | Description
-| `FCP_FOR_CURRENT_FILE`      | 1.0.0 | FCP for the current file, as returned by *Select File*.
-| `FCI_FOR_CURRENT_DF`        | 1.0.0 | FCI for the current DF, as returned by *Select Application*.
-| `EF_LIST`                   | 1.1.0 | List of EFs in the current DF.
-| `TRACEABILITY_INFORMATION`  | 1.1.0 | Product traceability information.
-| `CARD_PUBLIC_KEY`           | 2.1.0 | Card public key.
-| `CARD_CERTIFICATE`          | 2.1.0 | Card certificate.
-| `CA_CERTIFICATE`            | 2.1.0 | CA certificate.
+| Value                       | Description
+| `FCP_FOR_CURRENT_FILE`      | FCP for the current file, as returned by *Select File*.
+| `FCI_FOR_CURRENT_DF`        | FCI for the current DF, as returned by *Select Application*.
+| `EF_LIST`                   | List of EFs in the current DF.
+| `TRACEABILITY_INFORMATION`  | Product traceability information.
+| `CARD_PUBLIC_KEY`           | Card public key.
+| `CARD_CERTIFICATE`          | Card certificate.
+| `CA_CERTIFICATE`            | CA certificate.
 |===
 
 [[type_PutDataTag]]
@@ -397,16 +381,15 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card`
-| Since    | 2.1.0
 | Purpose  | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
 |===
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Value             | Since | Description
-| `CARD_KEY_PAIR`   | 2.1.0 | Card key pair.
-| `CARD_CERTIFICATE`| 2.1.0 | Card certificate.
-| `CA_CERTIFICATE`  | 2.1.0 | CA certificate.
+| Value             | Description
+| `CARD_KEY_PAIR`   | Card key pair.
+| `CARD_CERTIFICATE`| Card certificate.
+| `CA_CERTIFICATE`  | CA certificate.
 |===
 
 [[type_SelectFileControl]]
@@ -416,16 +399,15 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card`
-| Since    | 1.0.0
 | Purpose  | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
 |===
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Value         | Since | Description
-| `FIRST_EF`    | 1.0.0 | The first EF of the current Calypso DF.
-| `NEXT_EF`     | 1.0.0 | The next EF of the current Calypso DF.
-| `CURRENT_DF`  | 1.0.0 | The current Calypso DF.
+| Value         | Description
+| `FIRST_EF`    | The first EF of the current Calypso DF.
+| `NEXT_EF`     | The next EF of the current Calypso DF.
+| `CURRENT_DF`  | The current Calypso DF.
 |===
 
 [[type_WriteAccessLevel]]
@@ -435,16 +417,15 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card`
-| Since    | 1.0.0
 | Purpose  | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
 |===
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Value              | Since | Description
-| `PERSONALIZATION`  | 1.0.0 | Personalisation, load and debit operations -- uses the *issuer* key.
-| `LOAD`             | 1.0.0 | Load and debit operations -- uses the *load* key.
-| `DEBIT`            | 1.0.0 | Debit operations only -- uses the *debit* key.
+| Value              | Description
+| `PERSONALIZATION`  | Personalisation, load and debit operations -- uses the *issuer* key.
+| `LOAD`             | Load and debit operations -- uses the *load* key.
+| `DEBIT`            | Debit operations only -- uses the *debit* key.
 |===
 
 === Package calypso.card.card
@@ -456,7 +437,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | Carries the metadata of a Calypso DF.
 |===
 
@@ -465,35 +445,30 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getLid() -> short`
-| Since       | 1.0.0
 | Description | Returns the associated LID.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getDfStatus() -> byte`
-| Since       | 1.0.0
 | Description | Returns the DF status byte.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getAccessConditions() -> byte array`
-| Since       | 1.0.0
 | Description | Returns a reference to the access conditions.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
-| Since       | 1.0.0
 | Description | Returns a reference to the keys indexes.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
-| Since       | 1.0.0
 | Description | Returns the KIF associated with the supplied write access level.
 | Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
 |===
@@ -501,7 +476,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
-| Since       | 1.0.0
 | Description | Returns the KVC associated with the supplied write access level.
 | Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
 |===
@@ -513,7 +487,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | Carries the metadata of a Calypso EF.
 |===
 
@@ -522,56 +495,48 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getLid() -> short`
-| Since       | 1.0.0
 | Description | Returns the associated LID.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getDfStatus() -> byte`
-| Since       | 1.0.0
 | Description | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getEfType() -> ElementaryFile.Type`
-| Since       | 1.0.0
 | Description | Returns the EF type.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getRecordsNumber() -> integer`
-| Since       | 1.0.0
 | Description | Returns the number of records. For *counter* and *binary* files the value is always 1.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getRecordSize() -> integer`
-| Since       | 1.0.0
 | Description | Returns the size of a record. For binary files, this is the size of the file.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getAccessConditions() -> byte array`
-| Since       | 1.0.0
 | Description | Returns the access conditions; empty array if not available.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
-| Since       | 1.0.0
 | Description | Returns the key indexes; empty array if not available.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getSharedReference() -> short`
-| Since       | 1.0.0
 | Description | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
 |===
 
@@ -582,7 +547,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | Calypso Elementary File. Carries an `SFI`, a `FileHeader` and a `FileData`.
 |===
 
@@ -591,34 +555,31 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getSfi() -> byte`
-| Since       | 1.0.0
 | Description | Returns the SFI.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getHeader() -> FileHeader`
-| Since       | 1.0.0
 | Description | Returns the file header, or `null` if not yet set.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getData() -> FileData`
-| Since       | 1.0.0
 | Description | Returns the file data.
 |===
 
 ===== Enumeration `Type`
 
-[cols="1,1,4", options="header"]
+[cols="1,4", options="header"]
 |===
-| Value                | Since | Description
-| `LINEAR`             | 1.0.0 | Linear EF (1 to several records).
-| `BINARY`             | 1.0.0 | Binary EF (single continuous sequence of data bytes).
-| `CYCLIC`             | 1.0.0 | Cyclic EF (records organised in a cycle, from the most recent to the oldest).
-| `COUNTERS`           | 1.0.0 | Counters EF (single record containing K counters of three bytes each).
-| `SIMULATED_COUNTERS` | 1.0.0 | Simulated counter EF (linear file with a single record, kept for Calypso Rev 2 compatibility).
+| Value                | Description
+| `LINEAR`             | Linear EF (1 to several records).
+| `BINARY`             | Binary EF (single continuous sequence of data bytes).
+| `CYCLIC`             | Cyclic EF (records organised in a cycle, from the most recent to the oldest).
+| `COUNTERS`           | Counters EF (single record containing K counters of three bytes each).
+| `SIMULATED_COUNTERS` | Simulated counter EF (linear file with a single record, kept for Calypso Rev 2 compatibility).
 |===
 
 [[type_FileData]]
@@ -628,7 +589,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | Carries the content of a Calypso EF and exposes counter-oriented accessors.
 |===
 
@@ -637,21 +597,18 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getContent() -> byte array`
-| Since       | 1.0.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getContent(numRecord: integer) -> byte array`
-| Since       | 1.0.0
 | Description | Returns the known content of the supplied record number.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
-| Since       | 1.0.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
 | Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. + `IndexOutOfBoundsException` -- if the range exceeds the record content.
 |===
@@ -659,14 +616,12 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
-| Since       | 1.0.0
 | Description | Returns the known records content.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getContentAsCounterValue(numCounter: integer) -> integer`
-| Since       | 1.0.0
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1.
 | Throws      | `IllegalArgumentException` -- if `numCounter < 1`. + `IndexOutOfBoundsException` -- if the counter is truncated.
 |===
@@ -674,7 +629,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getAllCountersValue() -> sortedMap<integer, integer>`
-| Since       | 1.0.0
 | Description | Returns the values of all counters extracted from record #1.
 |===
 
@@ -685,7 +639,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | One record of a Stored Value debit log.
 |===
 
@@ -711,7 +664,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Purpose  | One record of a Stored Value load log.
 |===
 
@@ -738,7 +690,6 @@ image::../api_class_diagram.svg[Terminal Calypso Card API class diagram, align=c
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 1.0.0
 | Extends  | `IsoSmartCard` ([CNA-TR-API])
 | Purpose  | Dynamic view of the card's content, updated from selection to the end of the transaction.
 |===
@@ -827,7 +778,6 @@ modified during the transaction.
 |===
 | Kind     | Interface
 | Package  | `calypso.card.card`
-| Since    | 2.0.0
 | Extends  | `CardSelectionExtension` ([CNA-TR-API])
 | Purpose  | Enriches the [CNA-TR-API] selection scenario with Calypso-specific commands and pre-opening of a secure session.
 |===
@@ -887,7 +837,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card.transaction`
-| Since    | 1.0.0
 | Purpose  | Type of Stored Value operation.
 |===
 
@@ -905,7 +854,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Enumeration
 | Package  | `calypso.card.transaction`
-| Since    | 1.0.0
 | Purpose  | Direction of an SV action.
 |===
 
@@ -916,25 +864,47 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | `UNDO` | In a `RELOAD`, load a negative amount; in a `DEBIT`, cancel (totally or partially) a previous debit.
 |===
 
-[[type_ChannelControl]]
-==== ChannelControl `[deprecated]`
+[[type_SecureSessionStatus]]
+==== SecureSessionStatus
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
-| Kind     | Enumeration (deprecated)
+| Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
-| Purpose  | Policy for managing the physical channel after a card request is executed. Mirrors [CNA-TR-API] `ChannelControl`.
+| Purpose  | Immutable snapshot of the current secure session state, returned by <<op_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
 |===
 
-*Deprecated.* SHALL be replaced by [CNA-TR-API] `ChannelControl`.
+A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to the
+session state. To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus()`.
+
+[cols="1h,3", grid=rows, frame=ends]
+|===
+| `isOpen() -> boolean`                       | Indicates whether a secure session is open at the snapshot moment.
+| `getType() -> SecureSessionType`            | Returns the cryptographic nature of the session (symmetric vs asymmetric).
+| `getWriteAccessLevel() -> WriteAccessLevel` | Returns the write access level requested at session opening. MUST return `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
+|===
+
+[[type_SecureSessionType]]
+==== SecureSessionType
+
+[cols="1h,4", grid=rows, frame=ends]
+|===
+| Kind     | Enumeration
+| Package  | `calypso.card.transaction`
+| Purpose  | Cryptographic nature of a Calypso secure session.
+|===
 
 [cols="1,4", options="header"]
 |===
-| Value          | Description
-| `KEEP_OPEN`    | Leave the physical channel open.
-| `CLOSE_AFTER`  | Terminate communication with the card; behaviour depends on the observation mode.
+| Value        | Description
+| `SYMMETRIC`  | PSO/SAM sessions, Regular and Extended modes.
+| `ASYMMETRIC` | PKI mode.
 |===
+
+NOTE: This enumeration reflects the *cryptographic nature* of the session and not the *application mode*
+(Regular / Extended). Both symmetric modes share the same underlying cryptography and only differ in their
+configuration at the `TransactionManager` level; the integrator who needs to know the application mode obtains
+it directly via the sub-type of `TransactionManager` that has been instantiated.
 
 [[type_SearchCommandData]]
 ==== SearchCommandData
@@ -943,7 +913,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 1.1.0
 | Purpose  | Carries the input/output data of `TransactionManager.prepareSearchRecords`.
 |===
 
@@ -966,7 +935,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Purpose  | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed).
 |===
 
@@ -985,8 +953,22 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting` | Adds an authorised SV key.
 | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting` | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
 | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting` | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
+| `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting` | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin>>.
+| `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting` | Same as above, applied to every DF.
+| `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting` | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
+| `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting` | Same as above, applied to every DF.
 | `initCryptoContextForNextTransaction() -> void` | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate). _Throws `CryptoException`, `CryptoIOException`._
 |===
+
+[[sec_csnmin]]
+[NOTE]
+====
+*`csnMin` combination rule.* When several `assignOpenSecureSessionMaxDuration(...)` or
+`assignSvOperationMaxDuration(...)` calls are made with different `csnMin` values, each call defines a *range*
+bounded by its `csnMin` and the immediately higher declared `csnMin` (or `+∞` for the highest threshold). For a
+given card, the range to which its CSN belongs determines the applied bound. This mechanism allows the integrator
+to introduce or tighten duration bounds progressively as new generations of cards (with higher CSNs) are issued.
+====
 
 [[type_AsymmetricCryptoSecuritySetting]]
 ==== AsymmetricCryptoSecuritySetting
@@ -995,7 +977,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.1.0
 | Purpose  | Security setting carrier for PKI Calypso card transactions.
 |===
 
@@ -1015,6 +996,13 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Registers a card certificate parser. Same constraint as above.
+
+| `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
+| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
+  whose application DF matches `dfName`. See <<sec_csnmin>>.
+
+| `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
+| Same as above, applied to every DF.
 |===
 
 [[type_TransactionManager]]
@@ -1024,9 +1012,8 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
-| Extends  | `CardTransactionManager<T>` ([CNA-TR-API])
-| Purpose  | Common operations for every Calypso card transaction. Prepare/process model.
+| Extends  | `IsoCardTransactionManager` ([CNA-TR-API])
+| Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by [CNA-TR-API] when the underlying ISO/IEC 7816-4 card supports multi-channel.
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN,
@@ -1087,24 +1074,28 @@ the command would overflow the modification buffer and the multiple-session mode
 
 ===== Processing operations
 
+Processing of prepared commands is inherited from `CardTransactionManager` ([CNA-TR-API]) via the
+`IsoCardTransactionManager` stereotype. The Calypso `TransactionManager` does *not* redefine `processCommands()`;
+it relies on the inherited contract. Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`)
+are reached on demand through `asMultichannelCardTransactionManager()` of [CNA-TR-API] when the underlying card
+supports multi-channel.
+
+===== Status and audit operations
+
+[[op_getSecureSessionStatus]]
 [cols="1h,4", grid=rows, frame=ends]
 |===
-| Signature   | `processCommands(channelControl: ChannelControl) -> T` `[deprecated]`
-| Since       | 1.6.0
+| Signature   | `getSecureSessionStatus() -> SecureSessionStatus`
 | Description
-| Sends every prepared APDU and updates the bound <<type_CalypsoCard,`CalypsoCard`>>. The `CalypsoCard` MUST be
-  updated only when a write command is successful. Processing MUST be interrupted at the first failed command.
-| Throws
-| `ReaderIOException`, `CardIOException`, `CryptoIOException`, `CryptoException`,
-  `UnexpectedCommandStatusException`, `InconsistentDataException`, `UnauthorizedKeyException`,
-  `CardSignatureNotVerifiableException`, `InvalidCardSignatureException`, `SelectFileException`.
-| Status      | *Deprecated.* SHALL be replaced by `processCommands(ChannelControl)` of [CNA-TR-API].
+| Returns a non-`null` <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
+  state. The returned object is immutable and captures the state at the moment of the call.
+| Returns     | A non-`null` `SecureSessionStatus`.
+| Throws      | None.
 |===
 
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getTransactionAuditData() -> list<byte array>`
-| Since       | 1.2.0
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
 |===
 
@@ -1115,7 +1106,6 @@ the command would overflow the modification buffer and the multiple-session mode
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Extends  | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
 | Purpose  | Transaction manager that does *not* require any cryptographic computation.
 |===
@@ -1129,7 +1119,6 @@ the command would overflow the modification buffer and the multiple-session mode
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Extends  | <<type_TransactionManager,`TransactionManager<T>`>>
 | Purpose  | Common operations for every secure (cryptographically-backed) transaction manager.
 |===
@@ -1139,7 +1128,6 @@ the command would overflow the modification buffer and the multiple-session mode
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `getCryptoExtension(cryptoExtensionClass: Class<E>) -> E extends CardTransactionCryptoExtension`
-| Since       | 2.0.0
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Throws      | `IllegalArgumentException` -- if the supplied class is `null`.
 |===
@@ -1147,7 +1135,6 @@ the command would overflow the modification buffer and the multiple-session mode
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `prepareCloseSecureSession() -> T`
-| Since       | 1.6.0
 | Description
 | Schedules a *Close Secure Session* command. The ratification mechanism is disabled by default but MAY be enabled
   via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
@@ -1159,7 +1146,6 @@ the command would overflow the modification buffer and the multiple-session mode
 [cols="1h,4", grid=rows, frame=ends]
 |===
 | Signature   | `prepareCancelSecureSession() -> T`
-| Since       | 1.6.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- MUST NOT raise exceptions.
 |===
 
@@ -1170,7 +1156,6 @@ the command would overflow the modification buffer and the multiple-session mode
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
 | Purpose  | Common operations for every transaction manager backed by *symmetric* cryptography.
 |===
@@ -1222,7 +1207,6 @@ the command would overflow the modification buffer and the multiple-session mode
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
 | Purpose  | Symmetric-key transaction manager compatible with every Calypso product.
 |===
@@ -1236,7 +1220,6 @@ No additional operation declared.
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.0.0
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
 | Purpose  | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products.
 |===
@@ -1266,7 +1249,6 @@ No additional operation declared.
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
-| Since    | 2.1.0
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
 | Purpose  | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*.
 |===
@@ -1289,7 +1271,6 @@ No additional operation declared.
 |===
 | Kind     | Marker interface (SPI)
 | Package  | `calypso.card.transaction.spi`
-| Since    | 2.0.0
 | Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
 |===
 
@@ -1300,7 +1281,6 @@ No additional operation declared.
 |===
 | Kind     | Marker interface (SPI)
 | Package  | `calypso.card.transaction.spi`
-| Since    | 2.0.0
 | Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
 |===
 
@@ -1311,7 +1291,6 @@ No additional operation declared.
 |===
 | Kind     | Marker interface (SPI)
 | Package  | `calypso.card.transaction.spi`
-| Since    | 2.0.0
 | Purpose  | Marker enriching the card transaction command set with specific crypto commands (e.g. signature computation/verification). Declares no operation at the API level.
 |===
 
@@ -1322,7 +1301,6 @@ No additional operation declared.
 |===
 | Kind     | Marker interfaces (SPI)
 | Package  | `calypso.card.transaction.spi`
-| Since    | 2.1.0
 | Purpose  | Markers for PCA, CA and card certificates exposed by [CNA-TCCA-API] extensions.
 |===
 
@@ -1336,7 +1314,6 @@ content is exposed through the [CNA-TCCA-API] extension that produced them.
 |===
 | Kind     | Marker interfaces (SPI)
 | Package  | `calypso.card.transaction.spi`
-| Since    | 2.1.0
 | Purpose  | Markers for CA and card certificate parsers exposed by [CNA-TCCA-API] extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
 |===
 
@@ -1344,16 +1321,9 @@ content is exposed through the [CNA-TCCA-API] extension that produced them.
 [[sec_exceptions]]
 == Exceptions
 
-All exception types defined by this specification are *unchecked* (runtime). Exceptions marked as *deprecated*
-SHALL be replaced by their [CNA-TR-API] equivalents and MUST NOT be raised by new implementations.
-
-[[type_CardIOException]]
-=== CardIOException `[deprecated]`
-
-Runtime exception (final). Indicates a communication error with the card. *Deprecated.* SHALL be replaced by
-[CNA-TR-API] `CardCommunicationException`.
-
-Constructors: `(message)`, `(message, cause)` -- _since 1.0.0_.
+All exception types defined by this specification are *unchecked* (runtime). Communication-level errors with the
+reader or the card are reported through the [CNA-TR-API] exceptions (`ReaderCommunicationException`,
+`CardCommunicationException`, `InvalidCardResponseException`) and are *not* duplicated here.
 
 [[type_CardSignatureNotVerifiableException]]
 === CardSignatureNotVerifiableException
@@ -1362,21 +1332,21 @@ Runtime exception (final). Indicates that the card has correctly closed the secu
 authenticity of the session cannot be verified because the crypto module is no longer available (timeout,
 network problem, etc.).
 
-Constructors: `(message)`, `(message, cause)` -- _since 1.2.0_.
+Constructors: `(message)`, `(message, cause)`.
 
 [[type_CryptoException]]
 === CryptoException
 
 Runtime exception (final). Indicates that an error occurred when computing a crypto operation.
 
-Constructor: `(message, cause)` -- _since 2.0.0_.
+Constructor: `(message, cause)`.
 
 [[type_CryptoIOException]]
 === CryptoIOException
 
 Runtime exception (final). Indicates a communication error with the crypto module.
 
-Constructor: `(message, cause)` -- _since 2.0.0_.
+Constructor: `(message, cause)`.
 
 [[type_InconsistentDataException]]
 === InconsistentDataException
@@ -1384,7 +1354,7 @@ Constructor: `(message, cause)` -- _since 2.0.0_.
 Runtime exception (final). Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy
 between data read in session vs out of session.
 
-Constructor: `(message)` -- _since 1.2.0_.
+Constructor: `(message)`.
 
 [[type_InvalidCardSignatureException]]
 === InvalidCardSignatureException
@@ -1393,7 +1363,7 @@ Runtime exception (final). Indicates that the card signature is incorrect. For s
 typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this
 simply means that the card signature is invalid.
 
-Constructor: `(message)` -- _since 1.2.0_.
+Constructor: `(message)`.
 
 [[type_InvalidCertificateException]]
 === InvalidCertificateException
@@ -1401,22 +1371,14 @@ Constructor: `(message)` -- _since 1.2.0_.
 Runtime exception (final). Indicates that a certificate failed validation (signature, validity period, issuer or
 subject details, constraints, extensions, expiration, revocation).
 
-Constructors: `(message)`, `(message, cause)` -- _since 2.1.0_.
+Constructors: `(message)`, `(message, cause)`.
 
 [[type_InvalidPinException]]
 === InvalidPinException
 
 Runtime exception (final). Indicates that the provided PIN is invalid.
 
-Constructors: `(message)`, `(message, cause)` -- _since 2.0.0_.
-
-[[type_ReaderIOException]]
-=== ReaderIOException `[deprecated]`
-
-Runtime exception (final). Indicates a communication error with the reader of the card or crypto module.
-*Deprecated.* SHALL be replaced by [CNA-TR-API] `ReaderCommunicationException`.
-
-Constructors: `(message)`, `(message, cause)` -- _since 1.2.0_.
+Constructors: `(message)`, `(message, cause)`.
 
 [[type_SelectFileException]]
 === SelectFileException
@@ -1424,7 +1386,7 @@ Constructors: `(message)`, `(message, cause)` -- _since 1.2.0_.
 Runtime exception (final). Indicates that file selection failed because the file was not found (status word
 `6A82h`).
 
-Constructor: `(message, cause)` -- _since 1.4.0_.
+Constructor: `(message, cause)`.
 
 [[type_SessionBufferOverflowException]]
 === SessionBufferOverflowException
@@ -1432,23 +1394,14 @@ Constructor: `(message, cause)` -- _since 1.4.0_.
 Runtime exception (final). Indicates that the secure session cannot be performed atomically because the
 modification buffer capacity is insufficient.
 
-Constructor: `(message)` -- _since 1.2.0_.
+Constructor: `(message)`.
 
 [[type_UnauthorizedKeyException]]
 === UnauthorizedKeyException
 
 Runtime exception (final). Indicates that the card requires an unauthorised session key.
 
-Constructor: `(message)` -- _since 1.0.0_.
-
-[[type_UnexpectedCommandStatusException]]
-=== UnexpectedCommandStatusException `[deprecated]`
-
-Runtime exception (final). Indicates that an unexpected command status was returned by the card or the
-cryptographic module (e.g. incorrect crypto module signature, secure session altered by interfering APDUs,
-non-Calypso compliance). *Deprecated.* SHALL be replaced by [CNA-TR-API] `InvalidCardResponseException`.
-
-Constructor: `(message, cause)` -- _since 1.2.0_.
+Constructor: `(message)`.
 
 // =============================================================================
 [[sec_behaviours]]
@@ -1463,8 +1416,9 @@ Constructor: `(message, cause)` -- _since 1.2.0_.
   mode is active, this optimisation MUST NOT be performed.
 . The *PKI* mode (`SecurePkiModeTransactionManager`) MUST NOT be available unless the card declares
   `isPkiModeSupported() == true`.
-. The deprecated `ChannelControl`, `CardIOException`, `ReaderIOException` and `UnexpectedCommandStatusException`
-  MUST NOT be raised by new implementations; their [CNA-TR-API] replacements MUST be used.
+. Communication errors at the reader, card or APDU level MUST be reported through the [CNA-TR-API] exceptions
+  (`ReaderCommunicationException`, `CardCommunicationException`, `InvalidCardResponseException`); this
+  specification does not duplicate them.
 . Implementations MUST raise `SessionBufferOverflowException` instead of silently truncating a session when
   multiple-session mode is disabled and the modification buffer would overflow.
 

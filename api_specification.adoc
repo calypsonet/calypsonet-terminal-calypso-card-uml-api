@@ -259,8 +259,6 @@ TR   --> RC  : drives
 
 The following UML class diagram provides a visual representation of the types and relationships defined by this specification:
 
-
-
 [plantuml, target="api_class_diagram", format="svg"]
 ----
 include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=center]
@@ -2270,29 +2268,21 @@ Runtime exception (final). Indicates that the card has correctly closed the secu
 authenticity of the session cannot be verified because the crypto module is no longer available (timeout,
 network problem, etc.). _Since 1.2.0._
 
-Constructors: `(message)`, `(message, cause)`.
-
 [[type_CryptoException]]
 === CryptoException
 
 Runtime exception (final). Indicates that an error occurred when computing a crypto operation. _Since 2.0.0._
-
-Constructor: `(message, cause)`.
 
 [[type_CryptoIOException]]
 === CryptoIOException
 
 Runtime exception (final). Indicates a communication error with the crypto module. _Since 2.0.0._
 
-Constructor: `(message, cause)`.
-
 [[type_InconsistentDataException]]
 === InconsistentDataException
 
 Runtime exception (final). Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy
 between data read in session vs out of session. _Since 1.2.0._
-
-Constructor: `(message)`.
 
 [[type_InvalidCardSignatureException]]
 === InvalidCardSignatureException
@@ -2301,22 +2291,16 @@ Runtime exception (final). Indicates that the card signature is incorrect. For s
 typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this
 simply means that the card signature is invalid. _Since 1.2.0._
 
-Constructor: `(message)`.
-
 [[type_InvalidCertificateException]]
 === InvalidCertificateException
 
 Runtime exception (final). Indicates that a certificate failed validation (signature, validity period, issuer or
 subject details, constraints, extensions, expiration, revocation). _Since 2.1.0._
 
-Constructors: `(message)`, `(message, cause)`.
-
 [[type_InvalidPinException]]
 === InvalidPinException
 
 Runtime exception (final). Indicates that the provided PIN is invalid. _Since 2.0.0._
-
-Constructors: `(message)`, `(message, cause)`.
 
 [[type_SelectFileException]]
 === SelectFileException
@@ -2324,22 +2308,16 @@ Constructors: `(message)`, `(message, cause)`.
 Runtime exception (final). Indicates that file selection failed because the file was not found (status word
 `6A82h`). _Since 1.4.0._
 
-Constructor: `(message, cause)`.
-
 [[type_SessionBufferOverflowException]]
 === SessionBufferOverflowException
 
 Runtime exception (final). Indicates that the secure session cannot be performed atomically because the
 modification buffer capacity is insufficient. _Since 1.2.0._
 
-Constructor: `(message)`.
-
 [[type_UnauthorizedKeyException]]
 === UnauthorizedKeyException
 
 Runtime exception (final). Indicates that the card requires an unauthorised session key. _Since 1.0.0._
-
-Constructor: `(message)`.
 
 // =============================================================================
 [[sec_behaviours]]
@@ -2366,6 +2344,4 @@ Constructor: `(message)`.
 
 Copyright (c) {organization}, https://calypsonet.org.
 
-This specification is distributed under the terms of the *Eclipse Public License -- v 2.0* (EPL-2.0). A copy of the
-license is available in the link:LICENSE[`LICENSE`] file alongside this document and at
-https://www.eclipse.org/legal/epl-2.0/.
+This specification is distributed under the terms of the *Eclipse Public License -- v 2.0* (EPL-2.0). See https://www.eclipse.org/legal/epl-2.0/ for the license text.

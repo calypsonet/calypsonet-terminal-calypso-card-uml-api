@@ -744,19 +744,87 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 | Purpose  | One record of a Stored Value debit log.
 |===
 
-[cols="1h,1,4", options="header"]
-|===
-| Signature | Since | Description
+===== Operations
 
-| `getRawData() -> byte array`     | 1.0.0 | Raw bytes of the debit log record.
-| `getDebitDate() -> byte array`   | 1.0.0 | 2-byte debit date.
-| `getDebitTime() -> byte array`   | 1.0.0 | 2-byte debit time.
-| `getAmount() -> integer`         | 1.0.0 | Debit amount.
-| `getBalance() -> integer`        | 1.0.0 | SV balance after the debit.
-| `getKvc() -> byte`               | 1.0.0 | KVC of the debit key.
-| `getSamId() -> byte array`       | 1.0.0 | 4-byte SAM ID.
-| `getSamTNum() -> integer`        | 1.0.0 | SAM transaction number.
-| `getSvTNum() -> integer`         | 1.0.0 | SV transaction number.
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getRawData() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the raw bytes of the debit log record.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getDebitDate() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 2-byte debit date.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getDebitTime() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 2-byte debit time.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getAmount() -> integer`
+| Since       | 1.0.0
+| Description | Returns the debit amount.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getBalance() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SV balance after the debit.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getKvc() -> byte`
+| Since       | 1.0.0
+| Description | Returns the KVC of the debit key.
+| Returns     | A `byte` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSamId() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 4-byte SAM ID.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSamTNum() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SAM transaction number.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSvTNum() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SV transaction number.
+| Returns     | An `integer` value.
+| Throws      | None.
 |===
 
 [[type_SvLoadLogRecord]]
@@ -770,20 +838,96 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 | Purpose  | One record of a Stored Value load log.
 |===
 
-[cols="1h,1,4", options="header"]
-|===
-| Signature | Since | Description
+===== Operations
 
-| `getRawData() -> byte array`   | 1.0.0 | Raw bytes of the load log record.
-| `getLoadDate() -> byte array`  | 1.0.0 | 2-byte load date.
-| `getLoadTime() -> byte array`  | 1.0.0 | 2-byte load time.
-| `getAmount() -> integer`       | 1.0.0 | Load amount.
-| `getBalance() -> integer`      | 1.0.0 | SV balance after the load.
-| `getFreeData() -> byte array`  | 1.0.0 | 2-byte free data.
-| `getKvc() -> byte`             | 1.0.0 | KVC of the load key.
-| `getSamId() -> byte array`     | 1.0.0 | 4-byte SAM ID.
-| `getSamTNum() -> integer`      | 1.0.0 | SAM transaction number.
-| `getSvTNum() -> integer`       | 1.0.0 | SV transaction number.
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getRawData() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the raw bytes of the load log record.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getLoadDate() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 2-byte load date.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getLoadTime() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 2-byte load time.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getAmount() -> integer`
+| Since       | 1.0.0
+| Description | Returns the load amount.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getBalance() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SV balance after the load.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getFreeData() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 2-byte free data.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getKvc() -> byte`
+| Since       | 1.0.0
+| Description | Returns the KVC of the load key.
+| Returns     | A `byte` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSamId() -> byte array`
+| Since       | 1.0.0
+| Description | Returns the 4-byte SAM ID.
+| Returns     | A non-`null` `byte array`.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSamTNum() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SAM transaction number.
+| Returns     | An `integer` value.
+| Throws      | None.
+|===
+
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Signature   | `getSvTNum() -> integer`
+| Since       | 1.0.0
+| Description | Returns the SV transaction number.
+| Returns     | An `integer` value.
+| Throws      | None.
 |===
 
 [[type_CalypsoCard]]

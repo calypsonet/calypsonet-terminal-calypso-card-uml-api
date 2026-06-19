@@ -476,6 +476,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getLid() -> short`
+| Since       | 1.0.0
 | Description | Returns the associated LID.
 | Returns     | A `short` value.
 | Throws      | None.
@@ -484,6 +485,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getDfStatus() -> byte`
+| Since       | 1.0.0
 | Description | Returns the DF status byte.
 | Returns     | A `byte` value.
 | Throws      | None.
@@ -492,6 +494,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getAccessConditions() -> byte array`
+| Since       | 1.0.0
 | Description | Returns a reference to the access conditions.
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -500,6 +503,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
+| Since       | 1.0.0
 | Description | Returns a reference to the keys indexes.
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -508,6 +512,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
+| Since       | 1.0.0
 | Description | Returns the KIF associated with the supplied write access level.
 | Returns     | A `byte` value.
 | Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
@@ -516,6 +521,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
+| Since       | 1.0.0
 | Description | Returns the KVC associated with the supplied write access level.
 | Returns     | A `byte` value.
 | Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
@@ -537,6 +543,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getLid() -> short`
+| Since       | 1.0.0
 | Description | Returns the associated LID.
 | Returns     | A `short` value.
 | Throws      | None.
@@ -545,6 +552,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getDfStatus() -> byte`
+| Since       | 1.0.0
 | Description | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
 | Returns     | A `byte` value.
 | Throws      | None.
@@ -553,6 +561,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getEfType() -> ElementaryFile.Type`
+| Since       | 1.0.0
 | Description | Returns the EF type.
 | Returns     | A `ElementaryFile.Type`.
 | Throws      | None.
@@ -561,6 +570,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getRecordsNumber() -> integer`
+| Since       | 1.0.0
 | Description | Returns the number of records. For *counter* and *binary* files the value is always 1.
 | Returns     | An `integer` value.
 | Throws      | None.
@@ -569,6 +579,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getRecordSize() -> integer`
+| Since       | 1.0.0
 | Description | Returns the size of a record. For binary files, this is the size of the file.
 | Returns     | An `integer` value.
 | Throws      | None.
@@ -577,6 +588,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getAccessConditions() -> byte array`
+| Since       | 1.0.0
 | Description | Returns the access conditions; empty array if not available.
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -585,6 +597,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
+| Since       | 1.0.0
 | Description | Returns the key indexes; empty array if not available.
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -593,6 +606,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getSharedReference() -> short`
+| Since       | 1.0.0
 | Description | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
 | Returns     | A `short` value.
 | Throws      | None.
@@ -614,6 +628,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getSfi() -> byte`
+| Since       | 1.0.0
 | Description | Returns the SFI.
 | Returns     | A `byte` value.
 | Throws      | None.
@@ -622,6 +637,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getHeader() -> FileHeader`
+| Since       | 1.0.0
 | Description | Returns the file header, or `null` if not yet set.
 | Returns     | A `FileHeader`.
 | Throws      | None.
@@ -630,6 +646,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getData() -> FileData`
+| Since       | 1.0.0
 | Description | Returns the file data.
 | Returns     | A `FileData`.
 | Throws      | None.
@@ -665,6 +682,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContent() -> byte array`
+| Since       | 1.0.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -673,6 +691,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer) -> byte array`
+| Since       | 1.0.0
 | Description | Returns the known content of the supplied record number.
 | Returns     | A `byte array`.
 | Throws      | None.
@@ -681,6 +700,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
+| Since       | 1.0.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
 | Returns     | A `byte array`.
 | Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. + `IndexOutOfBoundsException` -- if the range exceeds the record content.
@@ -689,6 +709,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
+| Since       | 1.0.0
 | Description | Returns the known records content.
 | Returns     | A `sortedMap<integer, byte array>`.
 | Throws      | None.
@@ -697,6 +718,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContentAsCounterValue(numCounter: integer) -> integer`
+| Since       | 1.0.0
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1.
 | Returns     | An `integer` value.
 | Throws      | `IllegalArgumentException` -- if `numCounter < 1`. + `IndexOutOfBoundsException` -- if the counter is truncated.
@@ -705,6 +727,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getAllCountersValue() -> sortedMap<integer, integer>`
+| Since       | 1.0.0
 | Description | Returns the values of all counters extracted from record #1.
 | Returns     | A `sortedMap<integer, integer>`.
 | Throws      | None.
@@ -721,19 +744,19 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 | Purpose  | One record of a Stored Value debit log.
 |===
 
-[cols="1h,4", options="header"]
+[cols="1h,1,4", options="header"]
 |===
-| Signature | Description
+| Signature | Since | Description
 
-| `getRawData() -> byte array`     | Raw bytes of the debit log record.
-| `getDebitDate() -> byte array`   | 2-byte debit date.
-| `getDebitTime() -> byte array`   | 2-byte debit time.
-| `getAmount() -> integer`         | Debit amount.
-| `getBalance() -> integer`        | SV balance after the debit.
-| `getKvc() -> byte`               | KVC of the debit key.
-| `getSamId() -> byte array`       | 4-byte SAM ID.
-| `getSamTNum() -> integer`        | SAM transaction number.
-| `getSvTNum() -> integer`         | SV transaction number.
+| `getRawData() -> byte array`     | 1.0.0 | Raw bytes of the debit log record.
+| `getDebitDate() -> byte array`   | 1.0.0 | 2-byte debit date.
+| `getDebitTime() -> byte array`   | 1.0.0 | 2-byte debit time.
+| `getAmount() -> integer`         | 1.0.0 | Debit amount.
+| `getBalance() -> integer`        | 1.0.0 | SV balance after the debit.
+| `getKvc() -> byte`               | 1.0.0 | KVC of the debit key.
+| `getSamId() -> byte array`       | 1.0.0 | 4-byte SAM ID.
+| `getSamTNum() -> integer`        | 1.0.0 | SAM transaction number.
+| `getSvTNum() -> integer`         | 1.0.0 | SV transaction number.
 |===
 
 [[type_SvLoadLogRecord]]
@@ -747,20 +770,20 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 | Purpose  | One record of a Stored Value load log.
 |===
 
-[cols="1h,4", options="header"]
+[cols="1h,1,4", options="header"]
 |===
-| Signature | Description
+| Signature | Since | Description
 
-| `getRawData() -> byte array`   | Raw bytes of the load log record.
-| `getLoadDate() -> byte array`  | 2-byte load date.
-| `getLoadTime() -> byte array`  | 2-byte load time.
-| `getAmount() -> integer`       | Load amount.
-| `getBalance() -> integer`      | SV balance after the load.
-| `getFreeData() -> byte array`  | 2-byte free data.
-| `getKvc() -> byte`             | KVC of the load key.
-| `getSamId() -> byte array`     | 4-byte SAM ID.
-| `getSamTNum() -> integer`      | SAM transaction number.
-| `getSvTNum() -> integer`       | SV transaction number.
+| `getRawData() -> byte array`   | 1.0.0 | Raw bytes of the load log record.
+| `getLoadDate() -> byte array`  | 1.0.0 | 2-byte load date.
+| `getLoadTime() -> byte array`  | 1.0.0 | 2-byte load time.
+| `getAmount() -> integer`       | 1.0.0 | Load amount.
+| `getBalance() -> integer`      | 1.0.0 | SV balance after the load.
+| `getFreeData() -> byte array`  | 1.0.0 | 2-byte free data.
+| `getKvc() -> byte`             | 1.0.0 | KVC of the load key.
+| `getSamId() -> byte array`     | 1.0.0 | 4-byte SAM ID.
+| `getSamTNum() -> integer`      | 1.0.0 | SAM transaction number.
+| `getSvTNum() -> integer`       | 1.0.0 | SV transaction number.
 |===
 
 [[type_CalypsoCard]]
@@ -1975,6 +1998,7 @@ supports multi-channel.
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getCryptoExtension(cryptoExtensionClass: Class<E>) -> E extends CardTransactionCryptoExtension`
+| Since       | 2.0.0
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Returns     | A `E extends CardTransactionCryptoExtension`.
 | Throws      | `IllegalArgumentException` -- if the supplied class is `null`.
@@ -1983,6 +2007,7 @@ supports multi-channel.
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareCloseSecureSession() -> T`
+| Since       | 2.0.0
 | Description
 | Schedules a *Close Secure Session* command. The ratification mechanism is disabled by default but MAY be enabled
   via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
@@ -1995,6 +2020,7 @@ supports multi-channel.
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareCancelSecureSession() -> T`
+| Since       | 2.0.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- MUST NOT raise exceptions.
 | Returns     | A `T`.
 | Throws      | None.

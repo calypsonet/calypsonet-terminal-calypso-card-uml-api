@@ -319,7 +319,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Since       | 2.0.0
 | Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the reader through which the card is reached. +
+| `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction.
 | Returns     | A non-`null` <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
@@ -331,7 +331,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Since       | 2.0.0
 | Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the reader through which the card is reached. +
+| `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
@@ -344,7 +344,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Since       | 2.0.0
 | Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the reader through which the card is reached. +
+| `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
@@ -357,7 +357,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Since       | 2.1.0
 | Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the reader through which the card is reached. +
+| `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
@@ -2381,7 +2381,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Description | Adds an *Increase Multiple* command, or multiple *Increase* commands, depending on the card.
 | Parameters
 | `sfi`                       -- SFI of the EF to select. +
-  `counterNumberToIncValueMap` -- the map associating each counter number to be incremented to its increment value.
+  `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
@@ -2406,7 +2406,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Description | Adds a *Decrease Multiple* command or multiple *Decrease* commands.
 | Parameters
 | `sfi`                       -- SFI of the EF to select. +
-  `counterNumberToDecValueMap` -- the map associating each counter number to be decremented to its decrement value.
+  `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===

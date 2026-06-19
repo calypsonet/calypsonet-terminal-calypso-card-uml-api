@@ -1593,7 +1593,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
   this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
   sending sensitive commands).
 | Returns     | A `SecureExtendedModeTransactionManager`.
-| Throws      | `UnsupportedOperationException` if the extended mode is unavailable.
+| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1605,7 +1605,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
   intensive). When mutual authentication is also required, the two `prepare*` calls SHOULD be placed
   consecutively. Only makes sense in a secure session.
 | Returns     | A `SecureExtendedModeTransactionManager`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1614,7 +1614,7 @@ Nested inside `ElementaryFile`. _Since 1.0.0._
 | Since       | 2.0.0
 | Description | Requests to stop the encryption. NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | A `SecureExtendedModeTransactionManager`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
 [[type_SecurePkiModeTransactionManager]]
@@ -1744,7 +1744,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
   pre-open mode is active or the read-merge optimisation has been disabled.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalArgumentException` if `null`; `IllegalStateException` if no `SymmetricCryptoSecuritySetting` is available, or if an opening is already prepared/opened.
+| Throws
+| `IllegalArgumentException` -- if the provided argument is `null`. +
+  `IllegalStateException` -- in one of the following cases: no `SymmetricCryptoSecuritySetting` is available, a secure session opening is already prepared, or a secure session is already opened.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1754,8 +1756,8 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Description | Schedules an *SV Get* command.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`.
+| `UnsupportedOperationException` -- if the SV feature is not available for this card. +
+  `IllegalArgumentException` -- if one of the arguments is `null`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1766,9 +1768,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `IllegalArgumentException`, +
-  `IllegalStateException`, +
-  `SessionBufferOverflowException`.
+| `IllegalArgumentException` -- if one of the provided arguments is out of range. +
+  `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1777,7 +1779,10 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Schedules an *SV Reload* command with the optional data fields set to zero.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | None.
+| Throws
+| `IllegalArgumentException` -- if the provided argument is out of range. +
+  `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1788,7 +1793,10 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. Amount: `0..32767` for
   debit, `0..32768` for undebit.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | None.
+| Throws
+| `IllegalArgumentException` -- if one of the provided arguments is out of range. +
+  `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1797,7 +1805,10 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | None.
+| Throws
+| `IllegalArgumentException` -- if the provided argument is out of range. +
+  `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1806,7 +1817,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Schedules an *Invalidate* command.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalStateException` if the card is already invalidated.
+| Throws
+| `IllegalStateException` -- if the card is already invalidated. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1815,7 +1828,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Schedules a *Rehabilitate* command.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalStateException` if the card is not invalidated.
+| Throws
+| `IllegalStateException` -- if the card is not invalidated. +
+  `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1827,9 +1842,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   in the crypto module.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`, +
-  `IllegalStateException`.
+| `UnsupportedOperationException` -- if the *Change Key* command is not available for this card. +
+  `IllegalArgumentException` -- if the provided key index is out of range. +
+  `IllegalStateException` -- if the command is executed while a secure session is open.
 |===
 
 [[type_SecureTransactionManager]]
@@ -1866,7 +1881,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
   mode.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalStateException` -- if no secure session is opened or prepared, if a closing is already prepared, or if a cancelling is prepared.
+| Throws      | `IllegalStateException` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2084,8 +2099,8 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate).
 | Throws
-| `CryptoException`, +
-  `CryptoIOException`.
+| `CryptoException` -- if an error occurred when computing a crypto operation. +
+  `CryptoIOException` -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
 |===
 
 [[sec_csnmin]]
@@ -2142,9 +2157,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`, +
-  `IllegalStateException`.
+| `UnsupportedOperationException` -- if the *Get Data* command with the provided tag is not supported. +
+  `IllegalArgumentException` -- if `tag` is `null`. +
+  `IllegalStateException` -- if a secure session is open.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2154,9 +2169,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`, +
-  `IllegalStateException`.
+| `UnsupportedOperationException` -- if the *Put Data* command with the provided tag is not supported. +
+  `IllegalArgumentException` -- if `tag` is `null` or `data` is empty. +
+  `IllegalStateException` -- if a secure session is open.
 |===
 
 ===== Read operations
@@ -2185,7 +2200,10 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.1.0
 | Description | Adds *Read Record Multiple* commands. *MUST NOT be used within a secure session.*
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `UnsupportedOperationException` if the command is not supported by the card.
+| Throws
+| `UnsupportedOperationException` -- if this command is not supported by this card. +
+  `IllegalArgumentException` -- if one of the provided arguments is out of range. +
+  `IllegalStateException` -- if a secure session is open.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2213,9 +2231,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`, +
-  `IllegalStateException`.
+| `UnsupportedOperationException` -- if the *Search Record Multiple* command is not available for this card. +
+  `IllegalArgumentException` -- if the input data is inconsistent. +
+  `IllegalStateException` -- if a secure session is open.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2224,7 +2242,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.0.0
 | Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `UnsupportedOperationException` if PIN feature is unavailable.
+| Throws      | `UnsupportedOperationException` -- if the PIN feature is not available for this card.
 |===
 
 ===== Write operations
@@ -2262,7 +2280,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.1.0
 | Description | Adds one or more *Update Binary* commands.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `UnsupportedOperationException` if unsupported by the card.
+| Throws      | `UnsupportedOperationException` -- if this command is not supported by this card.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2316,7 +2334,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.0.0
 | Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value.
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalStateException` if the current counter value is unknown.
+| Throws      | `IllegalStateException` -- if the current counter value is unknown.
 |===
 
 NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> if
@@ -2330,7 +2348,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Since       | 1.0.0
 | Description | Reads every SV log (load + debit).
 | Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `UnsupportedOperationException` if SV is not available.
+| Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2340,8 +2358,8 @@ the command would overflow the modification buffer and the multiple-session mode
 | Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`.
+| `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
+  `IllegalArgumentException` -- if the provided argument is out of range.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2351,9 +2369,9 @@ the command would overflow the modification buffer and the multiple-session mode
 | Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
 | Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
-| `UnsupportedOperationException`, +
-  `IllegalArgumentException`, +
-  `IllegalStateException`.
+| `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
+  `IllegalArgumentException` -- if the provided argument is out of range. +
+  `IllegalStateException` -- if the command is executed while a secure session is open.
 |===
 
 [cols="1h,4", grid=rows, frame=all]

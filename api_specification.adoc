@@ -318,7 +318,9 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
 | Since       | 2.0.0
 | Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
-| Parameters  | `cardReader` -- the reader through which the card is reached. + `card` -- the selected card on which to operate the transaction.
+| Parameters
+| `cardReader` -- the reader through which the card is reached. +
+  `card` -- the selected card on which to operate the transaction.
 | Returns     | A non-`null` <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -328,7 +330,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
 | Since       | 2.0.0
 | Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
-| Parameters  | `cardReader` -- the reader through which the card is reached. + `card` -- the selected card on which to operate the transaction. + `securitySetting` -- the security setting to be used.
+| Parameters
+| `cardReader` -- the reader through which the card is reached. +
+  `card` -- the selected card on which to operate the transaction. +
+  `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -338,7 +343,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
 | Since       | 2.0.0
 | Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
-| Parameters  | `cardReader` -- the reader through which the card is reached. + `card` -- the selected card on which to operate the transaction. + `securitySetting` -- the security setting to be used.
+| Parameters
+| `cardReader` -- the reader through which the card is reached. +
+  `card` -- the selected card on which to operate the transaction. +
+  `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===
@@ -348,7 +356,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
 | Since       | 2.1.0
 | Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
-| Parameters  | `cardReader` -- the reader through which the card is reached. + `card` -- the selected card on which to operate the transaction. + `securitySetting` -- the security setting to be used.
+| Parameters
+| `cardReader` -- the reader through which the card is reached. +
+  `card` -- the selected card on which to operate the transaction. +
+  `securitySetting` -- the security setting to be used.
 | Returns     | A non-`null` <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Throws      | `IllegalArgumentException` -- if any parameter is `null`.
 |===

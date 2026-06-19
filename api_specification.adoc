@@ -1203,18 +1203,18 @@ modified during the transaction.
 |===
 | Signature   | `isPinBlocked() -> boolean`
 | Since       | 1.0.0
-| Description | Indicates whether the PIN is blocked. _Throws `IllegalStateException` if the PIN has not been checked._
+| Description | Indicates whether the PIN is blocked.
 | Returns     | A `boolean` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` if the PIN has not been checked.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getPinAttemptRemaining() -> integer`
 | Since       | 1.0.0
-| Description | Number of erroneous PIN presentations remaining. _Throws `IllegalStateException` if the PIN has not been checked._
+| Description | Number of erroneous PIN presentations remaining.
 | Returns     | An `integer` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` if the PIN has not been checked.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1230,9 +1230,9 @@ modified during the transaction.
 |===
 | Signature   | `getSvBalance() -> integer`
 | Since       | 1.0.0
-| Description | Current SV balance. _Throws `IllegalStateException` if no SV Get has been executed._
+| Description | Current SV balance.
 | Returns     | An `integer` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` if no SV Get has been executed.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1339,18 +1339,18 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0.0
-| Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`). _Throws `IllegalArgumentException` if `selectControl` is `null`._
+| Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if `selectControl` is `null`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0.0
-| Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*. _Throws `IllegalArgumentException` if `tag` is `null`._
+| Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*.
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if `tag` is `null`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1385,9 +1385,9 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
 | Since       | 1.7.0
 | Description
-| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used. _Throws `IllegalArgumentException` if the argument is `null`; `IllegalStateException` if pre-open is already prepared._
+| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if the argument is `null`; `IllegalStateException` if pre-open is already prepared.
 |===
 
 === Package calypso.card.transaction
@@ -1743,8 +1743,8 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 |===
 | Signature   | `initCryptoContextForNextTransaction() -> void`
 | Since       | 2.0.0
-| Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate). _Throws `CryptoException`, `CryptoIOException`._
-| Throws      | None.
+| Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate).
+| Throws      | `CryptoException`, `CryptoIOException`.
 |===
 
 [[sec_csnmin]]
@@ -1774,10 +1774,9 @@ to introduce or tighten duration bounds progressively as new generations of card
 | Since       | 2.1.0
 | Description
 | Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
-  and any constraints. _Throws `IllegalArgumentException` if `null`/invalid; `IllegalStateException` if already
-  registered; `InvalidCertificateException` if the verification fails._
+  and any constraints.
 | Returns     | A `AsymmetricCryptoSecuritySetting`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if `null`/invalid; `IllegalStateException` if already registered; `InvalidCertificateException` if the verification fails.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1794,10 +1793,9 @@ to introduce or tighten duration bounds progressively as new generations of card
 | Signature   | `addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1.0
 | Description
-| Registers a CA certificate parser, used when the CA certificate is not already available. _Throws
-  `IllegalStateException` if a parser is already registered for the same certificate type._
+| Registers a CA certificate parser, used when the CA certificate is not already available.
 | Returns     | A `AsymmetricCryptoSecuritySetting`.
-| Throws      | None.
+| Throws      | `IllegalStateException` if a parser is already registered for the same certificate type.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1860,27 +1858,27 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 |===
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0.0
-| Description | Adds a *Select File* command using a navigation control. _Throws `IllegalArgumentException` if `null`._
+| Description | Adds a *Select File* command using a navigation control.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if `null`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0.0
-| Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.* _Throws `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`._
+| Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
 | Since       | 2.1.0
-| Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.* _Throws `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`._
+| Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
 |===
 
 ===== Read operations
@@ -1907,9 +1905,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 |===
 | Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1.0
-| Description | Adds *Read Record Multiple* commands. *MUST NOT be used within a secure session.* _Throws `UnsupportedOperationException` if the command is not supported by the card._
+| Description | Adds *Read Record Multiple* commands. *MUST NOT be used within a secure session.*
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` if the command is not supported by the card.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1934,18 +1932,18 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 |===
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1.0
-| Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.* _Throws `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`._
+| Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareCheckPinStatus() -> T`
 | Since       | 1.0.0
-| Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter. _Throws `UnsupportedOperationException` if PIN feature is unavailable._
+| Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` if PIN feature is unavailable.
 |===
 
 ===== Write operations
@@ -1981,9 +1979,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 |===
 | Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1.0
-| Description | Adds one or more *Update Binary* commands. _Throws `UnsupportedOperationException` if unsupported by the card._
+| Description | Adds one or more *Update Binary* commands.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` if unsupported by the card.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2035,9 +2033,9 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 |===
 | Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
 | Since       | 1.0.0
-| Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value. _Throws `IllegalStateException` if the current counter value is unknown._
+| Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalStateException` if the current counter value is unknown.
 |===
 
 NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> if
@@ -2049,27 +2047,27 @@ the command would overflow the modification buffer and the multiple-session mode
 |===
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0.0
-| Description | Reads every SV log (load + debit). _Throws `UnsupportedOperationException` if SV is not available._
+| Description | Reads every SV log (load + debit).
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` if SV is not available.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareVerifyPin(pin: byte array) -> T`
 | Since       | 1.6.0
-| Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`. _Throws `UnsupportedOperationException`, `IllegalArgumentException`._
+| Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareChangePin(newPin: byte array) -> T`
 | Since       | 1.6.0
-| Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*. _Throws `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`._
+| Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2192,20 +2190,18 @@ supports multi-channel.
 | Description
 | Schedules an *Open Secure Session* command. If the next prepared command is a *Read One Record* or *Read One Or
   More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
-  pre-open mode is active or the read-merge optimisation has been disabled. _Throws `IllegalArgumentException`
-  if `null`; `IllegalStateException` if no `SymmetricCryptoSecuritySetting` is available, or if an opening is
-  already prepared/opened._
+  pre-open mode is active or the read-merge optimisation has been disabled.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException` if `null`; `IllegalStateException` if no `SymmetricCryptoSecuritySetting` is available, or if an opening is already prepared/opened.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
 | Since       | 2.0.0
-| Description | Schedules an *SV Get* command. _Throws `UnsupportedOperationException`, `IllegalArgumentException`._
+| Description | Schedules an *SV Get* command.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2213,10 +2209,9 @@ supports multi-channel.
 | Signature   | `prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T`
 | Since       | 2.0.0
 | Description
-| Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`. _Throws
-  `IllegalArgumentException`, `IllegalStateException`, `SessionBufferOverflowException`._
+| Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalArgumentException`, `IllegalStateException`, `SessionBufferOverflowException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2252,18 +2247,18 @@ supports multi-channel.
 |===
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0.0
-| Description | Schedules an *Invalidate* command. _Throws `IllegalStateException` if the card is already invalidated._
+| Description | Schedules an *Invalidate* command.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalStateException` if the card is already invalidated.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0.0
-| Description | Schedules a *Rehabilitate* command. _Throws `IllegalStateException` if the card is not invalidated._
+| Description | Schedules a *Rehabilitate* command.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `IllegalStateException` if the card is not invalidated.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2272,10 +2267,9 @@ supports multi-channel.
 | Since       | 2.0.0
 | Description
 | Schedules a *Change Key* command. *MUST be performed outside a secure session.* All KIFs/KVCs MUST be available
-  in the crypto module. _Throws `UnsupportedOperationException`, `IllegalArgumentException`,
-  `IllegalStateException`._
+  in the crypto module.
 | Returns     | A `T`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
 |===
 
 [[type_SecureRegularModeTransactionManager]]
@@ -2313,9 +2307,9 @@ No additional operation declared.
 | Description
 | Requests to mutually authenticate the card and the terminal *before* the secure session is closed. The use of
   this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
-  sending sensitive commands). _Throws `UnsupportedOperationException` if the extended mode is unavailable._
+  sending sensitive commands).
 | Returns     | A `SecureExtendedModeTransactionManager`.
-| Throws      | None.
+| Throws      | `UnsupportedOperationException` if the extended mode is unavailable.
 |===
 
 [cols="1h,4", grid=rows, frame=all]

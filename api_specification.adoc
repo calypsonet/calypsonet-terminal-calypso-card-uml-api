@@ -1743,7 +1743,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Schedules an *Open Secure Session* command. If the next prepared command is a *Read One Record* or *Read One Or
   More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
   pre-open mode is active or the read-merge optimisation has been disabled.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalArgumentException` if `null`; `IllegalStateException` if no `SymmetricCryptoSecuritySetting` is available, or if an opening is already prepared/opened.
 |===
 
@@ -1752,7 +1752,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
 | Since       | 2.0.0
 | Description | Schedules an *SV Get* command.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`.
@@ -1764,7 +1764,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description
 | Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `IllegalArgumentException`, +
   `IllegalStateException`, +
@@ -1776,7 +1776,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareSvReload(amount: integer) -> T`
 | Since       | 2.0.0
 | Description | Schedules an *SV Reload* command with the optional data fields set to zero.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -1787,7 +1787,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. Amount: `0..32767` for
   debit, `0..32768` for undebit.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -1796,7 +1796,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareSvDebit(amount: integer) -> T`
 | Since       | 2.0.0
 | Description | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -1805,7 +1805,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0.0
 | Description | Schedules an *Invalidate* command.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalStateException` if the card is already invalidated.
 |===
 
@@ -1814,7 +1814,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0.0
 | Description | Schedules a *Rehabilitate* command.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalStateException` if the card is not invalidated.
 |===
 
@@ -1825,7 +1825,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Description
 | Schedules a *Change Key* command. *MUST be performed outside a secure session.* All KIFs/KVCs MUST be available
   in the crypto module.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`, +
@@ -1865,7 +1865,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
   this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
   mode.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalStateException` -- if no secure session is opened or prepared, if a closing is already prepared, or if a cancelling is prepared.
 |===
 
@@ -1874,7 +1874,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareCancelSecureSession() -> T`
 | Since       | 2.0.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- MUST NOT raise exceptions.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2122,7 +2122,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareSelectFile(lid: short) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Select File* command targeting an EF by LID. _Fails if the file is not an EF._
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2131,7 +2131,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0.0
 | Description | Adds a *Select File* command using a navigation control.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalArgumentException` if `null`.
 |===
 
@@ -2140,7 +2140,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0.0
 | Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`, +
@@ -2152,7 +2152,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
 | Since       | 2.1.0
 | Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`, +
@@ -2166,7 +2166,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Read Records* command for a single record. *MUST NOT be used within a secure session; use `prepareReadRecords` instead for the in-session case.*
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2175,7 +2175,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Read Records* command for one or more records. Best-effort outside a secure session; strict mode inside a secure session.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2184,7 +2184,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1.0
 | Description | Adds *Read Record Multiple* commands. *MUST NOT be used within a secure session.*
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `UnsupportedOperationException` if the command is not supported by the card.
 |===
 
@@ -2193,7 +2193,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1.0
 | Description | Adds *Read Binary* commands. Best-effort outside a session; strict inside.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2202,7 +2202,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Read Records* command targeting the supplied counter (and all preceding counters).
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2211,7 +2211,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`, +
@@ -2223,7 +2223,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareCheckPinStatus() -> T`
 | Since       | 1.0.0
 | Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `UnsupportedOperationException` if PIN feature is unavailable.
 |===
 
@@ -2234,7 +2234,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareAppendRecord(sfi: byte, recordData: byte array) -> T`
 | Since       | 1.0.0
 | Description | Adds an *Append Record* command (a new record is added, the oldest record is deleted in a cyclic file).
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2243,7 +2243,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0.0
 | Description | Adds an *Update Record* command. Bytes beyond `recordData.length` MUST be left unchanged.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2252,7 +2252,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0.0
 | Description | Adds a *Write Record* command (binary OR with the existing data).
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2261,7 +2261,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1.0
 | Description | Adds one or more *Update Binary* commands.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `UnsupportedOperationException` if unsupported by the card.
 |===
 
@@ -2270,7 +2270,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1.0
 | Description | Adds one or more *Write Binary* commands (binary OR).
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2279,7 +2279,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T`
 | Since       | 1.0.0
 | Description | Adds an *Increase* command. For multiple counters of the same file, `prepareIncreaseCounters` is RECOMMENDED.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2288,7 +2288,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T`
 | Since       | 1.1.0
 | Description | Adds an *Increase Multiple* command, or multiple *Increase* commands, depending on the card.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2297,7 +2297,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
 | Since       | 1.0.0
 | Description | Adds a *Decrease* command.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2306,7 +2306,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T`
 | Since       | 1.1.0
 | Description | Adds a *Decrease Multiple* command or multiple *Decrease* commands.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 
@@ -2315,7 +2315,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
 | Since       | 1.0.0
 | Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `IllegalStateException` if the current counter value is unknown.
 |===
 
@@ -2329,7 +2329,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0.0
 | Description | Reads every SV log (load + debit).
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | `UnsupportedOperationException` if SV is not available.
 |===
 
@@ -2338,7 +2338,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareVerifyPin(pin: byte array) -> T`
 | Since       | 1.6.0
 | Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`.
@@ -2349,7 +2349,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareChangePin(newPin: byte array) -> T`
 | Since       | 1.6.0
 | Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws
 | `UnsupportedOperationException`, +
   `IllegalArgumentException`, +
@@ -2361,7 +2361,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareGenerateAsymmetricKeyPair() -> T`
 | Since       | 2.1.0
 | Description | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
-| Returns     | A `T`.
+| Returns     | The current instance (`T`), to allow fluent composition.
 | Throws      | None.
 |===
 

@@ -1742,7 +1742,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Since       | 2.0.0
 | Description | Schedules an *SV Get* command.
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1752,7 +1754,10 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Description
 | Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`.
 | Returns     | A `T`.
-| Throws      | `IllegalArgumentException`, `IllegalStateException`, `SessionBufferOverflowException`.
+| Throws
+| `IllegalArgumentException`, +
+  `IllegalStateException`, +
+  `SessionBufferOverflowException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1810,7 +1815,10 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Schedules a *Change Key* command. *MUST be performed outside a secure session.* All KIFs/KVCs MUST be available
   in the crypto module.
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`, +
+  `IllegalStateException`.
 |===
 
 [[type_SecureTransactionManager]]
@@ -2064,7 +2072,9 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `initCryptoContextForNextTransaction() -> void`
 | Since       | 2.0.0
 | Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate).
-| Throws      | `CryptoException`, `CryptoIOException`.
+| Throws
+| `CryptoException`, +
+  `CryptoIOException`.
 |===
 
 [[sec_csnmin]]
@@ -2120,7 +2130,10 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.0.0
 | Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`, +
+  `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2129,7 +2142,10 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 2.1.0
 | Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`, +
+  `IllegalStateException`.
 |===
 
 ===== Read operations
@@ -2185,7 +2201,10 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Since       | 1.1.0
 | Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`, +
+  `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2309,7 +2328,9 @@ the command would overflow the modification buffer and the multiple-session mode
 | Since       | 1.6.0
 | Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2318,7 +2339,10 @@ the command would overflow the modification buffer and the multiple-session mode
 | Since       | 1.6.0
 | Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
 | Returns     | A `T`.
-| Throws      | `UnsupportedOperationException`, `IllegalArgumentException`, `IllegalStateException`.
+| Throws
+| `UnsupportedOperationException`, +
+  `IllegalArgumentException`, +
+  `IllegalStateException`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]

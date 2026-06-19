@@ -394,8 +394,8 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Value                       | Since | Description
 | `FCP_FOR_CURRENT_FILE`      | 1.0.0 | FCP for the current file, as returned by *Select File*.
 | `FCI_FOR_CURRENT_DF`        | 1.0.0 | FCI for the current DF, as returned by *Select Application*.
-| `EF_LIST`                   | 1.0.0 | List of EFs in the current DF.
-| `TRACEABILITY_INFORMATION`  | 1.0.0 | Product traceability information.
+| `EF_LIST`                   | 1.1.0 | List of EFs in the current DF.
+| `TRACEABILITY_INFORMATION`  | 1.1.0 | Product traceability information.
 | `CARD_PUBLIC_KEY`           | 2.1.0 | Card public key.
 | `CARD_CERTIFICATE`          | 2.1.0 | Card certificate.
 | `CA_CERTIFICATE`            | 2.1.0 | CA certificate.
@@ -1938,7 +1938,7 @@ supports multi-channel.
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getTransactionAuditData() -> list<byte array>`
-| Since       | 2.0.0
+| Since       | 1.2.0
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
 | Returns     | A `list<byte array>`.
 | Throws      | None.

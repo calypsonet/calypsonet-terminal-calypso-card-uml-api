@@ -1828,12 +1828,13 @@ to introduce or tighten duration bounds progressively as new generations of card
 |===
 
 [[type_TransactionManager]]
-==== TransactionManager<T extends TransactionManager<T>>
+==== TransactionManager
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
+| Generics | `<T extends TransactionManager<T>>`
 | Extends  | `IsoCardTransactionManager` ([CNA-TR-API])
 | Since    | 2.0.0
 | Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by [CNA-TR-API] when the underlying ISO/IEC 7816-4 card supports multi-channel.
@@ -2125,12 +2126,13 @@ supports multi-channel.
 `FreeTransactionManager` does not add any operation.
 
 [[type_SecureTransactionManager]]
-==== SecureTransactionManager<T extends SecureTransactionManager<T>>
+==== SecureTransactionManager
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
+| Generics | `<T extends SecureTransactionManager<T>>`
 | Extends  | <<type_TransactionManager,`TransactionManager<T>`>>
 | Since    | 2.0.0
 | Purpose  | Common operations for every secure (cryptographically-backed) transaction manager.
@@ -2170,12 +2172,13 @@ supports multi-channel.
 |===
 
 [[type_SecureSymmetricCryptoTransactionManager]]
-==== SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>>
+==== SecureSymmetricCryptoTransactionManager
 
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Kind     | Interface
 | Package  | `calypso.card.transaction`
+| Generics | `<T extends SecureSymmetricCryptoTransactionManager<T>>`
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
 | Since    | 2.0.0
 | Purpose  | Common operations for every transaction manager backed by *symmetric* cryptography.

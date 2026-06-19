@@ -653,7 +653,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Throws      | None.
 |===
 
-===== Enumeration `Type`
+===== Enumeration Type
 
 Nested inside `ElementaryFile`. _Since 1.0.0._
 
@@ -1271,7 +1271,7 @@ modified during the transaction.
 | Throws      | None.
 |===
 
-===== Enumeration `ProductType`
+===== Enumeration ProductType
 
 Nested inside `CalypsoCard`. _Since 1.0.0._
 

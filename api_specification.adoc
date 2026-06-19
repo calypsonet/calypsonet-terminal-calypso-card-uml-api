@@ -2574,60 +2574,60 @@ reader or the card are reported through the [CNA-TR-API] exceptions (`ReaderComm
 [[type_CardSignatureNotVerifiableException]]
 === CardSignatureNotVerifiableException
 
-Runtime exception (final). Indicates that the card has correctly closed the secure session but that the
+Runtime exception. Indicates that the card has correctly closed the secure session but that the
 authenticity of the session cannot be verified because the crypto module is no longer available (timeout,
 network problem, etc.). _Since 1.2.0._
 
 [[type_CryptoException]]
 === CryptoException
 
-Runtime exception (final). Indicates that an error occurred when computing a crypto operation. _Since 2.0.0._
+Runtime exception. Indicates that an error occurred when computing a crypto operation. _Since 2.0.0._
 
 [[type_CryptoIOException]]
 === CryptoIOException
 
-Runtime exception (final). Indicates a communication error with the crypto module. _Since 2.0.0._
+Runtime exception. Indicates a communication error with the crypto module. _Since 2.0.0._
 
 [[type_InconsistentDataException]]
 === InconsistentDataException
 
-Runtime exception (final). Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy
+Runtime exception. Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy
 between data read in session vs out of session. _Since 1.2.0._
 
 [[type_InvalidCardSignatureException]]
 === InvalidCardSignatureException
 
-Runtime exception (final). Indicates that the card signature is incorrect. For symmetric-key transactions, this
+Runtime exception. Indicates that the card signature is incorrect. For symmetric-key transactions, this
 typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this
 simply means that the card signature is invalid. _Since 1.2.0._
 
 [[type_InvalidCertificateException]]
 === InvalidCertificateException
 
-Runtime exception (final). Indicates that a certificate failed validation (signature, validity period, issuer or
+Runtime exception. Indicates that a certificate failed validation (signature, validity period, issuer or
 subject details, constraints, extensions, expiration, revocation). _Since 2.1.0._
 
 [[type_InvalidPinException]]
 === InvalidPinException
 
-Runtime exception (final). Indicates that the provided PIN is invalid. _Since 2.0.0._
+Runtime exception. Indicates that the provided PIN is invalid. _Since 2.0.0._
 
 [[type_SelectFileException]]
 === SelectFileException
 
-Runtime exception (final). Indicates that file selection failed because the file was not found (status word
+Runtime exception. Indicates that file selection failed because the file was not found (status word
 `6A82h`). _Since 1.4.0._
 
 [[type_SessionBufferOverflowException]]
 === SessionBufferOverflowException
 
-Runtime exception (final). Indicates that the secure session cannot be performed atomically because the
+Runtime exception. Indicates that the secure session cannot be performed atomically because the
 modification buffer capacity is insufficient. _Since 1.2.0._
 
 [[type_UnauthorizedKeyException]]
 === UnauthorizedKeyException
 
-Runtime exception (final). Indicates that the card requires an unauthorised session key. _Since 1.0.0._
+Runtime exception. Indicates that the card requires an unauthorised session key. _Since 1.0.0._
 
 // =============================================================================
 [[sec_behaviours]]

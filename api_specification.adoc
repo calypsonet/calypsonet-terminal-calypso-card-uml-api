@@ -130,6 +130,18 @@ order to avoid ambiguity.
 | `void`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`.
 |===
 
+==== Operation contracts
+
+To avoid repetition, the following rules apply to every operation table in <<sec_specification>> and are therefore
+not restated for each operation:
+
+* *Non-`null` arguments.* Unless explicitly stated otherwise, every input parameter MUST be non-`null`. An
+  implementation MUST raise `IllegalArgumentException` if a `null` value is supplied. Operations whose only error
+  condition is a `null` argument therefore declare no entry in their *Throws* row.
+* *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
+  operation returns a non-`null` value.
+* *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
+
 === References
 
 [cols="1,1,4", options="header"]
@@ -269,7 +281,8 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 [[sec_specification]]
 == API Specification
 
-=== Package calypso.card
+[[sec_pkg_calypso_card]]
+=== API Entry Point and Common Definitions (`calypso.card`)
 
 [[type_CalypsoCardApiFactory]]
 ==== CalypsoCardApiFactory
@@ -289,30 +302,33 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createCalypsoCardSelectionExtension() -> CalypsoCardSelectionExtension`
 | Since       | 2.0
 | Description | Returns a new <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
-| Returns     | A non-`null` <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
+[[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Returns a new <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Parameters  | `cryptoCardTransactionManagerFactory` -- the factory of the crypto card transaction manager to be used.
-| Returns     | A non-`null` <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentException` -- if the factory is `null` or invalid.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
+| Throws      | `IllegalArgumentException` -- if the factory is invalid.
 |===
 
+[[op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description | Returns a new <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Parameters  | `cryptoCardTransactionManagerFactory` -- the factory of the crypto card transaction manager to be used.
-| Returns     | A non-`null` <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentException` -- if the factory is `null` or invalid.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Throws      | `IllegalArgumentException` -- if the factory is invalid.
 |===
 
+[[op_CalypsoCardApiFactory_createFreeTransactionManager]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
@@ -321,10 +337,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Parameters
 | `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction.
-| Returns     | A non-`null` <<type_FreeTransactionManager,`FreeTransactionManager`>>.
-| Throws      | `IllegalArgumentException` -- if any parameter is `null`.
+| Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 |===
 
+[[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
@@ -334,10 +350,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
-| Returns     | A non-`null` <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
-| Throws      | `IllegalArgumentException` -- if any parameter is `null`.
+| Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 |===
 
+[[op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
@@ -347,10 +363,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
-| Returns     | A non-`null` <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
-| Throws      | `IllegalArgumentException` -- if any parameter is `null`.
+| Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 |===
 
+[[op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
@@ -360,8 +376,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | `cardReader` -- the card reader to be used. +
   `card` -- the selected card on which to operate the transaction. +
   `securitySetting` -- the security setting to be used.
-| Returns     | A non-`null` <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
-| Throws      | `IllegalArgumentException` -- if any parameter is `null`.
+| Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -369,7 +384,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | Signature   | `createSearchCommandData() -> SearchCommandData`
 | Since       | 2.0
 | Description | Returns a new <<type_SearchCommandData,`SearchCommandData`>>.
-| Returns     | A non-`null` <<type_SearchCommandData,`SearchCommandData`>>.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -470,7 +485,8 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram, align=c
 | `DEBIT`            | 1.0 | Debit operations only -- uses the *debit* key.
 |===
 
-=== Package calypso.card.card
+[[sec_pkg_calypso_card_card]]
+=== Card Data Model (`calypso.card.card`)
 
 [[type_CalypsoCard]]
 ==== CalypsoCard
@@ -655,6 +671,7 @@ modified during the transaction.
 | Throws      | None.
 |===
 
+[[op_CalypsoCard_getFileBySfi]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile`
@@ -664,6 +681,7 @@ modified during the transaction.
 | Throws      | None.
 |===
 
+[[op_CalypsoCard_getFileByLid]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile`
@@ -867,6 +885,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension`
@@ -876,24 +895,25 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareSelectFile_byControl]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | `IllegalArgumentException` if `selectControl` is `null`.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareGetData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*.
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | `IllegalArgumentException` if `tag` is `null`.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareReadRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension`
@@ -903,6 +923,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareReadBinary]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension`
@@ -912,6 +933,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_CalypsoCardSelectionExtension_prepareReadCounter]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension`
@@ -921,6 +943,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_CalypsoCardSelectionExtension_preparePreOpenSecureSession]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
@@ -928,7 +951,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Description
 | Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
 | Returns     | A `CalypsoCardSelectionExtension`.
-| Throws      | `IllegalArgumentException` if the argument is `null`; `IllegalStateException` if pre-open is already prepared.
+| Throws      | `IllegalStateException` if pre-open is already prepared.
 |===
 
 [[type_DirectoryHeader]]
@@ -980,22 +1003,22 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Throws      | None.
 |===
 
+[[op_DirectoryHeader_getKif]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
 | Description | Returns the KIF associated with the supplied write access level.
 | Returns     | A `byte` value.
-| Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
 |===
 
+[[op_DirectoryHeader_getKvc]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
 | Description | Returns the KVC associated with the supplied write access level.
 | Returns     | A `byte` value.
-| Throws      | `IllegalArgumentException` -- if `writeAccessLevel` is `null`.
 |===
 
 [[type_ElementaryFile]]
@@ -1074,6 +1097,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_FileData_getContent_byRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer) -> byte array`
@@ -1083,6 +1107,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_FileData_getContent_byRange]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
@@ -1101,6 +1126,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_FileData_getContentAsCounterValue]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getContentAsCounterValue(numCounter: integer) -> integer?`
@@ -1222,7 +1248,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
 | Description | Returns the raw bytes of the debit log record.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1231,7 +1257,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getDebitDate() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte debit date.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1240,7 +1266,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getDebitTime() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte debit time.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1276,7 +1302,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1316,7 +1342,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
 | Description | Returns the raw bytes of the load log record.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1325,7 +1351,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getLoadDate() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte load date.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1334,7 +1360,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getLoadTime() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte load time.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1361,7 +1387,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getFreeData() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte free data.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1379,7 +1405,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A non-`null` `byte array`.
+| Returns     | A `byte array`.
 | Throws      | None.
 |===
 
@@ -1401,7 +1427,8 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
-=== Package calypso.card.transaction
+[[sec_pkg_calypso_card_transaction]]
+=== Transaction Orchestration (`calypso.card.transaction`)
 
 [[type_AsymmetricCryptoSecuritySetting]]
 ==== AsymmetricCryptoSecuritySetting
@@ -1414,6 +1441,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Purpose  | Security setting carrier for PKI Calypso card transactions.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting`
@@ -1422,9 +1450,10 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
   and any constraints.
 | Returns     | A `AsymmetricCryptoSecuritySetting`.
-| Throws      | `IllegalArgumentException` if `null`/invalid; `IllegalStateException` if already registered; `InvalidCertificateException` if the verification fails.
+| Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; `InvalidCertificateException` if the verification fails.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting`
@@ -1434,6 +1463,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_addCaCertificateParser]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting`
@@ -1444,6 +1474,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | `IllegalStateException` if a parser is already registered for the same certificate type.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
@@ -1453,6 +1484,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
@@ -1464,6 +1496,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
@@ -1498,6 +1531,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Purpose  | Carries the input/output data of `TransactionManager.prepareSearchRecords`.
 |===
 
+[[op_SearchCommandData_setSfi]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setSfi(sfi: byte) -> SearchCommandData`
@@ -1507,6 +1541,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_SearchCommandData_startAtRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
@@ -1516,6 +1551,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_SearchCommandData_setOffset]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setOffset(offset: integer) -> SearchCommandData`
@@ -1534,6 +1570,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_SearchCommandData_setSearchData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setSearchData(data: byte array) -> SearchCommandData`
@@ -1543,6 +1580,7 @@ Nested inside `ElementaryFile`. _Since 1.0._
 | Throws      | None.
 |===
 
+[[op_SearchCommandData_setMask]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setMask(mask: byte array) -> SearchCommandData`
@@ -1735,6 +1773,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 
 ===== Operations
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> T`
@@ -1744,12 +1783,12 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
   pre-open mode is active or the read-merge optimisation has been disabled.
 | Parameters  | `writeAccessLevel` -- the write access level to be used.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
-| `IllegalArgumentException` -- if the provided argument is `null`. +
-  `IllegalStateException` -- in one of the following cases: no `SymmetricCryptoSecuritySetting` is available, a secure session opening is already prepared, or a secure session is already opened.
+| `IllegalStateException` -- in one of the following cases: no `SymmetricCryptoSecuritySetting` is available, a secure session opening is already prepared, or a secure session is already opened.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvGet]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
@@ -1758,12 +1797,11 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Parameters
 | `svOperation` -- the nature of the intended operation: debit or reload. +
   `svAction`    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
-| Returns     | The current instance (`T`), to allow fluent composition.
-| Throws
-| `UnsupportedOperationException` -- if the SV feature is not available for this card. +
-  `IllegalArgumentException` -- if one of the arguments is `null`.
+| Returns     | The current instance (`T`).
+| Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T`
@@ -1775,26 +1813,28 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   `date`   -- a 2-byte free value. +
   `time`   -- a 2-byte free value. +
   `free`   -- a 2-byte free value.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalArgumentException` -- if one of the provided arguments is out of range. +
   `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
   `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvReload(amount: integer) -> T`
 | Since       | 2.0
 | Description | Schedules an *SV Reload* command with the optional data fields set to zero.
 | Parameters  | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalArgumentException` -- if the provided argument is out of range. +
   `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
   `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvDebit(amount: integer, date: byte array, time: byte array) -> T`
@@ -1806,20 +1846,21 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
   `date`   -- a 2-byte free value. +
   `time`   -- a 2-byte free value.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalArgumentException` -- if one of the provided arguments is out of range. +
   `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
   `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvDebit(amount: integer) -> T`
 | Since       | 2.0
 | Description | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero.
 | Parameters  | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalArgumentException` -- if the provided argument is out of range. +
   `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
@@ -1831,7 +1872,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0
 | Description | Schedules an *Invalidate* command.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is already invalidated. +
   `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
@@ -1842,12 +1883,13 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0
 | Description | Schedules a *Rehabilitate* command.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is not invalidated. +
   `SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
+[[op_SecureSymmetricCryptoTransactionManager_prepareChangeKey]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareChangeKey(keyIndex: integer, newKif: byte, newKvc: byte, issuerKif: byte, issuerKvc: byte) -> T`
@@ -1861,7 +1903,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   `newKvc`    -- the KVC of the new key. +
   `issuerKif` -- the KIF of the current card's issuer key. +
   `issuerKvc` -- the KVC of the current card's issuer key.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Change Key* command is not available for this card. +
   `IllegalArgumentException` -- if the provided key index is out of range. +
@@ -1883,6 +1925,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 
 ===== Operations
 
+[[op_SecureTransactionManager_getCryptoExtension]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `getCryptoExtension(cryptoExtensionClass: Class<E>) -> E extends CardTransactionCryptoExtension`
@@ -1890,7 +1933,6 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
 | Returns     | A `E extends CardTransactionCryptoExtension`.
-| Throws      | `IllegalArgumentException` -- if the supplied class is `null`.
 |===
 
 [cols="1h,4", grid=rows, frame=all]
@@ -1902,7 +1944,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
   via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
   this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
   mode.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | `IllegalStateException` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
 |===
 
@@ -1911,7 +1953,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Signature   | `prepareCancelSecureSession() -> T`
 | Since       | 2.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- MUST NOT raise exceptions.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
@@ -2016,6 +2058,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignKif]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting`
@@ -2025,6 +2068,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignDefaultKif]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting`
@@ -2034,6 +2078,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignDefaultKvc]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting`
@@ -2043,6 +2088,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_addAuthorizedSessionKey]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
@@ -2052,6 +2098,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_addAuthorizedSvKey]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
@@ -2061,6 +2108,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_setPinVerificationCipheringKey]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
@@ -2070,6 +2118,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_setPinModificationCipheringKey]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
@@ -2079,6 +2128,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
@@ -2088,6 +2138,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
@@ -2097,6 +2148,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
@@ -2106,6 +2158,7 @@ it directly via the sub-type of `TransactionManager` that has been instantiated.
 | Throws      | None.
 |===
 
+[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_allDf]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
@@ -2154,39 +2207,41 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 
 ===== Selection / data retrieval operations
 
+[[op_TransactionManager_prepareSelectFile_byLid]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(lid: short) -> T`
 | Since       | 1.1
 | Description | Adds a *Select File* command targeting an EF by LID. _Fails if the file is not an EF._
 | Parameters  | `lid` -- the LID of the EF to select.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareSelectFile_byControl]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0
 | Description | Adds a *Select File* command using a navigation control.
 | Parameters  | `selectFileControl` -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
-| Returns     | The current instance (`T`), to allow fluent composition.
-| Throws      | `IllegalArgumentException` -- if `selectFileControl` is `null`.
+| Returns     | The current instance (`T`).
 |===
 
+[[op_TransactionManager_prepareGetData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0
 | Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
 | Parameters  | `tag` -- the data type to retrieve.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Get Data* command with the provided tag is not supported. +
-  `IllegalArgumentException` -- if `tag` is `null`. +
   `IllegalStateException` -- if a secure session is open.
 |===
 
+[[op_TransactionManager_preparePutData]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
@@ -2195,15 +2250,16 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `tag`  -- the data type to inject. +
   `data` -- the data to inject.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Put Data* command with the provided tag is not supported. +
-  `IllegalArgumentException` -- if `tag` is `null` or `data` is empty. +
+  `IllegalArgumentException` -- if `data` is empty. +
   `IllegalStateException` -- if a secure session is open.
 |===
 
 ===== Read operations
 
+[[op_TransactionManager_prepareReadRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> T`
@@ -2212,10 +2268,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `sfi`           -- the SFI of the EF to read. +
   `recordNumber`  -- the record to read.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareReadRecords]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T`
@@ -2226,10 +2283,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
   `fromRecordNumber` -- the number of the first record to read. +
   `toRecordNumber`   -- the number of the last record to read. +
   `recordSize`       -- the record length.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareReadRecordsPartially]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
@@ -2241,13 +2299,14 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
   `toRecordNumber`   -- the number of the last record to read. +
   `offset`           -- the offset in the records where to start reading (`0` indicates the first byte). +
   `nbBytesToRead`    -- the number of bytes to read from each record.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if this command is not supported by this card. +
   `IllegalArgumentException` -- if one of the provided arguments is out of range. +
   `IllegalStateException` -- if a secure session is open.
 |===
 
+[[op_TransactionManager_prepareReadBinary]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T`
@@ -2257,10 +2316,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`           -- the SFI of the EF. +
   `offset`        -- the offset (`0` indicates the first byte). +
   `nbBytesToRead` -- the number of bytes to read.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareReadCounter]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T`
@@ -2269,17 +2329,18 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `sfi`              -- the SFI of the EF. +
   `nbCountersToRead` -- the number of counters to read.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareSearchRecords]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1
 | Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
 | Parameters  | `data` -- the input/output data containing the parameters of the command.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Search Record Multiple* command is not available for this card. +
   `IllegalArgumentException` -- if the input data is inconsistent. +
@@ -2291,12 +2352,13 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Signature   | `prepareCheckPinStatus() -> T`
 | Since       | 1.0
 | Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the PIN feature is not available for this card.
 |===
 
 ===== Write operations
 
+[[op_TransactionManager_prepareAppendRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareAppendRecord(sfi: byte, recordData: byte array) -> T`
@@ -2305,10 +2367,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `sfi`        -- the SFI to select. +
   `recordData` -- the new record data to write.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareUpdateRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
@@ -2318,10 +2381,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`          -- the SFI to select. +
   `recordNumber` -- the record to update. +
   `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareWriteRecord]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
@@ -2331,10 +2395,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`          -- the SFI to select. +
   `recordNumber` -- the record to write. +
   `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareUpdateBinary]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
@@ -2344,10 +2409,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`    -- the SFI of the EF to select. +
   `offset` -- the offset (`0` indicates the first byte). +
   `data`   -- the new data.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if this command is not supported by this card.
 |===
 
+[[op_TransactionManager_prepareWriteBinary]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T`
@@ -2357,10 +2423,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`    -- the SFI of the EF to select. +
   `offset` -- the offset (`0` indicates the first byte). +
   `data`   -- the data to write over the existing data.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareIncreaseCounter]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T`
@@ -2370,10 +2437,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`           -- SFI of the EF to select. +
   `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
   `incValue`      -- value to add to the counter (positive integer `<= 16777215`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareIncreaseCounters]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T`
@@ -2382,10 +2450,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `sfi`                       -- SFI of the EF to select. +
   `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareDecreaseCounter]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
@@ -2395,10 +2464,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`           -- SFI of the EF to select. +
   `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
   `decValue`      -- value to subtract from the counter (positive integer `<= 16777215`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareDecreaseCounters]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T`
@@ -2407,10 +2477,11 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | Parameters
 | `sfi`                       -- SFI of the EF to select. +
   `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
+[[op_TransactionManager_prepareSetCounter]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
@@ -2420,7 +2491,7 @@ exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardS
 | `sfi`           -- SFI of the EF to select. +
   `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
   `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | `IllegalStateException` -- if the current counter value is unknown.
 |===
 
@@ -2434,29 +2505,31 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0
 | Description | Reads every SV log (load + debit).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===
 
+[[op_TransactionManager_prepareVerifyPin]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareVerifyPin(pin: byte array) -> T`
 | Since       | 1.6
 | Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
 | Parameters  | `pin` -- the PIN code value (4-byte long `byte array`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
   `IllegalArgumentException` -- if the provided argument is out of range.
 |===
 
+[[op_TransactionManager_prepareChangePin]]
 [cols="1h,4", grid=rows, frame=all]
 |===
 | Signature   | `prepareChangePin(newPin: byte array) -> T`
 | Since       | 1.6
 | Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
 | Parameters  | `newPin` -- the new PIN code value (4-byte long `byte array`).
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
   `IllegalArgumentException` -- if the provided argument is out of range. +
@@ -2468,7 +2541,7 @@ the command would overflow the modification buffer and the multiple-session mode
 | Signature   | `prepareGenerateAsymmetricKeyPair() -> T`
 | Since       | 2.1
 | Description | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
-| Returns     | The current instance (`T`), to allow fluent composition.
+| Returns     | The current instance (`T`).
 | Throws      | None.
 |===
 
@@ -2488,9 +2561,9 @@ supports multi-channel.
 | Signature   | `getSecureSessionStatus() -> SecureSessionStatus`
 | Since       | 3.0
 | Description
-| Returns a non-`null` <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
+| Returns a <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
   state. The returned object is immutable and captures the state at the moment of the call.
-| Returns     | A non-`null` `SecureSessionStatus`.
+| Returns     | A `SecureSessionStatus`.
 | Throws      | None.
 |===
 
@@ -2503,7 +2576,8 @@ supports multi-channel.
 | Throws      | None.
 |===
 
-=== Package calypso.card.transaction.spi
+[[sec_pkg_calypso_card_transaction_spi]]
+=== Cryptographic Extension SPI (`calypso.card.transaction.spi`)
 
 [[type_AsymmetricCryptoCardTransactionManagerFactory]]
 ==== AsymmetricCryptoCardTransactionManagerFactory
@@ -2528,7 +2602,6 @@ supports multi-channel.
 |===
 
 // =============================================================================
-[[sec_exceptions]]
 [[type_CardTransactionCryptoExtension]]
 ==== CardTransactionCryptoExtension
 
@@ -2565,6 +2638,7 @@ content is exposed through the [CNA-TCCA-API] extension that produced them.
 | Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
 |===
 
+[[sec_exceptions]]
 == Exceptions
 
 All exception types defined by this specification are *unchecked* (runtime). Communication-level errors with the

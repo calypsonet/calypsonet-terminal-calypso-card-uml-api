@@ -301,300 +301,7 @@ The API is organized into the following packages:
 | `VERSION` | `string` | 1.0 | String representation of the API version (e.g. `"3.0"`).
 |===
 
-=== Enumerations
-
-==== Calypso Card Product Type
-
-Nested inside `CalypsoCard`. _Since 1.0._
-
-[cols="1,1,4",options="header"]
-|===
-| Value               | Since | Description
-| `PRIME_REVISION_1`  | 1.0 | Calypso Prime revision 1.x.
-| `PRIME_REVISION_2`  | 1.0 | Calypso Prime revision 2.x.
-| `PRIME_REVISION_3`  | 1.0 | Calypso Prime revision 3.x.
-| `LIGHT`             | 1.0 | Calypso Light.
-| `BASIC`             | 1.0 | Calypso Basic.
-| `UNKNOWN`           | 1.0 | Application Type is `0` or `FFh`, or selection data could not be properly parsed.
-|===
-
-==== Elementary File Type
-
-Nested inside `ElementaryFile`. _Since 1.0._
-
-[cols="1,1,4",options="header"]
-|===
-| Value                | Since | Description
-| `LINEAR`             | 1.0 | Linear EF (1 to several records).
-| `BINARY`             | 1.0 | Binary EF (single continuous sequence of data bytes).
-| `CYCLIC`             | 1.0 | Cyclic EF (records organised in a cycle, from the most recent to the oldest).
-| `COUNTERS`           | 1.0 | Counters EF (single record containing K counters of three bytes each).
-| `SIMULATED_COUNTERS` | 1.0 | Simulated counter EF (linear file with a single record, kept for Calypso Rev 2 compatibility).
-|===
-
-[[type_GetDataTag]]
-==== Get Data Tag
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value                       | Since | Description
-| `FCP_FOR_CURRENT_FILE`      | 1.0 | FCP for the current file, as returned by *Select File*.
-| `FCI_FOR_CURRENT_DF`        | 1.0 | FCI for the current DF, as returned by *Select Application*.
-| `EF_LIST`                   | 1.1 | List of EFs in the current DF.
-| `TRACEABILITY_INFORMATION`  | 1.1 | Product traceability information.
-| `CARD_PUBLIC_KEY`           | 2.1 | Card public key.
-| `CARD_CERTIFICATE`          | 2.1 | Card certificate.
-| `CA_CERTIFICATE`            | 2.1 | CA certificate.
-|===
-
-[[type_PutDataTag]]
-==== Put Data Tag
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card`
-| Since    | 2.1
-| Purpose  | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value             | Since | Description
-| `CARD_KEY_PAIR`   | 2.1 | Card key pair.
-| `CARD_CERTIFICATE`| 2.1 | Card certificate.
-| `CA_CERTIFICATE`  | 2.1 | CA certificate.
-|===
-
-[[type_SecureSessionType]]
-==== Secure Session Type
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card.transaction`
-| Since    | 3.0
-| Purpose  | Cryptographic nature of a Calypso secure session.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value        | Since | Description
-| `SYMMETRIC`  | 3.0 | PSO/SAM sessions, Regular and Extended modes.
-| `ASYMMETRIC` | 3.0 | PKI mode.
-|===
-
-NOTE: This enumeration reflects the *cryptographic nature* of the session and not the *application mode*
-(Regular / Extended).
-Both symmetric modes share the same underlying cryptography and only differ in their configuration at the `TransactionManager` level; the integrator who needs to know the application mode obtains it directly via the sub-type of `TransactionManager` that has been instantiated.
-
-[[type_SelectFileControl]]
-==== Select File Control
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value         | Since | Description
-| `FIRST_EF`    | 1.0 | The first EF of the current Calypso DF.
-| `NEXT_EF`     | 1.0 | The next EF of the current Calypso DF.
-| `CURRENT_DF`  | 1.0 | The current Calypso DF.
-|===
-
-[[type_SvAction]]
-==== SV Action
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Direction of an SV action.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value  | Since | Description
-| `DO`   | 1.0 | In a `RELOAD`, load a positive amount; in a `DEBIT`, debit a positive amount.
-| `UNDO` | 1.0 | In a `RELOAD`, load a negative amount; in a `DEBIT`, cancel (totally or partially) a previous debit.
-|===
-
-[[type_SvOperation]]
-==== SV Operation
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Type of Stored Value operation.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value     | Since | Description
-| `RELOAD`  | 1.0 | Increase the SV balance.
-| `DEBIT`   | 1.0 | Decrease the SV balance.
-|===
-
-[[type_WriteAccessLevel]]
-==== Write Access Level
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Enumeration
-| Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
-|===
-
-[cols="1,1,4",options="header"]
-|===
-| Value              | Since | Description
-| `PERSONALIZATION`  | 1.0 | Personalisation, load and debit operations -- uses the *issuer* key.
-| `LOAD`             | 1.0 | Load and debit operations -- uses the *load* key.
-| `DEBIT`            | 1.0 | Debit operations only -- uses the *debit* key.
-|===
-
-[[sec_exceptions]]
-=== Exceptions
-
-[[type_CardSignatureNotVerifiableException]]
-==== Card Signature Not Verifiable Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates that the card has correctly closed the secure session but that the authenticity of the session cannot be verified because the crypto module is no longer available (timeout, network problem, etc.).
-|===
-
-[[type_CryptoException]]
-==== Crypto Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates that an error occurred when computing a crypto operation.
-|===
-
-[[type_CryptoIOException]]
-==== Crypto IO Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates a communication error with the crypto module.
-|===
-
-[[type_InconsistentDataException]]
-==== Inconsistent Data Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy between data read in session vs out of session.
-|===
-
-[[type_InvalidCardSignatureException]]
-==== Invalid Card Signature Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates that the card signature is incorrect. For symmetric-key transactions, this typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this simply means that the card signature is invalid.
-|===
-
-[[type_InvalidCertificateException]]
-==== Invalid Certificate Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 2.1
-| Purpose  | Indicates that a certificate failed validation (signature, validity period, issuer or subject details, constraints, extensions, expiration, revocation).
-|===
-
-[[type_InvalidPinException]]
-==== Invalid PIN Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates that the provided PIN is invalid.
-|===
-
-[[type_SelectFileException]]
-==== Select File Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.4
-| Purpose  | Indicates that file selection failed because the file was not found (status word `6A82h`).
-|===
-
-[[type_SessionBufferOverflowException]]
-==== Session Buffer Overflow Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates that the secure session cannot be performed atomically because the modification buffer capacity is insufficient.
-|===
-
-[[type_UnauthorizedKeyException]]
-==== Unauthorized Key Exception
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Runtime exception
-| Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Indicates that the card requires an unauthorised session key.
-|===
-
-=== Interfaces
-
-[[type_AsymmetricCryptoCardTransactionManagerFactory]]
-==== Asymmetric Crypto Card Transaction Manager Factory
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Marker interface (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
-|===
+=== API Interfaces
 
 [[type_AsymmetricCryptoSecuritySetting]]
 ==== Asymmetric Crypto Security Setting
@@ -1253,17 +960,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Returns     | A `CalypsoCardSelectionExtension`.
 |===
 
-[[type_CardTransactionCryptoExtension]]
-==== Card Transaction Crypto Extension
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Marker interface (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker enriching the card transaction command set with specific crypto commands (e.g. signature computation/verification). Declares no operation at the API level.
-|===
-
 [[type_DirectoryHeader]]
 ==== Directory Header
 
@@ -1577,31 +1273,6 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 
 `FreeTransactionManager` does not add any operation.
-
-[[type_PcaCertificate]]
-==== PCA Certificate
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Marker interfaces (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Markers for PCA, CA and card certificates exposed by [CNA-TCCA-API] extensions.
-|===
-
-`PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.
-Their concrete content is exposed through the [CNA-TCCA-API] extension that produced them.
-
-[[type_PcaCertificateParser]]
-==== PCA Certificate Parser
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Marker interfaces (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Markers for CA and card certificate parsers exposed by [CNA-TCCA-API] extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
-|===
 
 [[type_SearchCommandData]]
 ==== Search Command Data
@@ -2272,17 +1943,6 @@ mode.
 | Throws      | None.
 |===
 
-[[type_SymmetricCryptoCardTransactionManagerFactory]]
-==== Symmetric Crypto Card Transaction Manager Factory
-
-[cols="1h,4",grid=rows,frame=all]
-|===
-| Kind     | Marker interface (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
-|===
-
 [[type_SymmetricCryptoSecuritySetting]]
 ==== Symmetric Crypto Security Setting
 
@@ -2862,6 +2522,348 @@ Processing of prepared commands is inherited from `CardTransactionManager` ([CNA
 `IsoCardTransactionManager` stereotype.
 The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
 Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of [CNA-TR-API] when the underlying card supports multi-channel.
+
+=== SPI Interfaces
+
+[[type_AsymmetricCryptoCardTransactionManagerFactory]]
+==== Asymmetric Crypto Card Transaction Manager Factory
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.0
+| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
+|===
+
+[[type_CardTransactionCryptoExtension]]
+==== Card Transaction Crypto Extension
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.0
+| Purpose  | Marker enriching the card transaction command set with specific crypto commands (e.g. signature computation/verification). Declares no operation at the API level.
+|===
+
+[[type_PcaCertificate]]
+==== PCA Certificate
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Marker interfaces (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Markers for PCA, CA and card certificates exposed by [CNA-TCCA-API] extensions.
+|===
+
+`PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.
+Their concrete content is exposed through the [CNA-TCCA-API] extension that produced them.
+
+[[type_PcaCertificateParser]]
+==== PCA Certificate Parser
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Marker interfaces (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Markers for CA and card certificate parsers exposed by [CNA-TCCA-API] extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
+|===
+
+[[type_SymmetricCryptoCardTransactionManagerFactory]]
+==== Symmetric Crypto Card Transaction Manager Factory
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.0
+| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
+|===
+
+=== Enumerations
+
+==== Calypso Card Product Type
+
+Nested inside `CalypsoCard`. _Since 1.0._
+
+[cols="1,1,4",options="header"]
+|===
+| Value               | Since | Description
+| `PRIME_REVISION_1`  | 1.0 | Calypso Prime revision 1.x.
+| `PRIME_REVISION_2`  | 1.0 | Calypso Prime revision 2.x.
+| `PRIME_REVISION_3`  | 1.0 | Calypso Prime revision 3.x.
+| `LIGHT`             | 1.0 | Calypso Light.
+| `BASIC`             | 1.0 | Calypso Basic.
+| `UNKNOWN`           | 1.0 | Application Type is `0` or `FFh`, or selection data could not be properly parsed.
+|===
+
+==== Elementary File Type
+
+Nested inside `ElementaryFile`. _Since 1.0._
+
+[cols="1,1,4",options="header"]
+|===
+| Value                | Since | Description
+| `LINEAR`             | 1.0 | Linear EF (1 to several records).
+| `BINARY`             | 1.0 | Binary EF (single continuous sequence of data bytes).
+| `CYCLIC`             | 1.0 | Cyclic EF (records organised in a cycle, from the most recent to the oldest).
+| `COUNTERS`           | 1.0 | Counters EF (single record containing K counters of three bytes each).
+| `SIMULATED_COUNTERS` | 1.0 | Simulated counter EF (linear file with a single record, kept for Calypso Rev 2 compatibility).
+|===
+
+[[type_GetDataTag]]
+==== Get Data Tag
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card`
+| Since    | 1.0
+| Purpose  | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value                       | Since | Description
+| `FCP_FOR_CURRENT_FILE`      | 1.0 | FCP for the current file, as returned by *Select File*.
+| `FCI_FOR_CURRENT_DF`        | 1.0 | FCI for the current DF, as returned by *Select Application*.
+| `EF_LIST`                   | 1.1 | List of EFs in the current DF.
+| `TRACEABILITY_INFORMATION`  | 1.1 | Product traceability information.
+| `CARD_PUBLIC_KEY`           | 2.1 | Card public key.
+| `CARD_CERTIFICATE`          | 2.1 | Card certificate.
+| `CA_CERTIFICATE`            | 2.1 | CA certificate.
+|===
+
+[[type_PutDataTag]]
+==== Put Data Tag
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card`
+| Since    | 2.1
+| Purpose  | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value             | Since | Description
+| `CARD_KEY_PAIR`   | 2.1 | Card key pair.
+| `CARD_CERTIFICATE`| 2.1 | Card certificate.
+| `CA_CERTIFICATE`  | 2.1 | CA certificate.
+|===
+
+[[type_SecureSessionType]]
+==== Secure Session Type
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card.transaction`
+| Since    | 3.0
+| Purpose  | Cryptographic nature of a Calypso secure session.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value        | Since | Description
+| `SYMMETRIC`  | 3.0 | PSO/SAM sessions, Regular and Extended modes.
+| `ASYMMETRIC` | 3.0 | PKI mode.
+|===
+
+NOTE: This enumeration reflects the *cryptographic nature* of the session and not the *application mode*
+(Regular / Extended).
+Both symmetric modes share the same underlying cryptography and only differ in their configuration at the `TransactionManager` level; the integrator who needs to know the application mode obtains it directly via the sub-type of `TransactionManager` that has been instantiated.
+
+[[type_SelectFileControl]]
+==== Select File Control
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card`
+| Since    | 1.0
+| Purpose  | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value         | Since | Description
+| `FIRST_EF`    | 1.0 | The first EF of the current Calypso DF.
+| `NEXT_EF`     | 1.0 | The next EF of the current Calypso DF.
+| `CURRENT_DF`  | 1.0 | The current Calypso DF.
+|===
+
+[[type_SvAction]]
+==== SV Action
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.0
+| Purpose  | Direction of an SV action.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value  | Since | Description
+| `DO`   | 1.0 | In a `RELOAD`, load a positive amount; in a `DEBIT`, debit a positive amount.
+| `UNDO` | 1.0 | In a `RELOAD`, load a negative amount; in a `DEBIT`, cancel (totally or partially) a previous debit.
+|===
+
+[[type_SvOperation]]
+==== SV Operation
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.0
+| Purpose  | Type of Stored Value operation.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value     | Since | Description
+| `RELOAD`  | 1.0 | Increase the SV balance.
+| `DEBIT`   | 1.0 | Decrease the SV balance.
+|===
+
+[[type_WriteAccessLevel]]
+==== Write Access Level
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card`
+| Since    | 1.0
+| Purpose  | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
+|===
+
+[cols="1,1,4",options="header"]
+|===
+| Value              | Since | Description
+| `PERSONALIZATION`  | 1.0 | Personalisation, load and debit operations -- uses the *issuer* key.
+| `LOAD`             | 1.0 | Load and debit operations -- uses the *load* key.
+| `DEBIT`            | 1.0 | Debit operations only -- uses the *debit* key.
+|===
+
+[[sec_exceptions]]
+=== Exceptions
+
+[[type_CardSignatureNotVerifiableException]]
+==== Card Signature Not Verifiable Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.2
+| Purpose  | Indicates that the card has correctly closed the secure session but that the authenticity of the session cannot be verified because the crypto module is no longer available (timeout, network problem, etc.).
+|===
+
+[[type_CryptoException]]
+==== Crypto Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 2.0
+| Purpose  | Indicates that an error occurred when computing a crypto operation.
+|===
+
+[[type_CryptoIOException]]
+==== Crypto IO Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 2.0
+| Purpose  | Indicates a communication error with the crypto module.
+|===
+
+[[type_InconsistentDataException]]
+==== Inconsistent Data Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.2
+| Purpose  | Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy between data read in session vs out of session.
+|===
+
+[[type_InvalidCardSignatureException]]
+==== Invalid Card Signature Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.2
+| Purpose  | Indicates that the card signature is incorrect. For symmetric-key transactions, this typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this simply means that the card signature is invalid.
+|===
+
+[[type_InvalidCertificateException]]
+==== Invalid Certificate Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 2.1
+| Purpose  | Indicates that a certificate failed validation (signature, validity period, issuer or subject details, constraints, extensions, expiration, revocation).
+|===
+
+[[type_InvalidPinException]]
+==== Invalid PIN Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 2.0
+| Purpose  | Indicates that the provided PIN is invalid.
+|===
+
+[[type_SelectFileException]]
+==== Select File Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.4
+| Purpose  | Indicates that file selection failed because the file was not found (status word `6A82h`).
+|===
+
+[[type_SessionBufferOverflowException]]
+==== Session Buffer Overflow Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.2
+| Purpose  | Indicates that the secure session cannot be performed atomically because the modification buffer capacity is insufficient.
+|===
+
+[[type_UnauthorizedKeyException]]
+==== Unauthorized Key Exception
+
+[cols="1h,4",grid=rows,frame=all]
+|===
+| Kind     | Runtime exception
+| Namespace  | `calypso.card.transaction`
+| Since    | 1.0
+| Purpose  | Indicates that the card requires an unauthorised session key.
+|===
 
 [[sec_behaviours]]
 == Behavioural Requirements

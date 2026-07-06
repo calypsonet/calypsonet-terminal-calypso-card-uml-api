@@ -33,8 +33,10 @@ v3.0.0-SNAPSHOT, {docdate}
 [abstract]
 == Abstract
 
-This document is the official technical specification of the **{spec-name}** standardised by the **{organization}** ({short-name}).
-It defines, in a language-agnostic way, the interfaces, classes, enumerations, exceptions, structural relationships and behavioural requirements that any conforming implementation of the {spec-name} MUST satisfy.
+This document is the official technical specification of the **{spec-name}** standardised
+by the **{organization}** ({short-name}).
+It defines, in a language-agnostic way, the interfaces, classes, enumerations, exceptions, structural
+relationships and behavioural requirements that any conforming implementation of the {spec-name} MUST satisfy.
 
 The {spec-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
 It builds on top of the *Terminal Reader API* ([CNA-TR-API]) and delegates every cryptographic operation to a symmetric ([CNA-TCCS-API]) or asymmetric ([CNA-TCCA-API]) crypto module.
@@ -51,8 +53,9 @@ It builds on top of the *Terminal Reader API* ([CNA-TR-API]) and delegates every
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===
 
-NOTE: The present document specifies the {spec-version} of the {spec-name} as an *initial release*, without historical reference to earlier drafts.
-It defines a single, coherent baseline against which conforming implementations are evaluated.
+NOTE: The present document specifies the {spec-version} of the {spec-name} as an *initial release*, without
+historical reference to earlier drafts. It defines a single, coherent baseline against which conforming
+implementations are evaluated.
 
 // =============================================================================
 == Introduction
@@ -91,14 +94,17 @@ The following topics are *out of scope*:
 
 A software product conforms to this specification if and only if:
 
-. it implements every interface and class defined in <<sec_specification>> with the operations and semantics prescribed in this document,
+. it implements every interface and class defined in <<sec_specification>> with the operations and semantics
+  prescribed in this document,
 . it raises exceptions exclusively of the types defined in <<sec_exceptions>> for the situations described,
 . it preserves the structural and behavioural relationships described in <<sec_architecture>>.
 
 Throughout this specification, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,
-**MAY** and **OPTIONAL** are to be interpreted as described in **RFC 2119** and **RFC 8174** when, and only when, they appear in all capitals.
+**MAY** and **OPTIONAL** are to be interpreted as described in **RFC 2119** and **RFC 8174** when, and only when,
+they appear in all capitals.
 
-In conformance with RFC 2119, **SHALL** is equivalent to **MUST**; this specification uses **MUST** exclusively in order to avoid ambiguity.
+In conformance with RFC 2119, **SHALL** is equivalent to **MUST**; this specification uses **MUST** exclusively in
+order to avoid ambiguity.
 
 === Document Conventions
 
@@ -2905,5 +2911,4 @@ When the pre-open mode is active, this optimisation MUST NOT be performed.
 
 Copyright (c) {organization}, https://calypsonet.org.
 
-This specification is distributed under the terms of the *Eclipse Public License -- v 2.0* (EPL-2.0).
-See https://www.eclipse.org/legal/epl-2.0/ for the license text.
+This specification is distributed under the terms of the *Eclipse Public License -- v 2.0* (EPL-2.0). See https://www.eclipse.org/legal/epl-2.0/ for the license text.

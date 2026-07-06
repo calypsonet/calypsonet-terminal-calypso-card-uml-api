@@ -209,7 +209,7 @@ not restated for each operation:
 | PKI Mode          | Secure session mode using asymmetric cryptography (Calypso 3.3+).
 | Stored Value (SV) | Calypso feature exposing a card-resident monetary counter.
 | Crypto Module     | Component implementing the SPI exposed by [CNA-TCCS-API] or [CNA-TCCA-API].
-| KIF / KVC         | Calypso Key IDentifier / Key Version Code.
+| KIF / KVC         | Calypso Key Identifier / Key Version Code.
 | HCE               | Host Card Emulation.
 |===
 

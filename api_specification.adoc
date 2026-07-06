@@ -121,11 +121,11 @@ as-is in the UML class diagram (<<sec_class_diagram>>).
 | Symbolic type    | Description                                                     | Typical bindings
 | `string`         | Sequence of characters, UTF-8 encoded by default.                | `String`, `string`, `str`.
 | `boolean`        | Two-state truth value.                                           | `boolean`, `bool`.
-| `integer`        | Signed 32-bit integer.                                           | `int`, `Int32`.
-| `short`          | Signed 16-bit integer.                                           | `short`, `Int16`.
 | `byte`           | Signed 8-bit value.                                              | `byte`, `i8`.
+| `short`          | Signed 16-bit integer.                                           | `short`, `Int16`.
+| `integer`        | Signed 32-bit integer.                                           | `int`, `Int32`.
 | `byte array`     | Ordered sequence of octets.                                      | `byte[]`, `[u8]`, `bytes`.
-| `list<T>`        | Ordered collection of `T` values.                                | `List<T>`, `Vec<T>`.
+| `list<T>`        | Ordered collection of `T` values, may contain duplicates.        | `List<T>`, `Vec<T>`.
 | `set<T>`         | Unordered collection of unique `T` values.                       | `Set<T>`, `HashSet<T>`.
 | `map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.| `Map<K,V>`, `Dictionary<K,V>`.
 | `sortedMap<K,V>` | Associative array sorted by key.                                 | `SortedMap<K,V>`, `BTreeMap<K,V>`.

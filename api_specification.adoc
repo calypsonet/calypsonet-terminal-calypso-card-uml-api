@@ -39,7 +39,7 @@ It defines, in a language-agnostic way, the interfaces, classes, enumerations, e
 relationships and behavioural requirements that any conforming implementation of the {spec-name} MUST satisfy.
 
 The {spec-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
-It builds on top of the *Terminal Reader API* ([CNA-TR-API]) and delegates every cryptographic operation to a symmetric ([CNA-TCCS-API]) or asymmetric ([CNA-TCCA-API]) crypto module.
+It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and delegates every cryptographic operation to a symmetric (<<ref_cna_tccs,CNA-TCCS-API>>) or asymmetric (<<ref_cna_tcca,CNA-TCCA-API>>) crypto module.
 
 [discrete]
 == Document Status
@@ -64,11 +64,11 @@ which each member was introduced.
 
 The {spec-name} defines the public surface used by terminal applications to:
 
-* select a Calypso card through a [CNA-TR-API] selection scenario enriched with Calypso-specific commands;
+* select a Calypso card through a <<ref_cna_tr,CNA-TR-API>> selection scenario enriched with Calypso-specific commands;
 * operate read-only transactions without involving a crypto module (*free* transaction);
-* operate fully authenticated transactions using a *symmetric* crypto module ([CNA-TCCS-API]) -- either in the
+* operate fully authenticated transactions using a *symmetric* crypto module (<<ref_cna_tccs,CNA-TCCS-API>>) -- either in the
 *regular* mode (compatible with every Calypso product) or in the *extended* mode (additional features only available on Calypso Prime Extended);
-* operate fully authenticated transactions using an *asymmetric* crypto module ([CNA-TCCA-API]) in *PKI* mode;
+* operate fully authenticated transactions using an *asymmetric* crypto module (<<ref_cna_tcca,CNA-TCCA-API>>) in *PKI* mode;
 * expose a dynamic view of the card (`CalypsoCard`) updated throughout the transaction.
 
 === Scope
@@ -216,7 +216,7 @@ synchronisation results in undefined behaviour. Distinct instances MAY be used c
 | Extended Mode     | Secure session mode supporting additional features (early mutual authentication, encryption of session APDUs, larger sessions). Available on Calypso Prime Extended.
 | PKI Mode          | Secure session mode using asymmetric cryptography (Calypso 3.3+).
 | Stored Value (SV) | Calypso feature exposing a card-resident monetary counter.
-| Crypto Module     | Component implementing the SPI exposed by [CNA-TCCS-API] or [CNA-TCCA-API].
+| Crypto Module     | Component implementing the SPI exposed by <<ref_cna_tccs,CNA-TCCS-API>> or <<ref_cna_tcca,CNA-TCCA-API>>.
 | KIF / KVC         | Calypso Key Identifier / Key Version Code.
 | HCE               | Host Card Emulation.
 |===
@@ -427,7 +427,7 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 |===
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
-| Extends  | `IsoSmartCard` ([CNA-TR-API])
+| Extends  | `IsoSmartCard` (<<ref_cna_tr,CNA-TR-API>>)
 | Since    | 1.0
 | Purpose  | Dynamic view of the card's content, updated from selection to the end of the transaction.
 |===
@@ -884,9 +884,9 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
-| Extends  | `CardSelectionExtension` ([CNA-TR-API])
+| Extends  | `CardSelectionExtension` (<<ref_cna_tr,CNA-TR-API>>)
 | Since    | 2.0
-| Purpose  | Enriches the [CNA-TR-API] selection scenario with Calypso-specific commands and pre-opening of a secure session.
+| Purpose  | Enriches the <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and pre-opening of a secure session.
 |===
 
 By default the selection rejects PRIME revision 3 cards that have been *invalidated*.
@@ -2187,9 +2187,9 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Generics | `<T extends TransactionManager<T>>`
-| Extends  | `IsoCardTransactionManager` ([CNA-TR-API])
+| Extends  | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
 | Since    | 2.0
-| Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by [CNA-TR-API] when the underlying ISO/IEC 7816-4 card supports multi-channel.
+| Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
@@ -2559,10 +2559,10 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 
 ===== Processing Operations
 
-Processing of prepared commands is inherited from `CardTransactionManager` ([CNA-TR-API]) via the
+Processing of prepared commands is inherited from `CardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>) via the
 `IsoCardTransactionManager` stereotype.
 The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
-Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of [CNA-TR-API] when the underlying card supports multi-channel.
+Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of <<ref_cna_tr,CNA-TR-API>> when the underlying card supports multi-channel.
 
 === SPI Interfaces
 
@@ -2596,11 +2596,11 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 | Kind     | Marker interfaces (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.1
-| Purpose  | Markers for PCA, CA and card certificates exposed by [CNA-TCCA-API] extensions.
+| Purpose  | Markers for PCA, CA and card certificates exposed by <<ref_cna_tcca,CNA-TCCA-API>> extensions.
 |===
 
 `PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.
-Their concrete content is exposed through the [CNA-TCCA-API] extension that produced them.
+Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> extension that produced them.
 
 [[type_PcaCertificateParser]]
 ==== PCA Certificate Parser
@@ -2610,7 +2610,7 @@ Their concrete content is exposed through the [CNA-TCCA-API] extension that prod
 | Kind     | Marker interfaces (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.1
-| Purpose  | Markers for CA and card certificate parsers exposed by [CNA-TCCA-API] extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
+| Purpose  | Markers for CA and card certificate parsers exposed by <<ref_cna_tcca,CNA-TCCA-API>> extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
 |===
 
 [[type_SymmetricCryptoCardTransactionManagerFactory]]
@@ -2916,7 +2916,7 @@ Failed write commands MUST NOT update the in-memory image.
 When the pre-open mode is active, this optimisation MUST NOT be performed.
 . The *PKI* mode (`SecurePkiModeTransactionManager`) MUST NOT be available unless the card declares
 `isPkiModeSupported() == true`.
-. Communication errors at the reader, card or APDU level MUST be reported through the [CNA-TR-API] exceptions (`ReaderCommunicationException`, `CardCommunicationException`, `InvalidCardResponseException`); this specification does not duplicate them.
+. Communication errors at the reader, card or APDU level MUST be reported through the <<ref_cna_tr,CNA-TR-API>> exceptions (`ReaderCommunicationException`, `CardCommunicationException`, `InvalidCardResponseException`); this specification does not duplicate them.
 . Implementations MUST raise `SessionBufferOverflowException` instead of silently truncating a session when multiple-session mode is disabled and the modification buffer would overflow.
 
 // =============================================================================

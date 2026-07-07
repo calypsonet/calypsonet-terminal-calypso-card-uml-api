@@ -48,7 +48,6 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 |===
 | Specification ID    | {spec-id}
 | Version             | {spec-version}
-| Status              | Working Draft -- submitted to the CNA TC Terminal for validation
 | Editor              | {organization}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===

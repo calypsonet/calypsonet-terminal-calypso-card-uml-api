@@ -428,7 +428,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getDirectoryHeader() -> DirectoryHeader`
+| Signature   | `getDirectoryHeader() -> DirectoryHeader?`
 | Since       | 1.0
 | Description | Metadata of the current DF; `null` if not set.
 | Returns     | A `DirectoryHeader`.
@@ -438,7 +438,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 [[op_CalypsoCard_getFileBySfi]]
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile`
+| Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
 | Returns     | A `ElementaryFile`.
@@ -448,7 +448,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 [[op_CalypsoCard_getFileByLid]]
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getFileByLid(lid: short) -> ElementaryFile`
+| Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose LID matches; `null` if not found.
 | Returns     | A `ElementaryFile`.
@@ -724,7 +724,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getSvLoadLogRecord() -> SvLoadLogRecord`
+| Signature   | `getSvLoadLogRecord() -> SvLoadLogRecord?`
 | Since       | 1.0
 | Description | Last SV load log record; `null` if not available.
 | Returns     | A `SvLoadLogRecord`.
@@ -733,7 +733,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getSvDebitLogLastRecord() -> SvDebitLogRecord`
+| Signature   | `getSvDebitLogLastRecord() -> SvDebitLogRecord?`
 | Since       | 1.0
 | Description | Last SV debit log record; `null` if not available.
 | Returns     | A `SvDebitLogRecord`.
@@ -1094,7 +1094,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getHeader() -> FileHeader`
+| Signature   | `getHeader() -> FileHeader?`
 | Since       | 1.0
 | Description | Returns the file header, or `null` if not yet set.
 | Returns     | A `FileHeader`.
@@ -1517,7 +1517,7 @@ To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus(
 
 [cols="1h,4", grid=rows, frame=all]
 |===
-| Signature   | `getWriteAccessLevel() -> WriteAccessLevel`
+| Signature   | `getWriteAccessLevel() -> WriteAccessLevel?`
 | Since       | 3.0
 | Description | Returns the write access level requested at session opening. MUST return `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
 | Returns     | A `WriteAccessLevel`.

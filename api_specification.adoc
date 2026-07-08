@@ -185,8 +185,8 @@ is backward-compatible per that API's evolution policy.
 | [[ref_rfc8174]] [RFC 8174]
 | https://www.rfc-editor.org/rfc/rfc8174[_Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words_], B. Leiba, May 2017.
 
-| [[ref_iso7816_4]] [ISO/IEC 7816-4]
-| https://www.iso.org[_Identification cards -- Integrated circuit cards -- Part 4: Organization, security and commands for interchange_].
+| [[ref_iso7816]] [ISO/IEC 7816]
+| https://www.iso.org[_Identification cards -- Integrated circuit cards_].
 
 | [[ref_cna_tr]] [CNA-TR-API]
 | https://docs.terminal-api.calypsonet.org/calypsonet-terminal-reader-uml-api/[_Terminal Reader API Specification_], version {ver-cna-tr}, {organization}.
@@ -515,7 +515,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getDfName() -> byte array`
 | Since       | 1.0
-| Description | DF name (5 to 16 bytes), as per ISO/IEC 7816-4.
+| Description | DF name (5 to 16 bytes), as per <<ref_iso7816,ISO/IEC 7816-4>>.
 | Returns     | A `byte array`.
 | Throws      | None.
 |===

@@ -88,7 +88,7 @@ This specification covers:
 
 The following topics are *out of scope*:
 
-* the on-the-wire APDU dialogue with the card (handled internally by the implementation);
+* the on-the-wire APDU dialog with the card (handled internally by the implementation);
 * the cryptographic algorithms themselves -- only the SPI contract is normative;
 * the on-the-wire transport between the terminal and any remote ticketing system.
 

@@ -30,12 +30,8 @@ v3.0.0-SNAPSHOT, {docdate}
 :spec-id: CNA-TCC-API
 :spec-version: 3.0.0-SNAPSHOT
 :ver-cna-tr: 3.0
-:ver-cna-tc: 3.0
-:ver-cna-td: 1.0
-:ver-cna-tcc: 3.0
 :ver-cna-tccs: 0.1
 :ver-cna-tcca: 0.2
-:ver-cna-tccl: 2.0
 
 [abstract]
 == Abstract
@@ -200,9 +196,6 @@ is backward-compatible per that API's evolution policy.
 
 | [[ref_cna_tcca]] [CNA-TCCA-API]
 | https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-asymmetric-uml-api/[_Terminal Calypso Crypto Asymmetric API Specification_], version {ver-cna-tcca}, {organization}.
-
-| [[ref_cna_tccl]] [CNA-TCCL-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-legacysam-uml-api/[_Terminal Calypso Crypto Legacy SAM API Specification_], version {ver-cna-tccl}, {organization}.
 |===
 
 ==== External resources
@@ -211,9 +204,9 @@ is backward-compatible per that API's evolution policy.
 |===
 | Resource | Link
 
-| Calypso Networks Association | https://calypsonet.org[calypsonet.org]
-| Terminal APIs website        | https://terminal-api.calypsonet.org/[terminal-api.calypsonet.org]
-| Terminal APIs documentation  | https://docs.terminal-api.calypsonet.org[docs.terminal-api.calypsonet.org]
+| Calypso Networks Association | https://calypsonet.org
+| Terminal APIs website        | https://terminal-api.calypsonet.org/
+| Terminal APIs documentation  | https://docs.terminal-api.calypsonet.org
 |===
 
 // =============================================================================

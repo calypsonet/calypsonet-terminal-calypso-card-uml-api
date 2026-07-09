@@ -386,6 +386,7 @@ The API is organized into the following packages:
 | Description
 | Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
 and any constraints.
+| Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; <<type_InvalidCertificateException,`InvalidCertificateException`>> if the verification fails.
 |===
@@ -955,6 +956,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*.
+| Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 |===
 
@@ -967,6 +969,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Since       | 1.7
 | Description
 | Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
+| Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | `IllegalStateException` if pre-open is already prepared.
 |===
@@ -1027,6 +1030,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
+| Parameters  | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 |===
 
@@ -1082,6 +1086,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
 | Description | Returns the KIF associated with the supplied write access level.
+| Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
 | Returns     | A `byte` value.
 |===
 
@@ -1093,6 +1098,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
 | Description | Returns the KVC associated with the supplied write access level.
+| Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
 | Returns     | A `byte` value.
 |===
 
@@ -2084,6 +2090,10 @@ mode.
 | Signature   | `assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines, for a write access level, the KIF to use when the card only provides a KVC.
+| Parameters
+| `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
+  `kvc` -- the KVC provided by the card. +
+  `kif` -- the KIF to associate with that KVC.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
@@ -2094,6 +2104,9 @@ mode.
 | Signature   | `assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KIF for a write access level.
+| Parameters
+| `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
+  `kif` -- the default KIF to use.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
@@ -2104,6 +2117,9 @@ mode.
 | Signature   | `assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KVC for a write access level.
+| Parameters
+| `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
+  `kvc` -- the default KVC to use.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===

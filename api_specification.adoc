@@ -438,7 +438,10 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
-| Description | Same as above, applied to every DF.
+| Description
+| Same as the <<op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
+  applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open PKI
+  secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
 | Returns     | A `AsymmetricCryptoSecuritySetting`.
 | Throws      | None.
 |===
@@ -539,7 +542,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getApplicationSerialNumber() -> byte array`
 | Since       | 1.0
-| Description | Application Serial Number (8 bytes).
+| Description | Returns the Application Serial Number, an 8-byte value uniquely identifying the card application.
 | Returns     | A `byte array`.
 | Throws      | None.
 |===
@@ -548,7 +551,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getStartupInfoRawData() -> byte array`
 | Since       | 1.0
-| Description | Raw Calypso startup information.
+| Description | Returns the raw Calypso startup information block -- the sequence of bytes from which the individual startup fields (platform, application type and subtype, software issuer, version and revision, etc.) are derived.
 | Returns     | A `byte array`.
 | Throws      | None.
 |===
@@ -557,7 +560,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getPlatform() -> byte`
 | Since       | 1.0
-| Description | Platform identification byte (chip reference).
+| Description | Returns the platform identification byte, which references the card's chip.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -566,7 +569,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getApplicationType() -> byte`
 | Since       | 1.0
-| Description | Application Type byte (product type + options).
+| Description | Returns the application type byte, which encodes the product type together with its options.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -575,7 +578,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getApplicationSubtype() -> byte`
 | Since       | 1.0
-| Description | Application Subtype byte (file structure reference).
+| Description | Returns the application subtype byte, which references the card's file structure.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -584,7 +587,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSoftwareIssuer() -> byte`
 | Since       | 1.0
-| Description | Software Issuer byte.
+| Description | Returns the software issuer byte, identifying the issuer of the card's embedded software.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -593,7 +596,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSoftwareVersion() -> byte`
 | Since       | 1.0
-| Description | Software Version byte.
+| Description | Returns the software version byte of the card's embedded software.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -602,7 +605,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSoftwareRevision() -> byte`
 | Since       | 1.0
-| Description | Software Revision byte.
+| Description | Returns the software revision byte of the card's embedded software.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -611,7 +614,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSessionModification() -> byte`
 | Since       | 1.0
-| Description | Session Modification byte (depending on the card, max bytes modifiable or max write commands per session).
+| Description | Returns the session modification byte, which -- depending on the card -- caps either the number of bytes modifiable or the number of write commands allowed within a secure session.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -723,7 +726,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getPinAttemptRemaining() -> integer`
 | Since       | 1.0
-| Description | Number of erroneous PIN presentations remaining.
+| Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `integer` value.
 | Throws      | `IllegalStateException` if the PIN has not been checked.
 |===
@@ -741,7 +744,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSvBalance() -> integer`
 | Since       | 1.0
-| Description | Current SV balance.
+| Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `integer` value.
 | Throws      | `IllegalStateException` if no SV Get has been executed.
 |===
@@ -750,7 +753,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `getSvLastTNum() -> integer`
 | Since       | 1.0
-| Description | Last SV transaction number. Same precondition as above.
+| Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `integer` value.
 | Throws      | None.
 |===
@@ -1052,7 +1055,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getDfStatus() -> byte`
 | Since       | 1.0
-| Description | Returns the DF status byte.
+| Description | Returns the status byte of the DF (Dedicated File) described by this header.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -1096,7 +1099,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getLid() -> short`
 | Since       | 1.0
-| Description | Returns the associated LID.
+| Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `short` value.
 | Throws      | None.
 |===
@@ -1118,7 +1121,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getData() -> FileData`
 | Since       | 1.0
-| Description | Returns the file data.
+| Description | Returns the `FileData` object carrying this Elementary File's content.
 | Returns     | A `FileData`.
 | Throws      | None.
 |===
@@ -1140,7 +1143,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getSfi() -> byte`
 | Since       | 1.0
-| Description | Returns the SFI.
+| Description | Returns the Short File Identifier (SFI) of this Elementary File.
 | Returns     | A `byte` value.
 | Throws      | None.
 |===
@@ -1173,7 +1176,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
 | Since       | 1.0
-| Description | Returns the known records content.
+| Description | Returns the known content of every record, keyed by record number.
 | Returns     | A `sortedMap<integer, byte array>`.
 | Throws      | None.
 |===
@@ -1264,7 +1267,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getEfType() -> ElementaryFile.Type`
 | Since       | 1.0
-| Description | Returns the EF type.
+| Description | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
 | Returns     | A `ElementaryFile.Type`.
 | Throws      | None.
 |===
@@ -1286,7 +1289,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getLid() -> short`
 | Since       | 1.0
-| Description | Returns the associated LID.
+| Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `short` value.
 | Throws      | None.
 |===
@@ -1364,7 +1367,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
 | Since       | 1.1
-| Description | Record number where the search begins (default: 1).
+| Description | Sets the record number at which the search begins (default: 1).
 | Returns     | A `SearchCommandData`.
 | Throws      | None.
 |===
@@ -1374,7 +1377,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `setOffset(offset: integer) -> SearchCommandData`
 | Since       | 1.1
-| Description | Offset (in bytes) at which the analysis starts (default: 0).
+| Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
 | Returns     | A `SearchCommandData`.
 | Throws      | None.
 |===
@@ -1393,7 +1396,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `setSearchData(data: byte array) -> SearchCommandData`
 | Since       | 1.1
-| Description | Sets the data to search.
+| Description | Sets the byte sequence to search for within the targeted record.
 | Returns     | A `SearchCommandData`.
 | Throws      | None.
 |===
@@ -1599,7 +1602,7 @@ in the crypto module.
 |===
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0
-| Description | Schedules an *Invalidate* command.
+| Description | Schedules an *Invalidate* command, which marks the card application as invalidated, blocking further use until it is rehabilitated.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is already invalidated. +
@@ -1629,7 +1632,7 @@ pre-open mode is active or the read-merge optimisation has been disabled.
 |===
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0
-| Description | Schedules a *Rehabilitate* command.
+| Description | Schedules a *Rehabilitate* command, which clears the card application's invalidation status, making it usable again.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is not invalidated. +
@@ -1680,7 +1683,7 @@ debit, `0..32768` for undebit.
 |===
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
 | Since       | 2.0
-| Description | Schedules an *SV Get* command.
+| Description | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV debit, undebit or reload.
 | Parameters
 | `svOperation` -- the nature of the intended operation: debit or reload. +
 `svAction`    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
@@ -2117,7 +2120,7 @@ mode.
 |===
 | Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
-| Description | Adds an authorised SV key.
+| Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
 | Returns     | A `SymmetricCryptoSecuritySetting`.
 | Throws      | None.
 |===
@@ -2157,7 +2160,10 @@ mode.
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
-| Description | Same as above, applied to every DF.
+| Description
+| Same as the <<op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
+  applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open
+  secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
 | Returns     | A `SymmetricCryptoSecuritySetting`.
 | Throws      | None.
 |===
@@ -2177,7 +2183,10 @@ mode.
 |===
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
-| Description | Same as above, applied to every DF.
+| Description
+| Same as the <<op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf,per-DF variant>>, but applied
+  to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of a Stored Value
+  operation for cards whose CSN is >= `csnMin`.
 | Returns     | A `SymmetricCryptoSecuritySetting`.
 | Throws      | None.
 |===
@@ -2344,7 +2353,7 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
 | Since       | 1.0
-| Description | Adds a *Decrease* command.
+| Description | Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
 | Parameters
 | `sfi`           -- SFI of the EF to select. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
@@ -2539,7 +2548,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 |===
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0
-| Description | Reads every SV log (load + debit).
+| Description | Schedules the reading of every Stored Value log, i.e. both the load and the debit log records.
 | Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===

@@ -386,8 +386,8 @@ The API is organized into the following packages:
 | Description
 | Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
 and any constraints.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
-| Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; `InvalidCertificateException` if the verification fails.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; <<type_InvalidCertificateException,`InvalidCertificateException`>> if the verification fails.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
@@ -396,7 +396,8 @@ and any constraints.
 | Signature   | `addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description | Registers a CA certificate. The issuer's certificate MUST be loaded first.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
+| Parameters  | `caCertificate` (<<type_PcaCertificate,`CaCertificate`>>) -- the CA certificate to register.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -407,7 +408,8 @@ and any constraints.
 | Since       | 2.1
 | Description
 | Registers a CA certificate parser, used when the CA certificate is not already available.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
+| Parameters  | `caCertificateParser` (<<type_PcaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalStateException` if a parser is already registered for the same certificate type.
 |===
 
@@ -417,7 +419,8 @@ and any constraints.
 | Signature   | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description | Registers a card certificate parser. Same constraint as above.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
+| Parameters  | `cardCertificateParser` (<<type_PcaCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -429,7 +432,7 @@ and any constraints.
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
 whose application DF matches `dfName`. See <<sec_csnmin>>.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -442,7 +445,7 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 | Same as the <<op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
   applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open PKI
   secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
-| Returns     | A `AsymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -467,7 +470,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getDirectoryHeader() -> DirectoryHeader?`
 | Since       | 1.0
 | Description | Metadata of the current DF; `null` if not set.
-| Returns     | A `DirectoryHeader`.
+| Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>.
 | Throws      | None.
 |===
 
@@ -477,7 +480,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
-| Returns     | A `ElementaryFile`.
+| Returns     | A <<type_ElementaryFile,`ElementaryFile`>>.
 | Throws      | None.
 |===
 
@@ -487,7 +490,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose LID matches; `null` if not found.
-| Returns     | A `ElementaryFile`.
+| Returns     | A <<type_ElementaryFile,`ElementaryFile`>>.
 | Throws      | None.
 |===
 
@@ -763,7 +766,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getSvLoadLogRecord() -> SvLoadLogRecord?`
 | Since       | 1.0
 | Description | Last SV load log record; `null` if not available.
-| Returns     | A `SvLoadLogRecord`.
+| Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>.
 | Throws      | None.
 |===
 
@@ -772,7 +775,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getSvDebitLogLastRecord() -> SvDebitLogRecord?`
 | Since       | 1.0
 | Description | Last SV debit log record; `null` if not available.
-| Returns     | A `SvDebitLogRecord`.
+| Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>.
 | Throws      | None.
 |===
 
@@ -804,7 +807,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description | Returns a new <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Parameters  | `cryptoCardTransactionManagerFactory` -- the factory of the crypto card transaction manager to be used.
+| Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is invalid.
 |===
@@ -829,8 +832,8 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the card reader to be used. +
-`card` -- the selected card on which to operate the transaction.
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+`card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
 | Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 |===
 
@@ -854,9 +857,9 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the card reader to be used. +
-`card` -- the selected card on which to operate the transaction. +
-`securitySetting` -- the security setting to be used.
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+`card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
+`securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 |===
 
@@ -869,9 +872,9 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.1
 | Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the card reader to be used. +
-`card` -- the selected card on which to operate the transaction. +
-`securitySetting` -- the security setting to be used.
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+`card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
+`securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 |===
 
@@ -884,9 +887,9 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Parameters
-| `cardReader` -- the card reader to be used. +
-`card` -- the selected card on which to operate the transaction. +
-`securitySetting` -- the security setting to be used.
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+`card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
+`securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 |===
 
@@ -898,7 +901,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Returns a new <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
-| Parameters  | `cryptoCardTransactionManagerFactory` -- the factory of the crypto card transaction manager to be used.
+| Parameters  | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is invalid.
 |===
@@ -940,7 +943,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `acceptInvalidatedCard() -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Requests to accept invalidated cards during the selection stage. *Operational only on PRIME revision 3+.*
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
@@ -952,7 +955,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 |===
 
 [[op_CalypsoCardSelectionExtension_preparePreOpenSecureSession]]
@@ -964,7 +967,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Since       | 1.7
 | Description
 | Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | `IllegalStateException` if pre-open is already prepared.
 |===
 
@@ -976,7 +979,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description | Adds one or more *Read Binary* commands for a binary EF. Best-effort.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
@@ -988,7 +991,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description | Adds a *Read Records* command reading the counter record up to the supplied counter number (all preceding counters are also read). Best-effort.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
@@ -1000,7 +1003,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
 | Description | Adds a *Read Records* command for a single record of a linear or cyclic EF. Best-effort: the command does not fail if the file/record is absent.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
@@ -1012,7 +1015,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
 
@@ -1024,7 +1027,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
-| Returns     | A `CalypsoCardSelectionExtension`.
+| Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 |===
 
 [[type_DirectoryHeader]]
@@ -1122,7 +1125,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getData() -> FileData`
 | Since       | 1.0
 | Description | Returns the `FileData` object carrying this Elementary File's content.
-| Returns     | A `FileData`.
+| Returns     | A <<type_FileData,`FileData`>>.
 | Throws      | None.
 |===
 
@@ -1133,7 +1136,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getHeader() -> FileHeader?`
 | Since       | 1.0
 | Description | Returns the file header, or `null` if not yet set.
-| Returns     | A `FileHeader`.
+| Returns     | A <<type_FileHeader,`FileHeader`>>.
 | Throws      | None.
 |===
 
@@ -1358,7 +1361,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setSfi(sfi: byte) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the SFI of the EF in which the search is performed.
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1368,7 +1371,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the record number at which the search begins (default: 1).
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1378,7 +1381,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setOffset(offset: integer) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1387,7 +1390,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `enableRepeatedOffset() -> SearchCommandData`
 | Since       | 1.1
 | Description | Analyse the data at the supplied offset, then repeatedly at each following offset until the end of the record.
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1397,7 +1400,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setSearchData(data: byte array) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the byte sequence to search for within the targeted record.
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1407,7 +1410,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setMask(mask: byte array) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1416,7 +1419,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `fetchFirstMatchingResult() -> SearchCommandData`
 | Since       | 1.1
 | Description | Requests to fetch the content of the first matching record into the `CalypsoCard`.
-| Returns     | A `SearchCommandData`.
+| Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
 
@@ -1451,7 +1454,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Requests encryption for all following session commands. SHOULD be limited to commands that require it (resource
 intensive). When mutual authentication is also required, the two `prepare*` calls SHOULD be placed
 consecutively. Only makes sense in a secure session.
-| Returns     | A `SecureExtendedModeTransactionManager`.
+| Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
@@ -1462,7 +1465,7 @@ consecutively. Only makes sense in a secure session.
 | Signature   | `prepareDeactivateEncryption() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
 | Description | Requests to stop the encryption. NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
-| Returns     | A `SecureExtendedModeTransactionManager`.
+| Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
@@ -1476,7 +1479,7 @@ consecutively. Only makes sense in a secure session.
 | Requests to mutually authenticate the card and the terminal *before* the secure session is closed. The use of
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
-| Returns     | A `SecureExtendedModeTransactionManager`.
+| Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 |===
 
@@ -1501,7 +1504,7 @@ sending sensitive commands).
 | Description
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
 *Read One Or More Counters*, the implementation SHOULD merge it with the session opening for optimisation.
-| Returns     | A `SecurePkiModeTransactionManager`.
+| Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Throws      | None.
 |===
 
@@ -1547,7 +1550,7 @@ To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus(
 | Signature   | `getType() -> SecureSessionType`
 | Since       | 3.0
 | Description | Returns the cryptographic nature of the session (symmetric vs asymmetric).
-| Returns     | A `SecureSessionType`.
+| Returns     | A <<type_SecureSessionType,`SecureSessionType`>>.
 | Throws      | None.
 |===
 
@@ -1556,7 +1559,7 @@ To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus(
 | Signature   | `getWriteAccessLevel() -> WriteAccessLevel?`
 | Since       | 3.0
 | Description | Returns the write access level requested at session opening. MUST return `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
-| Returns     | A `WriteAccessLevel`.
+| Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>.
 | Throws      | None.
 |===
 
@@ -1606,7 +1609,7 @@ in the crypto module.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is already invalidated. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession]]
@@ -1620,10 +1623,10 @@ in the crypto module.
 | Schedules an *Open Secure Session* command. If the next prepared command is a *Read One Record* or *Read One Or
 More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
 pre-open mode is active or the read-merge optimisation has been disabled.
-| Parameters  | `writeAccessLevel` -- the write access level to be used.
+| Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalStateException` -- in one of the following cases: no `SymmetricCryptoSecuritySetting` is available, a secure session opening is already prepared, or a secure session is already opened.
+| `IllegalStateException` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
 |===
 
 ===== Prepare Rehabilitate
@@ -1636,7 +1639,7 @@ pre-open mode is active or the read-merge optimisation has been disabled.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is not invalidated. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
@@ -1657,7 +1660,7 @@ debit, `0..32768` for undebit.
 | Throws
 | `IllegalArgumentException` -- if one of the provided arguments is out of range. +
 `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
@@ -1673,7 +1676,7 @@ debit, `0..32768` for undebit.
 | Throws
 | `IllegalArgumentException` -- if the provided argument is out of range. +
 `IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvGet]]
@@ -1685,8 +1688,8 @@ debit, `0..32768` for undebit.
 | Since       | 2.0
 | Description | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV debit, undebit or reload.
 | Parameters
-| `svOperation` -- the nature of the intended operation: debit or reload. +
-`svAction`    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
+| `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
+`svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
 | Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===
@@ -1709,7 +1712,7 @@ debit, `0..32768` for undebit.
 | Throws
 | `IllegalArgumentException` -- if one of the provided arguments is out of range. +
 `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
@@ -1725,7 +1728,7 @@ debit, `0..32768` for undebit.
 | Throws
 | `IllegalArgumentException` -- if the provided argument is out of range. +
 `IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-`SessionBufferOverflowException` -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[type_SecureTransactionManager]]
@@ -2026,7 +2029,7 @@ mode.
 | Signature   | `enableMultipleSession() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Enables multiple-session mode to handle more changes than the session buffer allows.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2035,7 +2038,7 @@ mode.
 | Signature   | `enableRatificationMechanism() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Enables the ratification mechanism to handle early card removal preventing reception of the closing ACK.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2044,7 +2047,7 @@ mode.
 | Signature   | `enablePinPlainTransmission() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Enables the PIN transmission in plain text.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2053,7 +2056,7 @@ mode.
 | Signature   | `enableSvLoadAndDebitLog() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Enables retrieval of both load *and* debit log records. Default: disabled.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2062,7 +2065,7 @@ mode.
 | Signature   | `authorizeSvNegativeBalance() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Allows the SV balance to become negative. Default: disabled.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2071,7 +2074,7 @@ mode.
 | Signature   | `disableReadOnSessionOpening() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the optimisation is performed.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2081,7 +2084,7 @@ mode.
 | Signature   | `assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines, for a write access level, the KIF to use when the card only provides a KVC.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2091,7 +2094,7 @@ mode.
 | Signature   | `assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KIF for a write access level.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2101,7 +2104,7 @@ mode.
 | Signature   | `assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KVC for a write access level.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2111,7 +2114,7 @@ mode.
 | Signature   | `addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2121,7 +2124,7 @@ mode.
 | Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2131,7 +2134,7 @@ mode.
 | Signature   | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2141,7 +2144,7 @@ mode.
 | Signature   | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2151,7 +2154,7 @@ mode.
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin>>.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2164,7 +2167,7 @@ mode.
 | Same as the <<op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
   applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open
   secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2174,7 +2177,7 @@ mode.
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2187,7 +2190,7 @@ mode.
 | Same as the <<op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf,per-DF variant>>, but applied
   to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of a Stored Value
   operation for cards whose CSN is >= `csnMin`.
-| Returns     | A `SymmetricCryptoSecuritySetting`.
+| Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -2197,8 +2200,8 @@ mode.
 | Since       | 2.0
 | Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate).
 | Throws
-| `CryptoException` -- if an error occurred when computing a crypto operation. +
-`CryptoIOException` -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
+| <<type_CryptoException,`CryptoException`>> -- if an error occurred when computing a crypto operation. +
+<<type_CryptoIOException,`CryptoIOException`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
 |===
 
 [[sec_csnmin]]
@@ -2237,7 +2240,7 @@ Implementations MUST update the bound `CalypsoCard` after each successful APDU e
 | Description
 | Returns a <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
 state. The returned object is immutable and captures the state at the moment of the call.
-| Returns     | A `SecureSessionStatus`.
+| Returns     | A <<type_SecureSessionStatus,`SecureSessionStatus`>>.
 | Throws      | None.
 |===
 
@@ -2473,7 +2476,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1
 | Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
-| Parameters  | `data` -- the input/output data containing the parameters of the command.
+| Parameters  | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
 | Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Search Record Multiple* command is not available for this card. +
@@ -2509,7 +2512,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0
 | Description | Adds a *Select File* command using a navigation control.
-| Parameters  | `selectFileControl` -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
+| Parameters  | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns     | The current instance (`T`).
 |===
 
@@ -2519,7 +2522,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0
 | Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
-| Parameters  | `tag` -- the data type to retrieve.
+| Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the *Get Data* command with the provided tag is not supported. +
@@ -2533,7 +2536,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | Since       | 2.1
 | Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
 | Parameters
-| `tag`  -- the data type to inject. +
+| `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.
 | Returns     | The current instance (`T`).
 | Throws

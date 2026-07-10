@@ -833,7 +833,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 | Parameters
-| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
 | Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
 |===
@@ -858,7 +858,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Parameters
-| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
@@ -873,7 +873,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.1
 | Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Parameters
-| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
@@ -888,7 +888,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.0
 | Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Parameters
-| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the card reader to be used. +
+| `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
@@ -2278,7 +2278,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds an *Append Record* command (a new record is added, the oldest record is deleted in a cyclic file).
 | Parameters
-| `sfi`        -- the SFI to select. +
+| `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
 | Returns     | The current instance (`T`).
 | Throws      | None.
@@ -2291,7 +2291,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds an *Update Record* command. Bytes beyond `recordData.length` MUST be left unchanged.
 | Parameters
-| `sfi`          -- the SFI to select. +
+| `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
@@ -2305,7 +2305,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds a *Write Record* command (binary OR with the existing data).
 | Parameters
-| `sfi`          -- the SFI to select. +
+| `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
@@ -2319,7 +2319,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.1
 | Description | Adds one or more *Update Binary* commands.
 | Parameters
-| `sfi`    -- the SFI of the EF to select. +
+| `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the new data.
 | Returns     | The current instance (`T`).
@@ -2333,7 +2333,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.1
 | Description | Adds one or more *Write Binary* commands (binary OR).
 | Parameters
-| `sfi`    -- the SFI of the EF to select. +
+| `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the data to write over the existing data.
 | Returns     | The current instance (`T`).
@@ -2347,9 +2347,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds an *Increase* command. For multiple counters of the same file, `prepareIncreaseCounters` is RECOMMENDED.
 | Parameters
-| `sfi`           -- SFI of the EF to select. +
+| `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
-`incValue`      -- value to add to the counter (positive integer `<= 16777215`).
+`incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
 | Throws      | None.
 |===
@@ -2361,7 +2361,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.1
 | Description | Adds an *Increase Multiple* command, or multiple *Increase* commands, depending on the card.
 | Parameters
-| `sfi`                       -- SFI of the EF to select. +
+| `sfi`                       -- the SFI of the EF. +
 `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
 | Returns     | The current instance (`T`).
 | Throws      | None.
@@ -2374,9 +2374,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
 | Parameters
-| `sfi`           -- SFI of the EF to select. +
+| `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
-`decValue`      -- value to subtract from the counter (positive integer `<= 16777215`).
+`decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
 | Throws      | None.
 |===
@@ -2388,7 +2388,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.1
 | Description | Adds a *Decrease Multiple* command or multiple *Decrease* commands.
 | Parameters
-| `sfi`                       -- SFI of the EF to select. +
+| `sfi`                       -- the SFI of the EF. +
 `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
 | Returns     | The current instance (`T`).
 | Throws      | None.
@@ -2401,7 +2401,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.0
 | Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value.
 | Parameters
-| `sfi`           -- SFI of the EF to select. +
+| `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
@@ -2419,7 +2419,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | Since       | 1.1
 | Description | Adds a *Read Records* command for a single record. *MUST NOT be used within a secure session; use `prepareReadRecords` instead for the in-session case.*
 | Parameters
-| `sfi`           -- the SFI of the EF to read. +
+| `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
 | Returns     | The current instance (`T`).
 | Throws      | None.

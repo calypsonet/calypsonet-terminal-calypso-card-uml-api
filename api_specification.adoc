@@ -99,7 +99,7 @@ A software product conforms to this specification if and only if:
 . it implements every interface and class defined in <<sec_specification>> with the operations and semantics
   prescribed in this document,
 . it raises exceptions exclusively of the types defined in <<sec_exceptions>> for the situations described,
-. it preserves the structural and behavioural relationships described in <<sec_architecture>> and <<sec_behaviours>>.
+. it preserves the structural relationships described in <<sec_architecture>>.
 
 Throughout this specification, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,
 **MAY** and **OPTIONAL** are to be interpreted as described in <<ref_rfc2119,RFC 2119>> and <<ref_rfc8174,RFC 8174>> when, and only when,
@@ -332,8 +332,6 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[sec_specification]]
 == API Specification
 
-Stateful operations are subject to the ordering and lifecycle constraints defined in <<sec_behaviours>>.
-
 === Classes
 
 [[type_CalypsoCardApiProperties]]
@@ -453,6 +451,9 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 |===
 
 A `CalypsoCard` carries: application identification (revision, class, DF name, serial number, ATR, issuer), the indication of optional features (Stored Value, PIN, Rev 3.2 mode, ratification management), the management information of the modification buffer, the invalidation status and the files / counters / SV data read or modified during the transaction.
+
+The `CalypsoCard` instance bound to a transaction MUST be a *dynamic view* of the card image and MUST be updated after every successful command.
+Failed write commands MUST NOT update the in-memory image.
 
 ===== Get Directory Header
 
@@ -861,12 +862,13 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 |===
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
 | Since       | 2.1
-| Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
+| Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>. PKI mode is available only if the card declares support for it (`CalypsoCard.isPkiModeSupported() == true`).
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
+| Throws      | `IllegalStateException` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
 |===
 
 [[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
@@ -2527,7 +2529,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0
-| Description | Adds one or more *Get Data* commands. *SECURITY WARNING: MUST NOT be used within a secure session.*
+| Description | Adds one or more *Get Data* commands. *MUST NOT be used within a secure session.*
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
 | Throws
@@ -2946,17 +2948,6 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Since    | 1.0
 | Purpose  | Indicates that the card requires an unauthorised session key.
 |===
-
-[[sec_behaviours]]
-== Behavioural Requirements
-
-. The `CalypsoCard` instance bound to a transaction MUST be a *dynamic view* of the card image and MUST be updated after every successful command.
-Failed write commands MUST NOT update the in-memory image.
-. Operations marked with a *SECURITY WARNING* MUST NOT be used inside a secure session; implementations MUST raise `IllegalStateException` if invoked while a session is open.
-. The *PKI* mode (`SecurePkiModeTransactionManager`) MUST NOT be available unless the card declares
-`isPkiModeSupported() == true`.
-. Communication errors at the reader, card or APDU level MUST be reported through the <<ref_cna_tr,CNA-TR-API>> exceptions (`ReaderCommunicationException`, `CardCommunicationException`, `InvalidCardResponseException`); this specification does not duplicate them.
-. Implementations MUST raise `SessionBufferOverflowException` instead of silently truncating a session when multiple-session mode is disabled and the modification buffer would overflow.
 
 // =============================================================================
 [appendix]

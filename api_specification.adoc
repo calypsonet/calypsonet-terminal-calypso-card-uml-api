@@ -2953,8 +2953,6 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 . The `CalypsoCard` instance bound to a transaction MUST be a *dynamic view* of the card image and MUST be updated after every successful command.
 Failed write commands MUST NOT update the in-memory image.
 . Operations marked with a *SECURITY WARNING* MUST NOT be used inside a secure session; implementations MUST raise `IllegalStateException` if invoked while a session is open.
-. The merging of *Open Secure Session* with a possible *Read Record* command is enabled by default; the application MAY opt out via `SymmetricCryptoSecuritySetting.disableReadOnSessionOpening()`.
-When the pre-open mode is active, this optimisation MUST NOT be performed.
 . The *PKI* mode (`SecurePkiModeTransactionManager`) MUST NOT be available unless the card declares
 `isPkiModeSupported() == true`.
 . Communication errors at the reader, card or APDU level MUST be reported through the <<ref_cna_tr,CNA-TR-API>> exceptions (`ReaderCommunicationException`, `CardCommunicationException`, `InvalidCardResponseException`); this specification does not duplicate them.

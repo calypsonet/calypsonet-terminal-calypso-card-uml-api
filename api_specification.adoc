@@ -387,7 +387,7 @@ The API is organized into the following packages:
 | Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
 and any constraints.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; <<type_InvalidCertificateException,`InvalidCertificateException`>> if the verification fails.
 |===
 
@@ -398,7 +398,7 @@ and any constraints.
 | Since       | 2.1
 | Description | Registers a CA certificate. The issuer's certificate MUST be loaded first.
 | Parameters  | `caCertificate` (<<type_PcaCertificate,`CaCertificate`>>) -- the CA certificate to register.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -410,7 +410,7 @@ and any constraints.
 | Description
 | Registers a CA certificate parser, used when the CA certificate is not already available.
 | Parameters  | `caCertificateParser` (<<type_PcaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalStateException` if a parser is already registered for the same certificate type.
 |===
 
@@ -421,7 +421,7 @@ and any constraints.
 | Since       | 2.1
 | Description | Registers a card certificate parser. Same constraint as above.
 | Parameters  | `cardCertificateParser` (<<type_PcaCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -433,7 +433,7 @@ and any constraints.
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
 whose application DF matches `dfName`. See <<sec_csnmin>>.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -446,7 +446,7 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 | Same as the <<op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
   applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open PKI
   secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
 
@@ -481,7 +481,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
-| Returns     | A <<type_ElementaryFile,`ElementaryFile`>>.
+| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>.
 | Throws      | None.
 |===
 
@@ -491,7 +491,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose LID matches; `null` if not found.
-| Returns     | A <<type_ElementaryFile,`ElementaryFile`>>.
+| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>.
 | Throws      | None.
 |===
 
@@ -809,7 +809,7 @@ A `CalypsoCard` carries: application identification (revision, class, DF name, s
 | Since       | 2.1
 | Description | Returns a new <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
-| Returns     | A <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is invalid.
 |===
 
@@ -1277,7 +1277,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getEfType() -> ElementaryFile.Type`
 | Since       | 1.0
 | Description | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
-| Returns     | A `ElementaryFile.Type`.
+| Returns     | An `ElementaryFile.Type`.
 | Throws      | None.
 |===
 
@@ -1759,7 +1759,7 @@ debit, `0..32768` for undebit.
 | Since       | 2.0
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
-| Returns     | A `E extends CardTransactionCryptoExtension`.
+| Returns     | An `E extends CardTransactionCryptoExtension`.
 |===
 
 ===== Prepare Cancel Secure Session

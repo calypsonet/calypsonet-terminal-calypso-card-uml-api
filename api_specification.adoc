@@ -1531,7 +1531,7 @@ No additional operation declared.
 |===
 
 A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to the session state.
-To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus()`.
+To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` again.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
@@ -2541,7 +2541,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 |===
 | Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
 | Since       | 2.1
-| Description | Adds one or more *Put Data* commands. *MUST be invoked outside a secure session.*
+| Description | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
 | Parameters
 | `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.

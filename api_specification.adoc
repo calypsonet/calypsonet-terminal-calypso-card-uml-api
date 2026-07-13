@@ -372,8 +372,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Signature   | `addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
-| Registers a self-signed PCA certificate. The implementation MUST verify the self-signature, the validity period
-and any constraints.
+| Registers a self-signed PCA certificate. Its self-signature, validity period and any constraints are verified.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; <<type_InvalidCertificateException,`InvalidCertificateException`>> if the verification fails.
@@ -452,8 +451,8 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 
 A `CalypsoCard` carries: application identification (revision, class, DF name, serial number, ATR, issuer), the indication of optional features (Stored Value, PIN, Rev 3.2 mode, ratification management), the management information of the modification buffer, the invalidation status and the files / counters / SV data read or modified during the transaction.
 
-The `CalypsoCard` instance bound to a transaction MUST be a *dynamic view* of the card image and MUST be updated after every successful command.
-Failed write commands MUST NOT update the in-memory image.
+The `CalypsoCard` instance bound to a transaction is a *dynamic view* of the card image, updated after every successful command.
+Failed write commands do not update the in-memory image.
 
 ===== Get Directory Header
 
@@ -490,7 +489,7 @@ Failed write commands MUST NOT update the in-memory image.
 |===
 | Signature   | `getFiles() -> set<ElementaryFile>`
 | Since       | 1.1
-| Description | All known EFs of the current DF. During a secure session, this set MUST reflect every in-session modification (which is rolled back on session failure).
+| Description | All known EFs of the current DF. During a secure session, this set reflects every in-session modification (which is rolled back on session failure).
 | Returns     | A `set<ElementaryFile>`.
 | Throws      | None.
 |===
@@ -665,7 +664,7 @@ Failed write commands MUST NOT update the in-memory image.
 |===
 | Signature   | `getTransactionCounter() -> integer`
 | Since       | 1.2
-| Description | Transaction counter from the output of the last successful *Open Secure Session*. *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but MUST NOT update this returned value.
+| Description | Transaction counter from the output of the last successful *Open Secure Session*. *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `integer` value.
 | Throws      | None.
 |===
@@ -1556,7 +1555,7 @@ To obtain a refreshed status, the caller MUST re-invoke `getSecureSessionStatus(
 |===
 | Signature   | `getWriteAccessLevel() -> WriteAccessLevel?`
 | Since       | 3.0
-| Description | Returns the write access level requested at session opening. MUST return `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
+| Description | Returns the write access level requested at session opening. Returns `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
 | Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>.
 | Throws      | None.
 |===
@@ -1760,7 +1759,7 @@ debit, `0..32768` for undebit.
 |===
 | Signature   | `prepareCancelSecureSession() -> T`
 | Since       | 2.0
-| Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- MUST NOT raise exceptions.
+| Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises exceptions.
 | Returns     | The current instance (`T`).
 | Throws      | None.
 |===
@@ -2236,7 +2235,7 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
-Implementations MUST update the bound `CalypsoCard` after each successful APDU exchange and MUST validate parameter ranges as documented in <<type_CalypsoCardSelectionExtension>>.
+The bound `CalypsoCard` is updated after each successful APDU exchange, and parameter ranges are validated as documented in <<type_CalypsoCardSelectionExtension>>.
 
 ===== Get Secure Session Status
 
@@ -2281,7 +2280,7 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0
-| Description | Adds an *Update Record* command. Bytes beyond `recordData.length` MUST be left unchanged.
+| Description | Adds an *Update Record* command. Bytes beyond `recordData.length` are left unchanged.
 | Parameters
 | `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to update. +

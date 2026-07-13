@@ -1500,7 +1500,7 @@ sending sensitive commands).
 | Since       | 2.1
 | Description
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
-*Read One Or More Counters*, the implementation SHOULD merge it with the session opening for optimisation.
+*Read One Or More Counters*, it will be merged with the session opening for optimisation.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Throws      | None.
 |===
@@ -1618,7 +1618,7 @@ in the crypto module.
 | Since       | 2.0
 | Description
 | Schedules an *Open Secure Session* command. If the next prepared command is a *Read One Record* or *Read One Or
-More Counters*, the implementation SHOULD merge it with the session opening for optimisation, unless the
+More Counters*, it will be merged with the session opening for optimisation, unless the
 pre-open mode is active or the read-merge optimisation has been disabled.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).

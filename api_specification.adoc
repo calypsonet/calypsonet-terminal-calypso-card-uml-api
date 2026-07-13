@@ -2671,7 +2671,13 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 ==== Calypso Card Product Type
 
-Nested inside `CalypsoCard`. _Since 1.0._
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card.card`.<<type_CalypsoCard,`CalypsoCard`>>
+| Since    | 1.0
+| Purpose  | Product type of a Calypso card.
+|===
 
 [cols="1,1,4", options="header"]
 |===
@@ -2686,7 +2692,13 @@ Nested inside `CalypsoCard`. _Since 1.0._
 
 ==== Elementary File Type
 
-Nested inside `ElementaryFile`. _Since 1.0._
+[cols="1h,4", grid=rows, frame=all]
+|===
+| Kind     | Enumeration
+| Namespace  | `calypso.card.card`.<<type_ElementaryFile,`ElementaryFile`>>
+| Since    | 1.0
+| Purpose  | Type of a Calypso Elementary File.
+|===
 
 [cols="1,1,4", options="header"]
 |===

@@ -141,6 +141,7 @@ Each interface, class, enumeration and exception defined in this document is des
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name       | The type's normalized name.
 | Kind       | The category of the type (interface, class, enumeration, exception, etc.).
 | Namespace  | The namespace in which the type is defined.
 | Extends    | The type extended by this type, when applicable.
@@ -339,6 +340,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CalypsoCardApiProperties`
 | Kind     | Final class
 | Namespace  | `calypso.card`
 | Since    | 1.0
@@ -360,6 +362,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `AsymmetricCryptoSecuritySetting`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.1
@@ -441,6 +444,7 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CalypsoCard`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Extends  | `IsoSmartCard` (<<ref_cna_tr,CNA-TR-API>>)
@@ -783,6 +787,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CalypsoCardApiFactory`
 | Kind     | Interface
 | Namespace  | `calypso.card`
 | Since    | 2.0
@@ -902,6 +907,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CalypsoCardSelectionExtension`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Extends  | `CardSelectionExtension` (<<ref_cna_tr,CNA-TR-API>>)
@@ -1029,6 +1035,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `DirectoryHeader`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -1108,6 +1115,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `ElementaryFile`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -1152,6 +1160,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `FileData`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -1232,6 +1241,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `FileHeader`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -1331,6 +1341,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `FreeTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
@@ -1345,6 +1356,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SearchCommandData`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.1
@@ -1433,6 +1445,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureExtendedModeTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
@@ -1484,6 +1497,7 @@ sending sensitive commands).
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecurePkiModeTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
@@ -1509,6 +1523,7 @@ sending sensitive commands).
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureRegularModeTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
@@ -1523,6 +1538,7 @@ No additional operation declared.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureSessionStatus`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 3.0
@@ -1564,6 +1580,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureSymmetricCryptoTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Generics | `<T extends SecureSymmetricCryptoTransactionManager<T>>`
@@ -1732,6 +1749,7 @@ debit, `0..32768` for undebit.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Generics | `<T extends SecureTransactionManager<T>>`
@@ -1783,6 +1801,7 @@ mode.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SvDebitLogRecord`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -1893,6 +1912,7 @@ mode.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SvLoadLogRecord`
 | Kind     | Interface
 | Namespace  | `calypso.card.card`
 | Since    | 1.0
@@ -2014,6 +2034,7 @@ mode.
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SymmetricCryptoSecuritySetting`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
@@ -2223,6 +2244,7 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `TransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Generics | `<T extends TransactionManager<T>>`
@@ -2610,6 +2632,7 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `AsymmetricCryptoCardTransactionManagerFactory`
 | Kind     | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.0
@@ -2621,6 +2644,7 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CardTransactionCryptoExtension`
 | Kind     | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.0
@@ -2632,6 +2656,7 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `PcaCertificate`
 | Kind     | Marker interfaces (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.1
@@ -2646,6 +2671,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `PcaCertificateParser`
 | Kind     | Marker interfaces (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.1
@@ -2657,6 +2683,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SymmetricCryptoCardTransactionManagerFactory`
 | Kind     | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.0
@@ -2669,6 +2696,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `ProductType`
 | Kind     | Enumeration
 | Namespace  | `calypso.card.card`.<<type_CalypsoCard,`CalypsoCard`>>
 | Since    | 1.0
@@ -2690,6 +2718,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `Type`
 | Kind     | Enumeration
 | Namespace  | `calypso.card.card`.<<type_ElementaryFile,`ElementaryFile`>>
 | Since    | 1.0
@@ -2711,6 +2740,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `GetDataTag`
 | Kind     | Enumeration
 | Namespace  | `calypso.card`
 | Since    | 1.0
@@ -2734,6 +2764,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `PutDataTag`
 | Kind     | Enumeration
 | Namespace  | `calypso.card`
 | Since    | 2.1
@@ -2753,6 +2784,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SecureSessionType`
 | Kind     | Enumeration
 | Namespace  | `calypso.card.transaction`
 | Since    | 3.0
@@ -2775,6 +2807,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SelectFileControl`
 | Kind     | Enumeration
 | Namespace  | `calypso.card`
 | Since    | 1.0
@@ -2794,6 +2827,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SvAction`
 | Kind     | Enumeration
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.0
@@ -2812,6 +2846,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SvOperation`
 | Kind     | Enumeration
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.0
@@ -2830,6 +2865,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `WriteAccessLevel`
 | Kind     | Enumeration
 | Namespace  | `calypso.card`
 | Since    | 1.0
@@ -2852,6 +2888,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CardSignatureNotVerifiableException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
@@ -2863,6 +2900,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CryptoException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
@@ -2874,6 +2912,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `CryptoIOException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
@@ -2885,6 +2924,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `InconsistentDataException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
@@ -2896,6 +2936,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `InvalidCardSignatureException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
@@ -2907,6 +2948,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `InvalidCertificateException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.1
@@ -2918,6 +2960,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `InvalidPinException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
@@ -2929,6 +2972,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SelectFileException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.4
@@ -2940,6 +2984,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `SessionBufferOverflowException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
@@ -2951,6 +2996,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="1h,4", grid=rows, frame=all]
 |===
+| Name     | `UnauthorizedKeyException`
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.0

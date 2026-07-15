@@ -435,7 +435,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
-whose application DF matches `dfName`. See <<sec_csnmin>>.
+whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -449,7 +449,7 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
-  applied to every application DF (no `dfName` filter). See <<sec_csnmin>>.
+  applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2402,7 +2402,7 @@ mode.
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
-| Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin>>.
+| Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2416,7 +2416,7 @@ mode.
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
-  applied to every application DF (no `dfName` filter). See <<sec_csnmin>>.
+  applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===

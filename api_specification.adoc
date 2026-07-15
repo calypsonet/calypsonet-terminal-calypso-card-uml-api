@@ -480,7 +480,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getDirectoryHeader() -> DirectoryHeader?`
 | Since       | 1.0
 | Description | Metadata of the current DF; `null` if not set.
-| Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>.
+| Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
 | Throws      | None.
 |===
 
@@ -492,7 +492,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
-| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>.
+| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found, or if `sfi == 0`.
 | Throws      | None.
 |===
 
@@ -504,7 +504,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
 | Description | EF whose LID matches; `null` if not found.
-| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>.
+| Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found.
 | Throws      | None.
 |===
 
@@ -864,7 +864,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getSvLoadLogRecord() -> SvLoadLogRecord?`
 | Since       | 1.0
 | Description | Last SV load log record; `null` if not available.
-| Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>.
+| Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>, or `null` if not available.
 | Throws      | None.
 |===
 
@@ -876,7 +876,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getSvDebitLogLastRecord() -> SvDebitLogRecord?`
 | Since       | 1.0
 | Description | Last SV debit log record; `null` if not available.
-| Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>.
+| Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>, or `null` if not available.
 | Throws      | None.
 |===
 
@@ -1259,7 +1259,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getHeader() -> FileHeader?`
 | Since       | 1.0
 | Description | Returns the file header, or `null` if not yet set.
-| Returns     | A <<type_FileHeader,`FileHeader`>>.
+| Returns     | A <<type_FileHeader,`FileHeader`>>, or `null` if not yet set.
 | Throws      | None.
 |===
 
@@ -1736,7 +1736,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Signature   | `getWriteAccessLevel() -> WriteAccessLevel?`
 | Since       | 3.0
 | Description | Returns the write access level requested at session opening. Returns `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
-| Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>.
+| Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>, or `null` in PKI mode.
 | Throws      | None.
 |===
 

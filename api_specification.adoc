@@ -2692,6 +2692,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 === Enumerations
 
+[[type_ProductType]]
 ==== Calypso Card Product Type
 
 [cols="1h,4", grid=rows, frame=all]
@@ -2714,6 +2715,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | `UNKNOWN`           | 1.0 | Application Type is `0` or `FFh`, or selection data could not be properly parsed.
 |===
 
+[[type_Type]]
 ==== Elementary File Type
 
 [cols="1h,4", grid=rows, frame=all]

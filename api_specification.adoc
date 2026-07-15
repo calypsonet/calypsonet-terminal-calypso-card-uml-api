@@ -684,7 +684,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getTraceabilityInformation() -> byte array`
 | Since       | 1.1
 | Description | Traceability information (software issuer ID and discretionary data); empty if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 
@@ -696,7 +696,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getCardPublicKey() -> byte array`
 | Since       | 2.1
 | Description | Card public key; empty if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 
@@ -708,7 +708,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getCardCertificate() -> byte array`
 | Since       | 2.1
 | Description | Card certificate; empty if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 
@@ -720,7 +720,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getCaCertificate() -> byte array`
 | Since       | 2.1
 | Description | CA certificate; empty if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 
@@ -1381,7 +1381,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getAccessConditions() -> byte array`
 | Since       | 1.0
 | Description | Returns the access conditions; empty array if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 
@@ -1417,7 +1417,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getKeyIndexes() -> byte array`
 | Since       | 1.0
 | Description | Returns the key indexes; empty array if not available.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if not available.
 | Throws      | None.
 |===
 

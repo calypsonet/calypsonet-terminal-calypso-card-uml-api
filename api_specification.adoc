@@ -1661,7 +1661,7 @@ debit, `0..32768` for undebit.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
-===== Prepare SV Debit (No Args)
+===== Prepare SV Debit (No Date)
 
 [cols="1h,4", grid=rows, frame=all]
 |===
@@ -1713,7 +1713,7 @@ debit, `0..32768` for undebit.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
-===== Prepare SV Reload (No Args)
+===== Prepare SV Reload (No Date)
 
 [cols="1h,4", grid=rows, frame=all]
 |===

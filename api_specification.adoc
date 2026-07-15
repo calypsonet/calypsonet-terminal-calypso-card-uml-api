@@ -366,7 +366,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.1
-| Purpose  | Security setting carrier for PKI Calypso card transactions.
+| Purpose  | Security setting carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySetting`>>.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
@@ -1024,7 +1024,7 @@ Failed write commands do not update the in-memory image.
 | Namespace  | `calypso.card.card`
 | Extends  | `CardSelectionExtension` (<<ref_cna_tr,CNA-TR-API>>)
 | Since    | 2.0
-| Purpose  | Enriches the <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and pre-opening of a secure session.
+| Purpose  | Enriches the <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and pre-opening of a secure session. An instance is obtained via <<op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension,`CalypsoCardApiFactory.createCalypsoCardSelectionExtension`>>.
 |===
 
 By default the selection rejects PRIME revision 3 cards that have been *invalidated*.
@@ -1479,7 +1479,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
 | Since    | 2.0
-| Purpose  | Transaction manager that does *not* require any cryptographic computation.
+| Purpose  | Transaction manager that does *not* require any cryptographic computation. An instance is obtained via <<op_CalypsoCardApiFactory_createFreeTransactionManager,`CalypsoCardApiFactory.createFreeTransactionManager`>>.
 |===
 
 `FreeTransactionManager` does not add any operation.
@@ -1493,7 +1493,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.1
-| Purpose  | Carries the input/output data of `TransactionManager.prepareSearchRecords`.
+| Purpose  | Carries the input/output data of `TransactionManager.prepareSearchRecords`. An instance is obtained via <<op_CalypsoCardApiFactory_createSearchCommandData,`CalypsoCardApiFactory.createSearchCommandData`>>.
 |===
 
 [[op_SearchCommandData_setSfi]]
@@ -1602,7 +1602,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
 | Since    | 2.0
-| Purpose  | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products.
+| Purpose  | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`CalypsoCardApiFactory.createSecureExtendedModeTransactionManager`>>.
 |===
 
 [[op_SecureExtendedModeTransactionManager_prepareActivateEncryption]]
@@ -1657,7 +1657,7 @@ sending sensitive commands).
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
 | Since    | 2.1
-| Purpose  | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*.
+| Purpose  | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*. An instance is obtained via <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`CalypsoCardApiFactory.createSecurePkiModeTransactionManager`>>.
 |===
 
 [[op_SecurePkiModeTransactionManager_prepareOpenSecureSession]]
@@ -1684,7 +1684,7 @@ sending sensitive commands).
 | Namespace  | `calypso.card.transaction`
 | Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
 | Since    | 2.0
-| Purpose  | Symmetric-key transaction manager compatible with every Calypso product.
+| Purpose  | Symmetric-key transaction manager compatible with every Calypso product. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`CalypsoCardApiFactory.createSecureRegularModeTransactionManager`>>.
 |===
 
 No additional operation declared.
@@ -2226,7 +2226,7 @@ mode.
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
-| Purpose  | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed).
+| Purpose  | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySetting`>>.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_enableMultipleSession]]

@@ -294,7 +294,7 @@ component "Reader / Card" as RC
 App  --> TR  : selection / observation
 App  --> TCC : transactions
 TCC  --> TCCx: delegates crypto
-TCC  --> TR  : reuses
+TCC  --> TR  : uses
 TCCx --> Mod : implemented by
 TR   --> RC  : drives
 @enduml
@@ -380,7 +380,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Registers a self-signed PCA certificate. Its self-signature, validity period and any constraints are verified.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentException` if invalid; `IllegalStateException` if already registered; <<type_InvalidCertificateException,`InvalidCertificateException`>> if the verification fails.
+| Throws
+| `IllegalArgumentException` -- if the certificate is invalid. +
+  `IllegalStateException` -- if the certificate is already registered. +
+  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the verification fails.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
@@ -407,7 +410,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Registers a CA certificate parser, used when the CA certificate is not already available.
 | Parameters  | `caCertificateParser` (<<type_PcaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalStateException` if a parser is already registered for the same certificate type.
+| Throws      | `IllegalStateException` -- if a parser is already registered for the same certificate type.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
@@ -802,7 +805,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the PIN is blocked.
 | Returns     | A `boolean` value.
-| Throws      | `IllegalStateException` if the PIN has not been checked.
+| Throws      | `IllegalStateException` -- if the PIN has not been checked.
 |===
 
 [[op_CalypsoCard_getPinAttemptRemaining]]
@@ -814,7 +817,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `integer` value.
-| Throws      | `IllegalStateException` if the PIN has not been checked.
+| Throws      | `IllegalStateException` -- if the PIN has not been checked.
 |===
 
 [[op_CalypsoCard_isSvFeatureAvailable]]
@@ -838,7 +841,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `integer` value.
-| Throws      | `IllegalStateException` if no SV Get has been executed.
+| Throws      | `IllegalStateException` -- if no SV Get has been executed.
 |===
 
 [[op_CalypsoCard_getSvLastTNum]]
@@ -1077,7 +1080,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
-| Throws      | `IllegalStateException` if pre-open is already prepared.
+| Throws      | `IllegalStateException` -- if pre-open is already prepared.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadBinary]]

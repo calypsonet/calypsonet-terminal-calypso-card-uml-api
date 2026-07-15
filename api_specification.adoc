@@ -430,9 +430,8 @@ whose application DF matches `dfName`. See <<sec_csnmin>>.
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
-| Same as the <<op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
-  applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open PKI
-  secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
+| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
+  applied to every application DF (no `dfName` filter). See <<sec_csnmin>>.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
@@ -2171,9 +2170,8 @@ mode.
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
-| Same as the <<op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf,per-DF variant>>, but
-  applied to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of an open
-  secure session for cards whose CSN is >= `csnMin`. See <<sec_csnmin>>.
+| Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
+  applied to every application DF (no `dfName` filter). See <<sec_csnmin>>.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===
@@ -2194,9 +2192,8 @@ mode.
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
-| Same as the <<op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf,per-DF variant>>, but applied
-  to every application DF (no `dfName` filter): sets the maximum duration (in milliseconds) of a Stored Value
-  operation for cards whose CSN is >= `csnMin`.
+| Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin`,
+  applied to every application DF (no `dfName` filter).
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | None.
 |===

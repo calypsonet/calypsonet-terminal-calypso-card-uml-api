@@ -525,7 +525,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getProductType() -> ProductType`
 | Since       | 1.0
 | Description | Returns the card product type (`PRIME_REVISION_1` / `PRIME_REVISION_2` / `PRIME_REVISION_3` / `LIGHT` / `BASIC` / `UNKNOWN`).
-| Returns     | A `ProductType`.
+| Returns     | A <<type_ProductType,`ProductType`>>.
 | Throws      | None.
 |===
 
@@ -1402,7 +1402,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getEfType() -> ElementaryFile.Type`
 | Since       | 1.0
 | Description | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
-| Returns     | An `ElementaryFile.Type`.
+| Returns     | An <<type_Type,`ElementaryFile.Type`>>.
 | Throws      | None.
 |===
 

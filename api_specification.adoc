@@ -743,7 +743,9 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `getTransactionCounter() -> integer`
 | Since       | 1.2
-| Description | Transaction counter from the output of the last successful *Open Secure Session*. *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
+| Description | Transaction counter from the output of the last successful *Open Secure Session*.
+
+*Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `integer` value.
 | Throws      | None.
 |===

@@ -964,7 +964,11 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
-| Description | Returns a new <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Description
+| Creates the <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>> that carries the
+asymmetric-key (PKI) cryptographic configuration required by
+<<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`createSecurePkiModeTransactionManager`>>. The
+supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is invalid.
@@ -977,7 +981,10 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createCalypsoCardSelectionExtension() -> CalypsoCardSelectionExtension`
 | Since       | 2.0
-| Description | Returns a new <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
+| Description
+| Creates a <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>> that enriches a
+<<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and the optional pre-opening of a
+secure session.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
 | Throws      | None.
 |===
@@ -989,7 +996,10 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
 | Since       | 2.0
-| Description | Returns a new <<type_FreeTransactionManager,`FreeTransactionManager`>>.
+| Description
+| Creates a <<type_FreeTransactionManager,`FreeTransactionManager`>> for exchanges with `card` (reached through
+`cardReader`) that require *no* cryptographic computation -- that is, no secure session and no security setting.
+For secured transactions, use one of the `createSecure*ModeTransactionManager` factories instead.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
@@ -1003,7 +1013,9 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createSearchCommandData() -> SearchCommandData`
 | Since       | 2.0
-| Description | Returns a new <<type_SearchCommandData,`SearchCommandData`>>.
+| Description
+| Creates an empty <<type_SearchCommandData,`SearchCommandData`>> used to configure and collect the results of
+<<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>.
 | Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
 | Throws      | None.
 |===
@@ -1015,7 +1027,12 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
-| Description | Returns a new <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
+| Description
+| Creates a <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>> that runs a
+symmetric-key secure session in *extended mode*, adding the operations available only on *Calypso Prime Extended*
+products (e.g. session encryption and early mutual authentication). For other products, use
+<<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`createSecureRegularModeTransactionManager`>>.
+Cryptographic operations rely on the supplied `securitySetting`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
@@ -1030,7 +1047,13 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
 | Since       | 2.1
-| Description | Returns a new <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>. PKI mode is available only if the card declares support for it (`CalypsoCard.isPkiModeSupported() == true`).
+| Description
+| Creates a <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>> that runs a secure session
+in *PKI mode*, using asymmetric-key (PKI) cryptography. PKI mode is available only if the card declares support for
+it (`CalypsoCard.isPkiModeSupported() == true`). For symmetric-key sessions, use
+<<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`createSecureRegularModeTransactionManager`>>
+or <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`createSecureExtendedModeTransactionManager`>>
+instead. Cryptographic operations rely on the supplied `securitySetting`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
@@ -1046,7 +1069,13 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
 | Since       | 2.0
-| Description | Returns a new <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
+| Description
+| Creates a <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>> that runs a
+symmetric-key secure session in *regular mode*, the baseline mode compatible with every Calypso product. To access
+*Calypso Prime Extended* features use
+<<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`createSecureExtendedModeTransactionManager`>>,
+or <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`createSecurePkiModeTransactionManager`>> for
+PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
@@ -1061,7 +1090,10 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
-| Description | Returns a new <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
+| Description
+| Creates the <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> that carries the
+symmetric-key (e.g. SAM-backed) cryptographic configuration required by the regular- and extended-mode secure
+transaction managers. The supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
 | Throws      | `IllegalArgumentException` -- if the factory is invalid.

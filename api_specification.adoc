@@ -516,7 +516,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getFiles() -> set<ElementaryFile>`
 | Since       | 1.1
 | Description | All known EFs of the current DF. During a secure session, this set reflects every in-session modification (which is rolled back on session failure).
-| Returns     | A `set<ElementaryFile>`.
+| Returns     | A `set<ElementaryFile>`; empty if no EF is known.
 | Throws      | None.
 |===
 
@@ -564,7 +564,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getDfName() -> byte array`
 | Since       | 1.0
 | Description | DF name (5 to 16 bytes), as per <<ref_iso7816,ISO/IEC 7816-4>>.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -576,7 +576,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getApplicationSerialNumber() -> byte array`
 | Since       | 1.0
 | Description | Returns the Application Serial Number, an 8-byte value uniquely identifying the card application.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -588,7 +588,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getStartupInfoRawData() -> byte array`
 | Since       | 1.0
 | Description | Returns the raw Calypso startup information block -- the sequence of bytes from which the individual startup fields (platform, application type and subtype, software issuer, version and revision, etc.) are derived.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -757,7 +757,7 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isPkiModeSupported() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether Public Key Authentication is supported (Rev 3.3+).
+| Description | Indicates whether Public Key Authentication is supported.
 | Returns     | A `boolean` value.
 | Throws      | None.
 |===
@@ -769,7 +769,7 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isExtendedModeSupported() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether the Extended Mode is supported (Rev 3.2+). MAY be updated after session opening depending on the type of key used.
+| Description | Indicates whether the Extended Mode is supported. MAY be updated after session opening depending on the type of key used.
 | Returns     | A `boolean` value.
 | Throws      | None.
 |===
@@ -890,7 +890,7 @@ Failed write commands do not update the in-memory image.
 | Signature   | `getSvDebitLogAllRecords() -> list<SvDebitLogRecord>`
 | Since       | 1.0
 | Description | All SV debit log records read from the card.
-| Returns     | A `list<SvDebitLogRecord>`.
+| Returns     | A `list<SvDebitLogRecord>`; empty if no debit log record has been read.
 | Throws      | None.
 |===
 
@@ -1165,7 +1165,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getAccessConditions() -> byte array`
 | Since       | 1.0
 | Description | Returns a reference to the access conditions.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -1189,7 +1189,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getKeyIndexes() -> byte array`
 | Since       | 1.0
 | Description | Returns a reference to the keys indexes.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -1297,7 +1297,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getAllCountersValue() -> sortedMap<integer, integer>`
 | Since       | 1.0
 | Description | Returns the values of all counters extracted from record #1.
-| Returns     | A `sortedMap<integer, integer>`.
+| Returns     | A `sortedMap<integer, integer>`; empty if no counter is known.
 | Throws      | None.
 |===
 
@@ -1309,7 +1309,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
 | Since       | 1.0
 | Description | Returns the known content of every record, keyed by record number.
-| Returns     | A `sortedMap<integer, byte array>`.
+| Returns     | A `sortedMap<integer, byte array>`; empty if no record content is known.
 | Throws      | None.
 |===
 
@@ -1321,7 +1321,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContent() -> byte array`
 | Since       | 1.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if the content is not known.
 | Throws      | None.
 |===
 
@@ -1333,7 +1333,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContent(numRecord: integer) -> byte array`
 | Since       | 1.0
 | Description | Returns the known content of the supplied record number.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if the record content is not known.
 | Throws      | None.
 |===
 
@@ -1345,7 +1345,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
 | Since       | 1.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
-| Returns     | A `byte array`.
+| Returns     | A `byte array`; empty if the content is not known.
 | Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. +
   `IndexOutOfBoundsException` -- if the range exceeds the record content.
 |===
@@ -1590,7 +1590,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getMatchingRecordNumbers() -> list<integer>`
 | Since       | 1.1
 | Description | Returns the record numbers that matched.
-| Returns     | A `list<integer>`.
+| Returns     | A `list<integer>`; empty if no record matched.
 | Throws      | None.
 |===
 
@@ -2011,7 +2011,7 @@ mode.
 | Signature   | `getDebitDate() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte debit date.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2023,7 +2023,7 @@ mode.
 | Signature   | `getDebitTime() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte debit time.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2047,7 +2047,7 @@ mode.
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
 | Description | Returns the raw bytes of the debit log record.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2059,7 +2059,7 @@ mode.
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2131,7 +2131,7 @@ mode.
 | Signature   | `getFreeData() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte free data.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2155,7 +2155,7 @@ mode.
 | Signature   | `getLoadDate() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte load date.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2167,7 +2167,7 @@ mode.
 | Signature   | `getLoadTime() -> byte array`
 | Since       | 1.0
 | Description | Returns the 2-byte load time.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2179,7 +2179,7 @@ mode.
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
 | Description | Returns the raw bytes of the load log record.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2191,7 +2191,7 @@ mode.
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A `byte array`.
+| Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
 
@@ -2511,7 +2511,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Signature   | `getTransactionAuditData() -> list<byte array>`
 | Since       | 1.2
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
-| Returns     | A `list<byte array>`.
+| Returns     | A `list<byte array>`; empty if no exchange has taken place.
 | Throws      | None.
 |===
 

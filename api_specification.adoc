@@ -1115,7 +1115,7 @@ transaction managers. The supplied factory provides the cryptographic module tha
 By default the selection rejects PRIME revision 3 cards that have been *invalidated*.
 The application MUST call
 `acceptInvalidatedCard` to stop ignoring them.
-For earlier revisions, the application MUST handle invalidation itself (typically via a *Select File* on the DF).
+For earlier revisions, the application MAY have to handle invalidation itself (typically via a *Select File* on the DF).
 
 For all `prepare*` operations, unless otherwise specified, the following parameter ranges apply:
 
@@ -1137,7 +1137,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `acceptInvalidatedCard() -> CalypsoCardSelectionExtension`
 | Since       | 1.0
-| Description | Requests to accept invalidated cards during the selection stage. *Operational only on PRIME revision 3+.*
+| Description | Requests to accept invalidated cards during the selection stage. *Works only with cards that indicate their invalidation status at the time of selection* (e.g., all PRIME Revision 3+ cards and certain PRIME Revision 2 cards).
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | None.
 |===
@@ -1162,7 +1162,14 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
-| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses. The mechanism is *ineffective* if (a) the card or crypto module does not support extended mode, (b) the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), (c) the session opens with a different access level, (d) an intermediate `processCommands(...)` is called, or (e) asymmetric cryptography is used.
+| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses.
+
+  The mechanism is *ineffective* if +
+  - the card or crypto module does not support extended mode, +
+  - the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), +
+  - the session opens with a different access level, +
+  - an intermediate `processCommands(...)` is called, or +
+  - asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | `IllegalStateException` -- if pre-open is already prepared.
@@ -2580,6 +2587,11 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
 The bound `CalypsoCard` is updated after each successful APDU exchange, and parameter ranges are validated as documented in <<type_CalypsoCardSelectionExtension>>.
 
+Processing of prepared commands is inherited from `CardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>) via the
+`IsoCardTransactionManager` stereotype.
+The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
+Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of <<ref_cna_tr,CNA-TR-API>> when the underlying card supports multi-channel.
+
 NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> if the command would overflow the modification buffer and the multiple-session mode is not allowed.
 
 [[op_TransactionManager_getSecureSessionStatus]]
@@ -2990,13 +3002,6 @@ state. The returned object is immutable and captures the state at the moment of 
 | Returns     | The current instance (`T`).
 | Throws      | None.
 |===
-
-===== Processing Operations
-
-Processing of prepared commands is inherited from `CardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>) via the
-`IsoCardTransactionManager` stereotype.
-The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
-Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of <<ref_cna_tr,CNA-TR-API>> when the underlying card supports multi-channel.
 
 === SPI Interfaces
 

@@ -148,6 +148,7 @@ Each interface, class, enumeration and exception defined in this document is des
 | Implements | The interface implemented by this type, when applicable.
 | Since      | The version of the API in which the type was introduced.
 | Purpose    | A normative description of the type's responsibility.
+| See also   | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
 ==== Operation tables
@@ -162,6 +163,7 @@ Each operation defined in this document is described by a table of the form:
 | Parameters  | A description of each input parameter.
 | Returns     | A description of the returned value, if any.
 | Throws      | A list of exceptional conditions, each mapped to a specific exception type.
+| See also    | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
 ==== Operation contracts
@@ -397,6 +399,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Parameters  | `caCertificate` (<<type_PcaCertificate,`CaCertificate`>>) -- the CA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
+| See also    | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificateParser]]
@@ -482,6 +485,10 @@ Failed write commands do not update the in-memory image.
 | Description | Metadata of the current DF; `null` if not set.
 | Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(short)`>> +
+                <<op_CalypsoCardSelectionExtension_prepareSelectFile_byControl,`CalypsoCardSelectionExtension.prepareSelectFile(SelectFileControl)`>> +
+                <<op_TransactionManager_prepareSelectFile_byLid,`TransactionManager.prepareSelectFile(short)`>> +
+                <<op_TransactionManager_prepareSelectFile_byControl,`TransactionManager.prepareSelectFile(SelectFileControl)`>>
 |===
 
 [[op_CalypsoCard_getFileBySfi]]
@@ -686,6 +693,8 @@ Failed write commands do not update the in-memory image.
 | Description | Traceability information (software issuer ID and discretionary data); empty if not available.
 | Returns     | A `byte array`; empty if not available.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
+                <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>>
 |===
 
 [[op_CalypsoCard_getCardPublicKey]]
@@ -698,6 +707,9 @@ Failed write commands do not update the in-memory image.
 | Description | Card public key; empty if not available.
 | Returns     | A `byte array`; empty if not available.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
+                <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
+                <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
 |===
 
 [[op_CalypsoCard_getCardCertificate]]
@@ -710,6 +722,9 @@ Failed write commands do not update the in-memory image.
 | Description | Card certificate; empty if not available.
 | Returns     | A `byte array`; empty if not available.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
+                <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
+                <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
 |===
 
 [[op_CalypsoCard_getCaCertificate]]
@@ -722,6 +737,9 @@ Failed write commands do not update the in-memory image.
 | Description | CA certificate; empty if not available.
 | Returns     | A `byte array`; empty if not available.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
+                <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
+                <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
 |===
 
 [[op_CalypsoCard_isDfRatified]]
@@ -734,6 +752,8 @@ Failed write commands do not update the in-memory image.
 | Description | Tells whether the last session has been ratified.
 | Returns     | A `boolean` value.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
 
 [[op_CalypsoCard_getTransactionCounter]]
@@ -748,6 +768,8 @@ Failed write commands do not update the in-memory image.
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `integer` value.
 | Throws      | None.
+| See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
 
 [[op_CalypsoCard_isPkiModeSupported]]
@@ -808,6 +830,8 @@ Failed write commands do not update the in-memory image.
 | Description | Indicates whether the PIN is blocked.
 | Returns     | A `boolean` value.
 | Throws      | `IllegalStateException` -- if the PIN has not been checked.
+| See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
+                <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
 
 [[op_CalypsoCard_getPinAttemptRemaining]]
@@ -820,6 +844,8 @@ Failed write commands do not update the in-memory image.
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `integer` value.
 | Throws      | `IllegalStateException` -- if the PIN has not been checked.
+| See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
+                <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
 
 [[op_CalypsoCard_isSvFeatureAvailable]]
@@ -844,6 +870,11 @@ Failed write commands do not update the in-memory image.
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `integer` value.
 | Throws      | `IllegalStateException` -- if no SV Get has been executed.
+| See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
 |===
 
 [[op_CalypsoCard_getSvLastTNum]]
@@ -856,6 +887,11 @@ Failed write commands do not update the in-memory image.
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `integer` value.
 | Throws      | None.
+| See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecord]]
@@ -868,6 +904,11 @@ Failed write commands do not update the in-memory image.
 | Description | Last SV load log record; `null` if not available.
 | Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>, or `null` if not available.
 | Throws      | None.
+| See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogLastRecord]]
@@ -880,6 +921,11 @@ Failed write commands do not update the in-memory image.
 | Description | Last SV debit log record; `null` if not available.
 | Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>, or `null` if not available.
 | Throws      | None.
+| See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecords]]
@@ -892,6 +938,11 @@ Failed write commands do not update the in-memory image.
 | Description | All SV debit log records read from the card.
 | Returns     | A `list<SvDebitLogRecord>`; empty if no debit log record has been read.
 | Throws      | None.
+| See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
+                <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
 |===
 
 [[type_CalypsoCardApiFactory]]
@@ -1620,6 +1671,8 @@ intensive). When mutual authentication is also required, the two `prepare*` call
 consecutively. Only makes sense in a secure session.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| See also    | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
+                <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>>
 |===
 
 [[op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption]]
@@ -1632,6 +1685,9 @@ consecutively. Only makes sense in a secure session.
 | Description | Requests to stop the encryption. NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
+                <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>> +
+                <<op_SecureTransactionManager_prepareCloseSecureSession,`SecureTransactionManager.prepareCloseSecureSession`>>
 |===
 
 [[op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication]]
@@ -1647,6 +1703,8 @@ this feature penalises the execution time of the secure session and SHOULD be us
 sending sensitive commands).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
+                <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>>
 |===
 
 [[type_SecurePkiModeTransactionManager]]
@@ -1808,6 +1866,7 @@ pre-open mode is active or the read-merge optimisation has been disabled.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
+| See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareRehabilitate]]
@@ -2772,6 +2831,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 | `UnsupportedOperationException` -- if the *Search Record Multiple* command is not available for this card. +
 `IllegalArgumentException` -- if the input data is inconsistent. +
 `IllegalStateException` -- if a secure session is open.
+| See also    | <<type_SearchCommandData,`SearchCommandData`>>
 |===
 
 [[op_TransactionManager_prepareCheckPinStatus]]

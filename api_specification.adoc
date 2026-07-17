@@ -28,6 +28,8 @@ v3.0.0-SNAPSHOT, {docdate}
 :short-name: CNA
 :spec-name: Terminal Calypso Card API
 :spec-id: CNA-TCC-API
+:release-date: <YYMMDD>
+:doc-ref: {release-date}-SP-CNATerminalAPI-CalypsoCard
 :spec-version: 3.0.0-SNAPSHOT
 :ver-cna-tr: 3.0
 :ver-cna-tccs: 0.1
@@ -49,7 +51,8 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 
 [cols="1h,3", grid=rows, frame=all]
 |===
-| Specification ID    | {spec-id}
+| Reference           | {doc-ref}
+| Short name          | {spec-id}
 | Version             | {spec-version}
 | Editor              | {organization}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
@@ -212,13 +215,13 @@ is backward-compatible per that API's evolution policy.
 | https://www.iso.org[_Identification cards -- Integrated circuit cards_].
 
 | [[ref_cna_tr]] [CNA-TR-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-reader-uml-api/[_Terminal Reader API Specification_], version {ver-cna-tr}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-reader-uml-api/[_Terminal Reader API Specification_] (SP-CNATerminalAPI-Reader), version {ver-cna-tr}, {organization}.
 
 | [[ref_cna_tccs]] [CNA-TCCS-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-symmetric-uml-api/[_Terminal Calypso Crypto Symmetric API Specification_], version {ver-cna-tccs}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-symmetric-uml-api/[_Terminal Calypso Crypto Symmetric API Specification_] (SP-CNATerminalAPI-CalypsoCryptoSymmetric), version {ver-cna-tccs}, {organization}.
 
 | [[ref_cna_tcca]] [CNA-TCCA-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-asymmetric-uml-api/[_Terminal Calypso Crypto Asymmetric API Specification_], version {ver-cna-tcca}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-asymmetric-uml-api/[_Terminal Calypso Crypto Asymmetric API Specification_] (SP-CNATerminalAPI-CalypsoCryptoAsymmetric), version {ver-cna-tcca}, {organization}.
 |===
 
 ==== External resources

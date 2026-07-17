@@ -378,10 +378,19 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 |===
 | Signature   | `addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
-| Description | Registers a CA certificate. The issuer's certificate MUST be loaded first.
+| Description
+| Registers a CA certificate. The issuer's certificate MUST be loaded first. Preloading a CA certificate avoids
+  having to read it from the card.
+
+  Various checks are performed to ensure the integrity and validity of the supplied CA certificate: verification
+  of the certificate's signature using the issuer's public key, check of the validity period to ensure the
+  certificate is neither expired nor prematurely valid, confirmation of the authenticity of the issuer and subject
+  details, and compliance with any constraints or extensions required for CA certificates.
 | Parameters  | `caCertificate` (<<type_PcaCertificate,`CaCertificate`>>) -- the CA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Throws
+| `IllegalStateException` -- if the contained public key has already been registered. +
+  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the check of the supplied certificate failed.
 | See also    | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
 |===
 
@@ -393,7 +402,8 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Signature   | `addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
-| Registers a CA certificate parser, used when the CA certificate is not already available.
+| Registers a CA certificate parser, used when the CA certificate is not already available. The parser provides
+  the means to build a CA certificate from the raw data read from the card.
 | Parameters  | `caCertificateParser` (<<type_PcaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | `IllegalStateException` -- if a parser is already registered for the same certificate type.
@@ -406,10 +416,12 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 |===
 | Signature   | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
-| Description | Registers a card certificate parser. Same constraint as above.
+| Description
+| Registers a card certificate parser. The parser provides the means to build a card certificate from the raw data
+  read from the card. Only one parser MAY be registered per certificate type.
 | Parameters  | `cardCertificateParser` (<<type_PcaCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Throws      | `IllegalStateException` -- if a parser associated with the same certificate type is already registered.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
@@ -420,13 +432,18 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Signature   | `addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
-| Registers a self-signed PCA certificate. Its self-signature, validity period and any constraints are verified.
+| Registers a self-signed PCA certificate.
+
+  Various checks are performed to ensure the integrity and validity of the supplied PCA certificate: verification
+  of the certificate's signature to ensure it is self-signed, check of the validity period to ensure the
+  certificate is neither expired nor prematurely valid, confirmation of the authenticity of the issuer and subject
+  details, and compliance with any constraints or extensions required for PCA certificates.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws
 | `IllegalArgumentException` -- if the certificate is invalid. +
-  `IllegalStateException` -- if the certificate is already registered. +
-  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the verification fails.
+  `IllegalStateException` -- if the contained public key has already been registered. +
+  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the check of the supplied certificate failed.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
@@ -563,7 +580,10 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `getDfName() -> byte array`
 | Since       | 1.0
-| Description | DF name (5 to 16 bytes), as per <<ref_iso7816,ISO/IEC 7816-4>>.
+| Description
+| DF name (5 to 16 bytes), as per <<ref_iso7816,ISO/IEC 7816-4>>. It also corresponds to the complete
+  representation of the target covered by the AID value supplied in the selection command: the AID selects the
+  application by specifying all or part of the targeted DF name (5 bytes minimum).
 | Returns     | A non-empty `byte array`.
 | Throws      | None.
 |===
@@ -591,7 +611,11 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
-| Description | EF whose LID matches; `null` if not found.
+| Description
+| EF whose LID matches; `null` if not found.
+
+  Note that when a secure session is running, the returned object carries all in-session modifications,
+  which are rolled back if the secure session fails.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found.
 | Throws      | None.
 |===
@@ -603,7 +627,11 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
-| Description | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
+| Description
+| EF whose SFI matches; `null` if not found, or if `sfi == 0`.
+
+  Note that when a secure session is running, the returned object carries all in-session modifications,
+  which are rolled back if the secure session fails.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found, or if `sfi == 0`.
 | Throws      | None.
 |===
@@ -840,8 +868,14 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isDfInvalidated() -> boolean`
 | Since       | 1.0
-| Description | Tells whether the current DF is invalidated.
-| Returns     | A `boolean` value.
+| Description
+| Tells whether the current DF is invalidated. The invalidation status is determined either from the response to
+  the *Select Application* command or from the response to a *Select File* (DF) command.
+
+  For a `PRIME_REVISION_3` card, a `6283h` status word is returned in response to the *Select Application* command
+  when the corresponding DF is invalidated. For older Calypso cards, it may be necessary to execute a *Select
+  File* command in order to determine the invalidation status.
+| Returns     | `true` if the current DF has been invalidated, `false` otherwise.
 | Throws      | None.
 |===
 
@@ -866,7 +900,10 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isExtendedModeSupported() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether the Extended Mode is supported. MAY be updated after session opening depending on the type of key used.
+| Description
+| Indicates whether the Extended Mode is supported. This indication is initially interpreted from the *Application
+  Type* byte, but MAY be updated once the secure session is opened: depending on the type of key used, the
+  extended mode functionalities may not be available (for example with a non-AES key).
 | Returns     | A `boolean` value.
 | Throws      | None.
 |===
@@ -904,8 +941,8 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isPinFeatureAvailable() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether the Calypso PIN feature is available.
-| Returns     | A `boolean` value.
+| Description | Indicates whether the Calypso PIN feature is available. This indication is interpreted from the *Application Type* byte.
+| Returns     | `true` if the card has the PIN feature, `false` otherwise.
 | Throws      | None.
 |===
 
@@ -916,7 +953,9 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isPkiModeSupported() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether Public Key Authentication is supported.
+| Description
+| Indicates whether Public Key Authentication is supported. This indication is interpreted from the *Application
+  Type* byte.
 | Returns     | A `boolean` value.
 | Throws      | None.
 |===
@@ -928,7 +967,9 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isRatificationOnDeselectSupported() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether ratification happens on deselect (ratification command not required).
+| Description
+| Indicates whether ratification happens on deselect (ratification command not required). This indication is
+  interpreted from the *Application Type* byte.
 | Returns     | A `boolean` value.
 | Throws      | None.
 |===
@@ -940,8 +981,8 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature   | `isSvFeatureAvailable() -> boolean`
 | Since       | 1.0
-| Description | Indicates whether the SV feature is available.
-| Returns     | A `boolean` value.
+| Description | Indicates whether the SV feature is available. This indication is interpreted from the *Application Type* byte.
+| Returns     | `true` if the card has the Stored Value feature, `false` otherwise.
 | Throws      | None.
 |===
 
@@ -1149,7 +1190,12 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
-| Description | Adds a *Get Data* command for the supplied tag. Useful e.g. for OMAPI cases where the FCI is not provided by *Select Application*.
+| Description
+| Adds a *Get Data* command for the supplied tag. This is the way to obtain FCI information when it is not
+  supplied directly by *Select Application* (e.g. the OMAPI case).
+
+  *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
+  some earlier revision cards.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 |===
@@ -1162,13 +1208,23 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
-| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange session execution by anticipating the APDU responses.
+| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange
+  session execution by anticipating the APDU responses.
+
+  The objective of the pre-opening is to allow the grouping of all the commands of a secure session. It is only
+  relevant for a distributed system where the ticketing processing is done remotely, so that a complete secure
+  session can be carried out in a single exchange between the server and the terminal.
+
+  To achieve that single exchange, all the data that will have to be read in session MUST first be read locally,
+  outside the session -- otherwise additional exchanges take place. The remote ticketing processing then prepares
+  all the commands of the session, from opening to closing, before executing it: `prepareOpenSecureSession(...)`,
+  then the other `prepare*` calls, then `prepareCloseSecureSession()`, and finally a single `processCommands()`.
 
   The mechanism is *ineffective* if +
   - the card or crypto module does not support extended mode, +
   - the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), +
   - the session opens with a different access level, +
-  - an intermediate `processCommands(...)` is called, or +
+  - an intermediate `processCommands()` is called, or +
   - asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
@@ -1182,9 +1238,15 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
-| Description | Adds one or more *Read Binary* commands for a binary EF. Best-effort.
+| Description
+| Adds one or more *Read Binary* commands to read all or part of the supplied binary EF. Once processed, the
+  result is available in the <<type_CalypsoCard,`CalypsoCard`>> if the requested file exists in the file structure
+  of the card and if the offset and the number of bytes to read are valid (*best-effort* mode).
+
+  *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
+  some earlier revision cards.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadCounter]]
@@ -1194,9 +1256,16 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
-| Description | Adds a *Read Records* command reading the counter record up to the supplied counter number (all preceding counters are also read). Best-effort.
+| Description
+| Adds a *Read Records* command to read a part of a record of the supplied EF, which SHOULD be a counter file. The
+  record is read up to the supplied counter number, so all preceding counters are also read. Once processed, the
+  result is available in the <<type_CalypsoCard,`CalypsoCard`>> if the requested file and counter number exist in
+  the file structure of the card (*best-effort* mode).
+
+  *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
+  some earlier revision cards.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadRecord]]
@@ -1206,9 +1275,15 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
-| Description | Adds a *Read Records* command for a single record of a linear or cyclic EF. Best-effort: the command does not fail if the file/record is absent.
+| Description
+| Adds a *Read Records* command for a single record of a linear or cyclic EF. Once processed, the result is
+  available in the <<type_CalypsoCard,`CalypsoCard`>> if the requested file and record exist in the file structure
+  of the card (*best-effort* mode: the command does not fail if the file or the record is absent).
+
+  *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
+  some earlier revision cards.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
@@ -1230,7 +1305,11 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
-| Description | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
+| Description
+| Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
+
+  *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
+  some earlier revision cards.
 | Parameters  | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 |===
@@ -1532,7 +1611,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getRecordSize() -> integer`
 | Since       | 1.0
-| Description | Returns the size of a record. For binary files, this is the size of the file.
+| Description
+| Returns the size of a record. For a *counter* file, this is the original size of record #1; the extra bytes --
+  the remainder of the division of the file size by 3 -- are not accessible. For a *binary* file, this is the size
+  of the file.
 | Returns     | An `integer` value.
 | Throws      | None.
 |===
@@ -1544,7 +1626,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 |===
 | Signature   | `getRecordsNumber() -> integer`
 | Since       | 1.0
-| Description | Returns the number of records. For *counter* and *binary* files the value is always 1.
+| Description
+| Returns the number of records. For a *counter* file the number of records is always `1`, and for a *binary*
+  file it is always `1` as well. For a counter file, the extra bytes -- the remainder of the division of the file
+  size by 3 -- are not accessible.
 | Returns     | An `integer` value.
 | Throws      | None.
 |===
@@ -1620,7 +1705,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getMatchingRecordNumbers() -> list<integer>`
 | Since       | 1.1
 | Description | Returns the record numbers that matched.
-| Returns     | A `list<integer>`; empty if no record matched.
+| Returns     | A `list<integer>`; empty if no record matched or if the command has not yet been processed.
 | Throws      | None.
 |===
 
@@ -1705,9 +1790,14 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareActivateEncryption() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
 | Description
-| Requests encryption for all following session commands. SHOULD be limited to commands that require it (resource
-intensive). When mutual authentication is also required, the two `prepare*` calls SHOULD be placed
-consecutively. Only makes sense in a secure session.
+| Requests encryption for all following session commands. This ensures data confidentiality and prevents
+  man-in-the-middle attacks. This command only makes sense in the context of a secure session.
+
+  Encryption is resource intensive and increases transaction times: it is therefore RECOMMENDED to limit it to
+  the commands that require it. Furthermore, when early mutual authentication is also required, it is RECOMMENDED
+  for performance reasons to place the
+  <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
+  and `prepareActivateEncryption` calls consecutively (in any order).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
@@ -1721,7 +1811,12 @@ consecutively. Only makes sense in a secure session.
 |===
 | Signature   | `prepareDeactivateEncryption() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
-| Description | Requests to stop the encryption. NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
+| Description
+| Requests to stop the encryption, which restores the exchanges with the card to their normal mode. This command
+  only makes sense in the context of a secure session in which encryption of the commands has previously been
+  requested.
+
+  NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
 | Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
@@ -1883,7 +1978,11 @@ in the crypto module.
 |===
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0
-| Description | Schedules an *Invalidate* command, which marks the card application as invalidated, blocking further use until it is rehabilitated.
+| Description
+| Schedules an *Invalidate* command, which marks the card application as invalidated, blocking further use until
+  it is rehabilitated. This command is usually executed within a secure session with the `DEBIT` key, depending on
+  the access rights granted to it in the file structure of the card. The resulting DF status is available in the
+  <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is already invalidated. +
@@ -1898,9 +1997,15 @@ in the crypto module.
 | Signature   | `prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> T`
 | Since       | 2.0
 | Description
-| Schedules an *Open Secure Session* command. If the next prepared command is a *Read One Record* or *Read One Or
-More Counters*, it will be merged with the session opening for optimisation, unless the
-pre-open mode is active or the read-merge optimisation has been disabled.
+| Schedules an *Open Secure Session* command. The secure session is opened with the supplied
+  <<type_WriteAccessLevel,`WriteAccessLevel`>>, depending on whether the transaction profile is personalisation,
+  reload or debit.
+
+  If the next prepared command is a *Read One Record* or *Read One Or More Counters*, it is merged with the
+  session opening for optimisation, unless the pre-open mode is active or the read-merge optimisation has been
+  disabled. This mechanism may in some cases be incompatible with the security constraints; it can then be
+  disabled via
+  <<op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening,`SymmetricCryptoSecuritySetting.disableReadOnSessionOpening`>>.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).
 | Throws
@@ -1915,7 +2020,11 @@ pre-open mode is active or the read-merge optimisation has been disabled.
 |===
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0
-| Description | Schedules a *Rehabilitate* command, which clears the card application's invalidation status, making it usable again.
+| Description
+| Schedules a *Rehabilitate* command, which clears the card application's invalidation status, making it usable
+  again. This command is usually executed within a secure session with the `PERSONALIZATION` key, depending on the
+  access rights granted to it in the file structure of the card. The resulting DF status is available in the
+  <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
 | Throws
 | `IllegalStateException` -- if the card is not invalidated. +
@@ -1930,8 +2039,12 @@ pre-open mode is active or the read-merge optimisation has been disabled.
 | Signature   | `prepareSvDebit(amount: integer, date: byte array, time: byte array) -> T`
 | Since       | 2.0
 | Description
-| Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. Amount: `0..32767` for
-debit, `0..32768` for undebit.
+| Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. It decreases the current SV
+  balance by the supplied amount, or cancels a previous debit, according to the operation type chosen when the
+  preceding *SV Get* command was called. Amount: `0..32767` for debit, `0..32768` for undebit.
+
+  The key used is the *debit* key. Once processed, the data is available in the
+  <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
 | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
 `date`   -- a 2-byte free value. +
@@ -1950,7 +2063,11 @@ debit, `0..32768` for undebit.
 |===
 | Signature   | `prepareSvDebit(amount: integer) -> T`
 | Since       | 2.0
-| Description | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero.
+| Description
+| Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero. It decreases the
+  current SV balance by the supplied amount, or cancels a previous debit. The key used is the *debit* key. Once
+  processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
+  management operations.
 | Parameters  | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
 | Returns     | The current instance (`T`).
 | Throws
@@ -1966,7 +2083,10 @@ debit, `0..32768` for undebit.
 |===
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
 | Since       | 2.0
-| Description | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV debit, undebit or reload.
+| Description
+| Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV
+  debit, undebit or reload. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>>
+  through its dedicated SV data management operations.
 | Parameters
 | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
 `svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
@@ -1982,7 +2102,9 @@ debit, `0..32768` for undebit.
 | Signature   | `prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T`
 | Since       | 2.0
 | Description
-| Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`.
+| Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`. The key
+  used is the *reload* key. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  its dedicated SV data management operations.
 | Parameters
 | `amount` -- the value to be reloaded, positive or negative integer in the range `-8388608..8388607`. +
 `date`   -- a 2-byte free value. +
@@ -2002,7 +2124,10 @@ debit, `0..32768` for undebit.
 |===
 | Signature   | `prepareSvReload(amount: integer) -> T`
 | Since       | 2.0
-| Description | Schedules an *SV Reload* command with the optional data fields set to zero.
+| Description
+| Schedules an *SV Reload* command with the optional data fields set to zero. The key used is the *reload* key.
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
+  management operations.
 | Parameters  | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
 | Returns     | The current instance (`T`).
 | Throws
@@ -2470,7 +2595,9 @@ mode.
 |===
 | Signature   | `disableReadOnSessionOpening() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
-| Description | Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the optimisation is performed.
+| Description
+| Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the
+  optimisation is performed; it may however be incompatible with the security requirements in some cases.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2530,7 +2657,13 @@ mode.
 |===
 | Signature   | `initCryptoContextForNextTransaction() -> void`
 | Since       | 2.0
-| Description | Prepares the crypto module for the next transaction by anticipating security context configuration. MUST be called *after* the user-visible notification (e.g. after opening the gate).
+| Description
+| Prepares the crypto module for the next transaction by anticipating the security context configuration.
+
+  This feature is only useful when the currently allocated cryptographic module will be used for the next
+  transaction. It is particularly relevant to optimise the transaction time in a ticketing context of user card
+  validation. For the optimisation to be effective, this operation MUST be called at the very end of the current
+  transaction, that is, *after* the user has been notified of the access right (e.g. after opening the gate).
 | Throws
 | <<type_CryptoException,`CryptoException`>> -- if an error occurred when computing a crypto operation. +
 <<type_CryptoIOException,`CryptoIOException`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
@@ -2627,12 +2760,16 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareAppendRecord(sfi: byte, recordData: byte array) -> T`
 | Since       | 1.0
-| Description | Adds an *Append Record* command (a new record is added, the oldest record is deleted in a cyclic file).
+| Description
+| Adds an *Append Record* command: a new record is added, and the oldest record is deleted in a cyclic file.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareChangePin]]
@@ -2642,7 +2779,12 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareChangePin(newPin: byte array) -> T`
 | Since       | 1.6
-| Description | Adds a *Change PIN* command. *MUST be performed outside a secure session.* If transmitted plain, the command MUST be preceded by a successful *Verify PIN*.
+| Description
+| Adds a *Change PIN* command. It MUST be performed outside a secure session. If transmitted plain, the command
+  MUST be preceded by a successful *Verify PIN*. Once processed, the PIN status is available in the
+  <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
+  <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `newPin` -- the new PIN code value (4-byte long `byte array`).
 | Returns     | The current instance (`T`).
 | Throws
@@ -2658,7 +2800,11 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareCheckPinStatus() -> T`
 | Since       | 1.0
-| Description | Adds a *Verify PIN* command without PIN presentation in order to read the attempt counter.
+| Description
+| Adds a *Verify PIN* command without PIN presentation, in order to read the attempt counter. Once processed, the
+  PIN status is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
+  <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the PIN feature is not available for this card.
 |===
@@ -2670,13 +2816,20 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
 | Since       | 1.0
-| Description | Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
+| Description
+| Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
+  If several counters of the same file have to be decremented at the same time of the transaction, it is
+  RECOMMENDED to use <<op_TransactionManager_prepareDecreaseCounters,`prepareDecreaseCounters`>> for optimisation
+  reasons.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounters]]
@@ -2686,7 +2839,12 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T`
 | Since       | 1.1
-| Description | Adds a *Decrease Multiple* command or multiple *Decrease* commands.
+| Description
+| Adds a *Decrease Multiple* command, or multiple *Decrease* commands. The decision to execute one or the other
+  is made according to the type of card.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
@@ -2713,7 +2871,13 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0
-| Description | Adds one or more *Get Data* commands. *MUST NOT be used within a secure session.*
+| Description
+| Adds one or more *Get Data* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
+  modes.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>> or
+  <<op_CalypsoCard_getDirectoryHeader,`getDirectoryHeader`>>, depending on the supplied tag.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
 | Throws
@@ -2728,13 +2892,19 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T`
 | Since       | 1.0
-| Description | Adds an *Increase* command. For multiple counters of the same file, `prepareIncreaseCounters` is RECOMMENDED.
+| Description
+| Adds an *Increase* command. If several counters of the same file have to be incremented at the same time of the
+  transaction, it is RECOMMENDED to use
+  <<op_TransactionManager_prepareIncreaseCounters,`prepareIncreaseCounters`>> for optimisation reasons.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounters]]
@@ -2744,7 +2914,12 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T`
 | Since       | 1.1
-| Description | Adds an *Increase Multiple* command, or multiple *Increase* commands, depending on the card.
+| Description
+| Adds an *Increase Multiple* command, or multiple *Increase* commands. The decision to execute one or the other
+  is made according to the type of card.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
@@ -2777,13 +2952,24 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1
-| Description | Adds *Read Binary* commands. Best-effort outside a session; strict inside.
+| Description
+| Adds *Read Binary* commands.
+
+  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
+  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
+  targeted file or the validity of the offset and the number of bytes to read -- the `CalypsoCard` may then simply
+  not be filled. Inside a secure session (*strict* mode), it fails in those cases.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `offset`        -- the offset (`0` indicates the first byte). +
 `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws
+| `UnsupportedOperationException` -- if this command is not supported by this card. +
+  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadCounter]]
@@ -2793,12 +2979,22 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T`
 | Since       | 1.1
-| Description | Adds a *Read Records* command targeting the supplied counter (and all preceding counters).
+| Description
+| Adds a *Read Records* command targeting the supplied counter. The record is read up to the counter location
+  supplied as parameter, so all preceding counters are also read.
+
+  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
+  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
+  targeted file or counter -- the `CalypsoCard` may then simply not be filled. Inside a secure session (*strict*
+  mode), it fails if the targeted file or counter is not found.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`              -- the SFI of the EF. +
 `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecord]]
@@ -2808,12 +3004,21 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> T`
 | Since       | 1.1
-| Description | Adds a *Read Records* command for a single record. *MUST NOT be used within a secure session; use `prepareReadRecords` instead for the in-session case.*
+| Description
+| Adds a *Read Records* command for a single record. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
+  modes. For the in-session case, use
+  <<op_TransactionManager_prepareReadRecords,`prepareReadRecords`>> instead, with valid parameters.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
+
+  The following `processCommands()` does not fail whatever the existence of the targeted file or record: the
+  `CalypsoCard` may then simply not be filled (*best-effort* mode).
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecords]]
@@ -2823,14 +3028,23 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T`
 | Since       | 1.1
-| Description | Adds a *Read Records* command for one or more records. Best-effort outside a secure session; strict mode inside a secure session.
+| Description
+| Adds a *Read Records* command for one or more records.
+
+  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
+  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
+  targeted file or record -- the `CalypsoCard` may then simply not be filled. Inside a secure session (*strict*
+  mode), it fails if the targeted file or record is not found.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`              -- the SFI of the EF. +
 `fromRecordNumber` -- the number of the first record to read. +
 `toRecordNumber`   -- the number of the last record to read. +
 `recordSize`       -- the record length.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecordsPartially]]
@@ -2840,7 +3054,16 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1
-| Description | Adds *Read Record Multiple* commands. *MUST NOT be used within a secure session.*
+| Description
+| Adds *Read Record Multiple* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
+  modes.
+
+  The following `processCommands()` does not fail whatever the existence of the targeted file or the validity of
+  the offset and the number of bytes to read: the `CalypsoCard` may then simply not be filled (*best-effort*
+  mode).
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`              -- the SFI of the EF. +
 `fromRecordNumber` -- the number of the first record to read. +
@@ -2861,7 +3084,19 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1
-| Description | Adds a *Search Record Multiple* command. *MUST NOT be used within a secure session.*
+| Description
+| Adds a *Search Record Multiple* command. The command searches whether the supplied data are present in the
+  records of the file; an optional mask MAY be applied to specify precisely the bits to take into account in the
+  comparison. It is only possible with a *linear*, *cyclic*, *Counters* or *Simulated Counter* EF. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
+  modes.
+
+  Once processed, the result is available in the supplied input/output
+  <<type_SearchCommandData,`SearchCommandData`>>, and the content of the first matching record in the
+  <<type_CalypsoCard,`CalypsoCard`>> when requested.
+
+  The following `processCommands()` does not fail whatever the existence of the targeted file or the validity of
+  the record number and offset: the `SearchCommandData` and `CalypsoCard` may then simply not be updated
+  (*best-effort* mode).
 | Parameters  | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
 | Returns     | The current instance (`T`).
 | Throws
@@ -2878,7 +3113,13 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareSelectFile(lid: short) -> T`
 | Since       | 1.1
-| Description | Adds a *Select File* command targeting an EF by LID. _Fails if the file is not an EF._
+| Description
+| Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
+  an EF.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and
+  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (`T`).
 | Throws      | None.
@@ -2891,7 +3132,11 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0
-| Description | Adds a *Select File* command using a navigation control.
+| Description
+| Adds a *Select File* command using a navigation control.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns     | The current instance (`T`).
 |===
@@ -2903,13 +3148,26 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
 | Since       | 1.0
-| Description | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value.
+| Description
+| Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value. The operation is
+  selected according to whether the difference between the current value and the desired value is negative
+  (*Increase*) or positive (*Decrease*).
+
+  Two assumptions are made, and neither is checked by this operation: the counter value has been read beforehand,
+  and the type of session -- and its associated access rights -- is consistent with the requested operation (a
+  reload session if the counter is to be incremented, a debit session if it is to be decremented). An
+  inconsistency is only detected when the session is closed.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalStateException` -- if the current counter value is unknown.
+| Throws
+| `IllegalStateException` -- if the current counter value is unknown. +
+  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareSvReadAllLogs]]
@@ -2919,7 +3177,18 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0
-| Description | Schedules the reading of every Stored Value log, i.e. both the load and the debit log records.
+| Description
+| Schedules the reading of every Stored Value log, that is, both the load and the debit log records. This
+  operation requires the selected application to be of type *Store Value* (file structure `20h`).
+
+  The SV transaction logs are contained in two files with fixed identifiers: the file whose SFI is `14h` holds one
+  record carrying the unique reload log, and the file whose SFI is `15h` holds three records carrying the last
+  three debit logs.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> in raw format through its
+  dedicated file and data management operations, or as dedicated objects through
+  <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>> and
+  <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>.
 | Returns     | The current instance (`T`).
 | Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
 |===
@@ -2931,13 +3200,20 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1
-| Description | Adds one or more *Update Binary* commands.
+| Description
+| Adds one or more *Update Binary* commands. The data of the file before the offset and after the supplied data
+  are left unchanged.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the new data.
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationException` -- if this command is not supported by this card.
+| Throws
+| `UnsupportedOperationException` -- if this command is not supported by this card. +
+  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareUpdateRecord]]
@@ -2947,13 +3223,17 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0
-| Description | Adds an *Update Record* command. Bytes beyond `recordData.length` are left unchanged.
+| Description
+| Adds an *Update Record* command. Bytes beyond `recordData.length` are left unchanged.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareVerifyPin]]
@@ -2963,7 +3243,14 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareVerifyPin(pin: byte array) -> T`
 | Since       | 1.6
-| Description | Adds a *Verify PIN* command. Plain or ciphered transmission depends on `SymmetricCryptoSecuritySetting`.
+| Description
+| Adds a *Verify PIN* command. This command MAY be performed both inside and outside a secure session. The PIN
+  code is transmitted in plain text or enciphered, according to the parameter set in the
+  <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
+
+  Once processed, the PIN status is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
+  <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `pin` -- the PIN code value (4-byte long `byte array`).
 | Returns     | The current instance (`T`).
 | Throws
@@ -2978,13 +3265,20 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1
-| Description | Adds one or more *Write Binary* commands (binary OR).
+| Description
+| Adds one or more *Write Binary* commands, performing a binary OR with the existing data. The data of the file
+  before the offset and after the supplied data are left unchanged.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the data to write over the existing data.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws
+| `UnsupportedOperationException` -- if this command is not supported by this card. +
+  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareWriteRecord]]
@@ -2994,13 +3288,17 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature   | `prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0
-| Description | Adds a *Write Record* command (binary OR with the existing data).
+| Description
+| Adds a *Write Record* command, performing a binary OR with the existing data.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
+  and data management operations.
 | Parameters
 | `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
 
 === SPI Interfaces

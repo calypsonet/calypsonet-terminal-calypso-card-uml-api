@@ -494,6 +494,9 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
 | Purpose  | Dynamic view of the card's content, updated from selection to the end of the transaction.
 |===
 
+An instance of `CalypsoCard` is obtained by casting the `IsoSmartCard` object produced by the selection process
+defined in <<ref_cna_tr,CNA-TR-API>>.
+
 A `CalypsoCard` carries: application identification (revision, class, DF name, serial number, ATR, issuer), the indication of optional features (Stored Value, PIN, Rev 3.2 mode, ratification management), the management information of the modification buffer, the invalidation status and the files / counters / SV data read or modified during the transaction.
 
 The `CalypsoCard` instance bound to a transaction is a *dynamic view* of the card image, updated after every successful command.
@@ -2783,6 +2786,8 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
+The preparation step makes it possible to group commands together in order to minimise network data exchanges,
+which is especially useful in a distributed architecture.
 The bound `CalypsoCard` is updated after each successful APDU exchange, and parameter ranges are validated as documented in <<type_CalypsoCardSelectionExtension>>.
 
 Processing of prepared commands is inherited from `CardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>) via the
@@ -3672,7 +3677,12 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
-| Purpose  | Indicates inconsistent data: either APDU-exchange de-synchronisation, or a discrepancy between data read in session vs out of session.
+| Purpose
+| Indicates the detection of inconsistent data, in one of the following cases: +
+  - a *de-synchronisation of the APDU exchanges*, that is, a number of APDU responses different from the number of
+  APDU requests; +
+  - an *inconsistency in the card data*, which can happen for example when the data read outside the secure
+  session differs from the data read inside it.
 |===
 
 [[type_InvalidCardSignatureException]]
@@ -3684,7 +3694,15 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
-| Purpose  | Indicates that the card signature is incorrect. For symmetric-key transactions, this typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`. For PKI transactions, this simply means that the card signature is invalid.
+| Purpose
+| Indicates that the card signature is incorrect.
+
+  For a transaction secured by *symmetric* cryptography (e.g. SAM), this indicates that the card has correctly
+  closed the secure session, but that the card session is *not authentic* because the MAC it produced is wrong.
+  This typically happens when the *Digest Authenticate* or *SV Check* status word is `6988h`.
+
+  For a transaction secured by *asymmetric* cryptography (e.g. PKI), this indicates only that the card signature
+  is incorrect.
 |===
 
 [[type_InvalidCertificateException]]

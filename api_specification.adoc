@@ -1228,24 +1228,26 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
-| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange
-  session execution by anticipating the APDU responses.
+a| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange
+session execution by anticipating the APDU responses.
 
-  The objective of the pre-opening is to allow the grouping of all the commands of a secure session. It is only
-  relevant for a distributed system where the ticketing processing is done remotely, so that a complete secure
-  session can be carried out in a single exchange between the server and the terminal.
+The objective of the pre-opening is to allow the grouping of all the commands of a secure session. It is only
+relevant for a distributed system where the ticketing processing is done remotely, so that a complete secure
+session can be carried out in a single exchange between the server and the terminal.
 
-  To achieve that single exchange, all the data that will have to be read in session MUST first be read locally,
-  outside the session -- otherwise additional exchanges take place. The remote ticketing processing then prepares
-  all the commands of the session, from opening to closing, before executing it: `prepareOpenSecureSession(...)`,
-  then the other `prepare*` calls, then `prepareCloseSecureSession()`, and finally a single `processCommands()`.
+To achieve that single exchange, all the data that will have to be read in session MUST first be read locally,
+outside the session -- otherwise additional exchanges take place. The remote ticketing processing then prepares
+all the commands of the session, from opening to closing, before executing it: `prepareOpenSecureSession(...)`,
+then the other `prepare*` calls, then `prepareCloseSecureSession()`, and finally a single `processCommands()`.
 
-  The mechanism is *ineffective* if +
-  - the card or crypto module does not support extended mode, +
-  - the session needs intermediate exchanges (PIN, SV, encryption, early mutual auth, unread session data), +
-  - the session opens with a different access level, +
-  - an intermediate `processCommands()` is called, or +
-  - asymmetric cryptography is used.
+The mechanism is *ineffective* if:
+
+* the card or crypto module does not support extended mode;
+* the session needs intermediate exchanges (PIN, SV, encryption, early mutual authentication, unread session
+  data);
+* the session opens with a different access level;
+* an intermediate `processCommands()` is called;
+* asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | `IllegalStateException` -- if pre-open is already prepared.

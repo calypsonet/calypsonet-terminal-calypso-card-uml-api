@@ -822,7 +822,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `integer` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` -- if no SV Get command has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -872,7 +872,7 @@ Failed write commands do not update the in-memory image.
 
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `integer` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -904,7 +904,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Tells whether the last session has been ratified.
 | Returns     | A `boolean` value.
-| Throws      | None.
+| Throws      | `IllegalStateException` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===

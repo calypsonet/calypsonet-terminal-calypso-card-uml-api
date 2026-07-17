@@ -151,6 +151,10 @@ Each interface, class, enumeration and exception defined in this document is des
 | See also   | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
+The *Purpose* row states, in one or two sentences, the responsibility of the type and the way an instance is
+obtained. Any content that requires structure -- rules, lists, notes, nested tables or examples -- is placed as
+prose below the table, because table cells render inline content only.
+
 ==== Operation tables
 
 Each operation defined in this document is described by a table of the form:
@@ -3677,13 +3681,15 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Kind     | Runtime exception
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
-| Purpose
-| Indicates the detection of inconsistent data, in one of the following cases: +
-  - a *de-synchronisation of the APDU exchanges*, that is, a number of APDU responses different from the number of
-  APDU requests; +
-  - an *inconsistency in the card data*, which can happen for example when the data read outside the secure
-  session differs from the data read inside it.
+| Purpose  | Indicates the detection of inconsistent data.
 |===
+
+The inconsistency falls into one of the following cases:
+
+* a *de-synchronisation of the APDU exchanges*, that is, a number of APDU responses different from the number of
+  APDU requests;
+* an *inconsistency in the card data*, which can happen for example when the data read outside the secure session
+  differs from the data read inside it.
 
 [[type_InvalidCardSignatureException]]
 ==== Invalid Card Signature Exception

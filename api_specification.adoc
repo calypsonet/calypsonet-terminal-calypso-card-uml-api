@@ -456,6 +456,9 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
   applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -470,6 +473,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
 whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to. +
+  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -616,6 +623,7 @@ Failed write commands do not update the in-memory image.
 
   Note that when a secure session is running, the returned object carries all in-session modifications,
   which are rolled back if the secure session fails.
+| Parameters  | `lid` -- the LID to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found.
 | Throws      | None.
 |===
@@ -632,6 +640,7 @@ Failed write commands do not update the in-memory image.
 
   Note that when a secure session is running, the returned object carries all in-session modifications,
   which are rolled back if the secure session fails.
+| Parameters  | `sfi` -- the SFI to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found, or if `sfi == 0`.
 | Throws      | None.
 |===
@@ -1045,6 +1054,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
 | Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
+| Throws      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSearchCommandData]]
@@ -1079,6 +1089,7 @@ Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
+| Throws      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager]]
@@ -1122,6 +1133,7 @@ PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
+| Throws      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting]]
@@ -1198,6 +1210,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
   some earlier revision cards.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Throws      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_preparePreOpenSecureSession]]
@@ -1245,6 +1258,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
+| Parameters
+| `sfi` -- the SFI of the EF. +
+  `offset` -- the offset (0 indicates the first byte). +
+  `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
@@ -1264,6 +1281,9 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
+| Parameters
+| `sfi` -- the SFI of the EF. +
+  `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
@@ -1282,6 +1302,9 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
+| Parameters
+| `sfi` -- the SFI of the EF to read. +
+  `recordNumber` -- the record number to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
 |===
@@ -1294,6 +1317,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
+| Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
 | Throws      | None.
 |===
@@ -1312,6 +1336,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
   some earlier revision cards.
 | Parameters  | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Throws      | None.
 |===
 
 [[type_DirectoryHeader]]
@@ -1372,6 +1397,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Description | Returns the KIF associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
 | Returns     | A `byte` value.
+| Throws      | None.
 |===
 
 [[op_DirectoryHeader_getKvc]]
@@ -1384,6 +1410,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Description | Returns the KVC associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
 | Returns     | A `byte` value.
+| Throws      | None.
 |===
 
 [[op_DirectoryHeader_getLid]]
@@ -1502,6 +1529,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContent(numRecord: integer) -> byte array`
 | Since       | 1.0
 | Description | Returns the known content of the supplied record number.
+| Parameters  | `numRecord` -- the record number.
 | Returns     | A `byte array`; empty if the record content is not known.
 | Throws      | None.
 |===
@@ -1514,6 +1542,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
 | Since       | 1.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
+| Parameters
+| `numRecord` -- the record number. +
+  `dataOffset` -- the offset index (should be >= 0). +
+  `dataLength` -- the data length (should be >= 1).
 | Returns     | A `byte array`; empty if the content is not known.
 | Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. +
   `IndexOutOfBoundsException` -- if the range exceeds the record content.
@@ -1527,6 +1559,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `getContentAsCounterValue(numCounter: integer) -> integer?`
 | Since       | 1.0
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
+| Parameters  | `numCounter` -- the counter number (should be >= 1).
 | Returns     | An `integer` value, or `null` if record #1 or the requested counter is not set.
 | Throws      | `IllegalArgumentException` -- if `numCounter < 1`. +
   `IndexOutOfBoundsException` -- if the counter is truncated.
@@ -1717,6 +1750,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setMask(mask: byte array) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
+| Parameters  | `mask` -- the mask.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
 | Throws      | None.
 |===
@@ -1729,6 +1763,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setOffset(offset: integer) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
+| Parameters  | `offset` -- the offset.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
 | Throws      | None.
 |===
@@ -1741,6 +1776,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setSearchData(data: byte array) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the byte sequence to search for within the targeted record.
+| Parameters  | `data` -- the data to search.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
 | Throws      | None.
 |===
@@ -1753,6 +1789,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `setSfi(sfi: byte) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the SFI of the EF in which the search is performed.
+| Parameters  | `sfi` -- the SFI of the EF.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
 | Throws      | None.
 |===
@@ -1765,6 +1802,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the record number at which the search begins (default: 1).
+| Parameters  | `recordNumber` -- the number of the record where the search should begin.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
 | Throws      | None.
 |===
@@ -2160,6 +2198,7 @@ in the crypto module.
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
 | Returns     | An `E extends CardTransactionCryptoExtension`.
+| Throws      | None.
 |===
 
 [[op_SecureTransactionManager_prepareCancelSecureSession]]
@@ -2462,6 +2501,9 @@ mode.
 | Signature   | `addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
+| Parameters
+| `kif` -- the KIF value. +
+  `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2474,6 +2516,9 @@ mode.
 | Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
+| Parameters
+| `kif` -- the KIF value. +
+  `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2534,6 +2579,9 @@ mode.
 | Description
 | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
   applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2546,6 +2594,10 @@ mode.
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to. +
+  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2560,6 +2612,9 @@ mode.
 | Description
 | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin`,
   applied to every application DF (no `dfName` filter).
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2572,6 +2627,10 @@ mode.
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
+| Parameters
+| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to. +
+  `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2677,6 +2736,9 @@ mode.
 | Signature   | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
+| Parameters
+| `kif` -- the KIF value. +
+  `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -2689,6 +2751,9 @@ mode.
 | Signature   | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
+| Parameters
+| `kif` -- the KIF value. +
+  `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
 | Throws      | None.
 |===
@@ -3139,6 +3204,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns     | The current instance (`T`).
+| Throws      | None.
 |===
 
 [[op_TransactionManager_prepareSetCounter]]

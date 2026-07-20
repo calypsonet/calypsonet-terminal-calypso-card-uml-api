@@ -25,11 +25,9 @@ v3.0.0-SNAPSHOT, {docdate}
 :example-caption: Example
 :appendix-caption: Appendix
 :organization: Calypso Networks Association
-:short-name: CNA
 :spec-name: Terminal Calypso Card API
 :spec-id: CNA-TCC-API
-:release-date: <YYMMDD>
-:doc-ref: {release-date}-SP-CNATerminalAPI-CalypsoCard
+:doc-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
 :spec-version: 3.0.0-SNAPSHOT
 :ver-cna-tr: 3.0
 :ver-cna-tccs: 0.1
@@ -39,7 +37,7 @@ v3.0.0-SNAPSHOT, {docdate}
 == Abstract
 
 This document is the official technical specification of the **{spec-name}** standardised
-by the **{organization}** ({short-name}).
+by the **{organization}** (CNA).
 It defines, in a language-agnostic way, the interfaces, classes, enumerations, exceptions, structural
 relationships and behavioural requirements that any conforming implementation of the {spec-name} MUST satisfy.
 

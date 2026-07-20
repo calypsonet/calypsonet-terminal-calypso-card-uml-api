@@ -230,13 +230,13 @@ is backward-compatible per that API's evolution policy.
 | Reference | Document
 
 | [[ref_cna_tr]] [CNA-TR-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-reader-uml-api/[_Terminal Reader API Specification_] (SP-CNATerminalAPI-Reader), version {ver-cna-tr}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-reader-uml-api/[_CNA Terminal API -- Reader_] (SP-CNATerminalAPI-Reader), version {ver-cna-tr}, {organization}.
 
 | [[ref_cna_tccs]] [CNA-TCCS-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-symmetric-uml-api/[_Terminal Calypso Crypto Symmetric API Specification_] (SP-CNATerminalAPI-CalypsoCryptoSymmetric), version {ver-cna-tccs}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-symmetric-uml-api/[_CNA Terminal API -- Calypso Crypto Symmetric_] (SP-CNATerminalAPI-CalypsoCryptoSymmetric), version {ver-cna-tccs}, {organization}.
 
 | [[ref_cna_tcca]] [CNA-TCCA-API]
-| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-asymmetric-uml-api/[_Terminal Calypso Crypto Asymmetric API Specification_] (SP-CNATerminalAPI-CalypsoCryptoAsymmetric), version {ver-cna-tcca}, {organization}.
+| https://docs.terminal-api.calypsonet.org/calypsonet-terminal-calypso-crypto-asymmetric-uml-api/[_CNA Terminal API -- Calypso Crypto Asymmetric_] (SP-CNATerminalAPI-CalypsoCryptoAsymmetric), version {ver-cna-tcca}, {organization}.
 |===
 
 ==== Normative References

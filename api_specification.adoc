@@ -65,6 +65,7 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 | Reference           | {spec-ref}
 | Short name          | {spec-id}
 | Version             | {revnumber}
+| Revision date       | {revdate}
 | Editor              | {organization}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===

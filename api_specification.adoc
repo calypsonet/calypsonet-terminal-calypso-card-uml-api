@@ -27,8 +27,7 @@ v3.0.0-SNAPSHOT, {docdate}
 :organization: Calypso Networks Association
 :spec-name: Terminal Calypso Card API
 :spec-id: CNA-TCC-API
-:doc-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
-:spec-version: 3.0.0-SNAPSHOT
+:spec-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
 :ver-cna-tr: 3.0
 :ver-cna-tccs: 0.1
 :ver-cna-tcca: 0.2
@@ -49,14 +48,14 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 
 [cols="1h,3", grid=rows, frame=all]
 |===
-| Reference           | {doc-ref}
+| Reference           | {spec-ref}
 | Short name          | {spec-id}
-| Version             | {spec-version}
+| Version             | {revnumber}
 | Editor              | {organization}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===
 
-NOTE: The present document specifies the {spec-version} of the {spec-name}. It defines a single, coherent
+NOTE: The present document specifies the {revnumber} of the {spec-name}. It defines a single, coherent
 baseline against which conforming implementations are evaluated; the *Since* column indicates the version in
 which each member was introduced.
 

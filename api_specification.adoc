@@ -491,7 +491,11 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
@@ -508,7 +512,12 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
@@ -1087,7 +1096,11 @@ secure session.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
+| Signature
+| `createFreeTransactionManager(` +
+`{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}card: CalypsoCard` +
+`) -> FreeTransactionManager`
 | Since       | 2.0
 | Description
 | Creates a <<type_FreeTransactionManager,`FreeTransactionManager`>> for exchanges with `card` (reached through
@@ -1119,7 +1132,12 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
+| Signature
+| `createSecureExtendedModeTransactionManager(` +
+`{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`) -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
 | Description
 | Creates a <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>> that runs a
@@ -1140,7 +1158,12 @@ Cryptographic operations rely on the supplied `securitySetting`.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
+| Signature
+| `createSecurePkiModeTransactionManager(` +
+`{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}securitySetting: AsymmetricCryptoSecuritySetting` +
+`) -> SecurePkiModeTransactionManager`
 | Since       | 2.1
 | Description
 | Creates a <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>> that runs a secure session
@@ -1162,7 +1185,12 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
+| Signature
+| `createSecureRegularModeTransactionManager(` +
+`{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`) -> SecureRegularModeTransactionManager`
 | Since       | 2.0
 | Description
 | Creates a <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>> that runs a
@@ -1294,7 +1322,12 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension`
+| Signature
+| `prepareReadBinary(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}nbBytesToRead: integer` +
+`) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
 | Adds one or more *Read Binary* commands to read all or part of the supplied binary EF. Once processed, the
@@ -1316,7 +1349,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension`
+| Signature
+| `prepareReadCounter(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}nbCountersToRead: integer` +
+`) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
 | Adds a *Read Records* command to read a part of a record of the supplied EF, which SHOULD be a counter file. The
@@ -1338,7 +1375,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension`
+| Signature
+| `prepareReadRecord(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}recordNumber: integer` +
+`) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
 | Description
 | Adds a *Read Records* command for a single record of a linear or cyclic EF. Once processed, the result is
@@ -1584,7 +1625,12 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
+| Signature
+| `getContent(` +
+`{nbsp}{nbsp}numRecord: integer,` +
+`{nbsp}{nbsp}dataOffset: integer,` +
+`{nbsp}{nbsp}dataLength: integer` +
+`) -> byte array`
 | Since       | 1.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
 | Parameters
@@ -2036,7 +2082,14 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareChangeKey(keyIndex: integer, newKif: byte, newKvc: byte, issuerKif: byte, issuerKvc: byte) -> T`
+| Signature
+| `prepareChangeKey(` +
+`{nbsp}{nbsp}keyIndex: integer,` +
+`{nbsp}{nbsp}newKif: byte,` +
+`{nbsp}{nbsp}newKvc: byte,` +
+`{nbsp}{nbsp}issuerKif: byte,` +
+`{nbsp}{nbsp}issuerKvc: byte` +
+`) -> T`
 | Since       | 2.0
 | Description
 | Schedules a *Change Key* command. *MUST be performed outside a secure session.* All KIFs/KVCs MUST be available
@@ -2119,7 +2172,12 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSvDebit(amount: integer, date: byte array, time: byte array) -> T`
+| Signature
+| `prepareSvDebit(` +
+`{nbsp}{nbsp}amount: integer,` +
+`{nbsp}{nbsp}date: byte array,` +
+`{nbsp}{nbsp}time: byte array` +
+`) -> T`
 | Since       | 2.0
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. It decreases the current SV
@@ -2164,7 +2222,11 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
+| Signature
+| `prepareSvGet(` +
+`{nbsp}{nbsp}svOperation: SvOperation,` +
+`{nbsp}{nbsp}svAction: SvAction` +
+`) -> T`
 | Since       | 2.0
 | Description
 | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV
@@ -2182,7 +2244,13 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T`
+| Signature
+| `prepareSvReload(` +
+`{nbsp}{nbsp}amount: integer,` +
+`{nbsp}{nbsp}date: byte array,` +
+`{nbsp}{nbsp}time: byte array,` +
+`{nbsp}{nbsp}free: byte array` +
+`) -> T`
 | Since       | 2.0
 | Description
 | Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`. The key
@@ -2543,7 +2611,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `addAuthorizedSessionKey(` +
+`{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}kvc: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
 | Parameters
@@ -2558,7 +2630,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `addAuthorizedSvKey(` +
+`{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}kvc: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
 | Parameters
@@ -2573,7 +2649,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignDefaultKif(` +
+`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}kif: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KIF for a write access level.
 | Parameters
@@ -2588,7 +2668,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignDefaultKvc(` +
+`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}kvc: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KVC for a write access level.
 | Parameters
@@ -2603,7 +2687,12 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignKif(` +
+`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}kvc: byte,` +
+`{nbsp}{nbsp}kif: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines, for a write access level, the KIF to use when the card only provides a KVC.
 | Parameters
@@ -2619,7 +2708,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
@@ -2636,7 +2729,12 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Parameters
@@ -2652,7 +2750,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignSvOperationMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin`,
@@ -2669,7 +2771,12 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `assignSvOperationMaxDuration(` +
+`{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}maxDuration: long` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
 | Parameters
@@ -2778,7 +2885,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `setPinModificationCipheringKey(` +
+`{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}kvc: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
 | Parameters
@@ -2793,7 +2904,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `setPinVerificationCipheringKey(` +
+`{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}kvc: byte` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
 | Parameters
@@ -2870,7 +2985,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareAppendRecord(sfi: byte, recordData: byte array) -> T`
+| Signature
+| `prepareAppendRecord(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}recordData: byte array` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds an *Append Record* command: a new record is added, and the oldest record is deleted in a cyclic file.
@@ -2926,7 +3045,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
+| Signature
+| `prepareDecreaseCounter(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}decValue: integer` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
@@ -2949,7 +3073,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T`
+| Signature
+| `prepareDecreaseCounters(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}counterNumberToDecValueMap: map<integer, integer>` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds a *Decrease Multiple* command, or multiple *Decrease* commands. The decision to execute one or the other
@@ -3002,7 +3130,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T`
+| Signature
+| `prepareIncreaseCounter(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}incValue: integer` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds an *Increase* command. If several counters of the same file have to be incremented at the same time of the
@@ -3024,7 +3157,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T`
+| Signature
+| `prepareIncreaseCounters(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}counterNumberToIncValueMap: map<integer, integer>` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds an *Increase Multiple* command, or multiple *Increase* commands. The decision to execute one or the other
@@ -3044,7 +3181,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
+| Signature
+| `preparePutData(` +
+`{nbsp}{nbsp}tag: PutDataTag,` +
+`{nbsp}{nbsp}data: byte array` +
+`) -> T`
 | Since       | 2.1
 | Description | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
 | Parameters
@@ -3062,7 +3203,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T`
+| Signature
+| `prepareReadBinary(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}nbBytesToRead: integer` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds *Read Binary* commands.
@@ -3089,7 +3235,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T`
+| Signature
+| `prepareReadCounter(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}nbCountersToRead: integer` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds a *Read Records* command targeting the supplied counter. The record is read up to the counter location
@@ -3114,7 +3264,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> T`
+| Signature
+| `prepareReadRecord(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}recordNumber: integer` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds a *Read Records* command for a single record. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
@@ -3138,7 +3292,13 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T`
+| Signature
+| `prepareReadRecords(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}fromRecordNumber: integer,` +
+`{nbsp}{nbsp}toRecordNumber: integer,` +
+`{nbsp}{nbsp}recordSize: integer` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds a *Read Records* command for one or more records.
@@ -3164,7 +3324,14 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
+| Signature
+| `prepareReadRecordsPartially(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}fromRecordNumber: integer,` +
+`{nbsp}{nbsp}toRecordNumber: integer,` +
+`{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}nbBytesToRead: integer` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds *Read Record Multiple* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
@@ -3259,7 +3426,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
+| Signature
+| `prepareSetCounter(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}newValue: integer` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value. The operation is
@@ -3311,7 +3483,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
+| Signature
+| `prepareUpdateBinary(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}data: byte array` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds one or more *Update Binary* commands. The data of the file before the offset and after the supplied data
@@ -3334,7 +3511,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
+| Signature
+| `prepareUpdateRecord(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}recordNumber: integer,` +
+`{nbsp}{nbsp}recordData: byte array` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds an *Update Record* command. Bytes beyond `recordData.length` are left unchanged.
@@ -3376,7 +3558,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T`
+| Signature
+| `prepareWriteBinary(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}data: byte array` +
+`) -> T`
 | Since       | 1.1
 | Description
 | Adds one or more *Write Binary* commands, performing a binary OR with the existing data. The data of the file
@@ -3399,7 +3586,12 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
+| Signature
+| `prepareWriteRecord(` +
+`{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}recordNumber: integer,` +
+`{nbsp}{nbsp}recordData: byte array` +
+`) -> T`
 | Since       | 1.0
 | Description
 | Adds a *Write Record* command, performing a binary OR with the existing data.

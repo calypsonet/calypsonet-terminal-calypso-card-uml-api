@@ -167,7 +167,7 @@ as-is in the UML class diagram (<<sec_class_diagram>>).
 
 Each interface, class, enumeration and exception defined in this document is described by a table of the form:
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name       | The type's normalized name.
 | Kind       | The category of the type (interface, class, enumeration, exception, etc.).
@@ -188,7 +188,7 @@ notes, value tables or examples -- is placed as prose below the table.
 
 Each operation defined in this document is described by a table of the form:
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | The operation's language-agnostic signature.
 | Since       | The version of the API in which the operation was introduced.
@@ -380,7 +380,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[type_CalypsoCardApiProperties]]
 ==== Calypso Card API Properties
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CalypsoCardApiProperties`
 | Kind     | Final class
@@ -402,7 +402,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[type_AsymmetricCryptoSecuritySetting]]
 ==== Asymmetric Crypto Security Setting
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `AsymmetricCryptoSecuritySetting`
 | Kind     | Interface
@@ -414,7 +414,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
 ===== Add CA Certificate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
@@ -437,7 +437,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificateParser]]
 ===== Add CA Certificate Parser
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
@@ -452,7 +452,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
 ===== Add Card Certificate Parser
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
@@ -467,7 +467,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
 ===== Add PCA Certificate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
@@ -489,7 +489,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
 ===== Assign Open Secure Session Max Duration (All DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -506,7 +506,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
 ===== Assign Open Secure Session Max Duration (Per DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -524,7 +524,7 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
 [[type_CalypsoCard]]
 ==== Calypso Card
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CalypsoCard`
 | Kind     | Interface
@@ -545,7 +545,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getApplicationSerialNumber]]
 ===== Get Application Serial Number
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getApplicationSerialNumber() -> byte array`
 | Since       | 1.0
@@ -557,7 +557,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getApplicationSubtype]]
 ===== Get Application Subtype
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getApplicationSubtype() -> byte`
 | Since       | 1.0
@@ -569,7 +569,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getApplicationType]]
 ===== Get Application Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getApplicationType() -> byte`
 | Since       | 1.0
@@ -581,7 +581,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getCaCertificate]]
 ===== Get CA Certificate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getCaCertificate() -> byte array`
 | Since       | 2.1
@@ -596,7 +596,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getCardCertificate]]
 ===== Get Card Certificate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getCardCertificate() -> byte array`
 | Since       | 2.1
@@ -611,7 +611,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getCardPublicKey]]
 ===== Get Card Public Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getCardPublicKey() -> byte array`
 | Since       | 2.1
@@ -626,7 +626,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getDfName]]
 ===== Get DF Name
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDfName() -> byte array`
 | Since       | 1.0
@@ -641,7 +641,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getDirectoryHeader]]
 ===== Get Directory Header
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDirectoryHeader() -> DirectoryHeader?`
 | Since       | 1.0
@@ -657,7 +657,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getFileByLid]]
 ===== Get File By LID
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
 | Since       | 1.0
@@ -674,7 +674,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getFileBySfi]]
 ===== Get File By SFI
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
 | Since       | 1.0
@@ -691,7 +691,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getFiles]]
 ===== Get Files
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getFiles() -> set<ElementaryFile>`
 | Since       | 1.1
@@ -703,7 +703,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getPinAttemptRemaining]]
 ===== Get PIN Attempt Remaining
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getPinAttemptRemaining() -> integer`
 | Since       | 1.0
@@ -717,7 +717,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getPlatform]]
 ===== Get Platform
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getPlatform() -> byte`
 | Since       | 1.0
@@ -729,7 +729,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getProductType]]
 ===== Get Product Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getProductType() -> ProductType`
 | Since       | 1.0
@@ -741,7 +741,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSessionModification]]
 ===== Get Session Modification
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSessionModification() -> byte`
 | Since       | 1.0
@@ -753,7 +753,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSoftwareIssuer]]
 ===== Get Software Issuer
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSoftwareIssuer() -> byte`
 | Since       | 1.0
@@ -765,7 +765,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSoftwareRevision]]
 ===== Get Software Revision
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSoftwareRevision() -> byte`
 | Since       | 1.0
@@ -777,7 +777,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSoftwareVersion]]
 ===== Get Software Version
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSoftwareVersion() -> byte`
 | Since       | 1.0
@@ -789,7 +789,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getStartupInfoRawData]]
 ===== Get Startup Info Raw Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getStartupInfoRawData() -> byte array`
 | Since       | 1.0
@@ -801,7 +801,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSvBalance]]
 ===== Get SV Balance
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvBalance() -> integer`
 | Since       | 1.0
@@ -818,7 +818,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSvDebitLogAllRecords]]
 ===== Get SV Debit Log All Records
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvDebitLogAllRecords() -> list<SvDebitLogRecord>`
 | Since       | 1.0
@@ -835,7 +835,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSvDebitLogLastRecord]]
 ===== Get SV Debit Log Last Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvDebitLogLastRecord() -> SvDebitLogRecord?`
 | Since       | 1.0
@@ -852,7 +852,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSvLastTNum]]
 ===== Get SV Last T Num
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvLastTNum() -> integer`
 | Since       | 1.0
@@ -869,7 +869,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getSvLoadLogRecord]]
 ===== Get SV Load Log Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvLoadLogRecord() -> SvLoadLogRecord?`
 | Since       | 1.0
@@ -886,7 +886,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getTraceabilityInformation]]
 ===== Get Traceability Information
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getTraceabilityInformation() -> byte array`
 | Since       | 1.1
@@ -900,7 +900,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_getTransactionCounter]]
 ===== Get Transaction Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getTransactionCounter() -> integer`
 | Since       | 1.2
@@ -916,7 +916,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isDfInvalidated]]
 ===== Is DF Invalidated
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isDfInvalidated() -> boolean`
 | Since       | 1.0
@@ -934,7 +934,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isDfRatified]]
 ===== Is DF Ratified
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isDfRatified() -> boolean`
 | Since       | 1.0
@@ -948,7 +948,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isExtendedModeSupported]]
 ===== Is Extended Mode Supported
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isExtendedModeSupported() -> boolean`
 | Since       | 1.0
@@ -963,7 +963,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isHce]]
 ===== Is HCE
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isHce() -> boolean`
 | Since       | 1.0
@@ -975,7 +975,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isPinBlocked]]
 ===== Is PIN Blocked
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isPinBlocked() -> boolean`
 | Since       | 1.0
@@ -989,7 +989,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isPinFeatureAvailable]]
 ===== Is PIN Feature Available
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isPinFeatureAvailable() -> boolean`
 | Since       | 1.0
@@ -1001,7 +1001,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isPkiModeSupported]]
 ===== Is PKI Mode Supported
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isPkiModeSupported() -> boolean`
 | Since       | 1.0
@@ -1015,7 +1015,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isRatificationOnDeselectSupported]]
 ===== Is Ratification On Deselect Supported
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isRatificationOnDeselectSupported() -> boolean`
 | Since       | 1.0
@@ -1029,7 +1029,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCard_isSvFeatureAvailable]]
 ===== Is SV Feature Available
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isSvFeatureAvailable() -> boolean`
 | Since       | 1.0
@@ -1041,7 +1041,7 @@ Failed write commands do not update the in-memory image.
 [[type_CalypsoCardApiFactory]]
 ==== Calypso Card API Factory
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CalypsoCardApiFactory`
 | Kind     | Interface
@@ -1053,7 +1053,7 @@ Failed write commands do not update the in-memory image.
 [[op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting]]
 ===== Create Asymmetric Crypto Security Setting
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
@@ -1070,7 +1070,7 @@ supplied factory provides the cryptographic module that performs those computati
 [[op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension]]
 ===== Create Calypso Card Selection Extension
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createCalypsoCardSelectionExtension() -> CalypsoCardSelectionExtension`
 | Since       | 2.0
@@ -1085,7 +1085,7 @@ secure session.
 [[op_CalypsoCardApiFactory_createFreeTransactionManager]]
 ===== Create Free Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createFreeTransactionManager(cardReader: CardReader, card: CalypsoCard) -> FreeTransactionManager`
 | Since       | 2.0
@@ -1103,7 +1103,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 [[op_CalypsoCardApiFactory_createSearchCommandData]]
 ===== Create Search Command Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createSearchCommandData() -> SearchCommandData`
 | Since       | 2.0
@@ -1117,7 +1117,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 [[op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager]]
 ===== Create Secure Extended Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createSecureExtendedModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
@@ -1138,7 +1138,7 @@ Cryptographic operations rely on the supplied `securitySetting`.
 [[op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager]]
 ===== Create Secure PKI Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createSecurePkiModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager`
 | Since       | 2.1
@@ -1160,7 +1160,7 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 [[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
 ===== Create Secure Regular Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createSecureRegularModeTransactionManager(cardReader: CardReader, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager`
 | Since       | 2.0
@@ -1182,7 +1182,7 @@ PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 [[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting]]
 ===== Create Symmetric Crypto Security Setting
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -1198,7 +1198,7 @@ transaction managers. The supplied factory provides the cryptographic module tha
 [[type_CalypsoCardSelectionExtension]]
 ==== Calypso Card Selection Extension
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CalypsoCardSelectionExtension`
 | Kind     | Interface
@@ -1229,7 +1229,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 [[op_CalypsoCardSelectionExtension_acceptInvalidatedCard]]
 ===== Accept Invalidated Card
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `acceptInvalidatedCard() -> CalypsoCardSelectionExtension`
 | Since       | 1.0
@@ -1241,7 +1241,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 [[op_CalypsoCardSelectionExtension_prepareGetData]]
 ===== Prepare Get Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
@@ -1259,7 +1259,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 [[op_CalypsoCardSelectionExtension_preparePreOpenSecureSession]]
 ===== Prepare Pre Open Secure Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
@@ -1292,7 +1292,7 @@ The mechanism is *ineffective* if:
 [[op_CalypsoCardSelectionExtension_prepareReadBinary]]
 ===== Prepare Read Binary
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
@@ -1314,7 +1314,7 @@ The mechanism is *ineffective* if:
 [[op_CalypsoCardSelectionExtension_prepareReadCounter]]
 ===== Prepare Read Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
@@ -1336,7 +1336,7 @@ The mechanism is *ineffective* if:
 [[op_CalypsoCardSelectionExtension_prepareReadRecord]]
 ===== Prepare Read Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
@@ -1357,7 +1357,7 @@ The mechanism is *ineffective* if:
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
 ===== Prepare Select File (LID)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
@@ -1370,7 +1370,7 @@ The mechanism is *ineffective* if:
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byControl]]
 ===== Prepare Select File (Select Control)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
@@ -1387,7 +1387,7 @@ The mechanism is *ineffective* if:
 [[type_DirectoryHeader]]
 ==== Directory Header
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `DirectoryHeader`
 | Kind     | Interface
@@ -1399,7 +1399,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getAccessConditions]]
 ===== Get Access Conditions
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAccessConditions() -> byte array`
 | Since       | 1.0
@@ -1411,7 +1411,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getDfStatus]]
 ===== Get DF Status
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDfStatus() -> byte`
 | Since       | 1.0
@@ -1423,7 +1423,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getKeyIndexes]]
 ===== Get Key Indexes
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
 | Since       | 1.0
@@ -1435,7 +1435,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getKif]]
 ===== Get KIF
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
@@ -1448,7 +1448,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getKvc]]
 ===== Get KVC
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
 | Since       | 1.0
@@ -1461,7 +1461,7 @@ The mechanism is *ineffective* if:
 [[op_DirectoryHeader_getLid]]
 ===== Get LID
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getLid() -> short`
 | Since       | 1.0
@@ -1473,7 +1473,7 @@ The mechanism is *ineffective* if:
 [[type_ElementaryFile]]
 ==== Elementary File
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `ElementaryFile`
 | Kind     | Interface
@@ -1485,7 +1485,7 @@ The mechanism is *ineffective* if:
 [[op_ElementaryFile_getData]]
 ===== Get Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getData() -> FileData`
 | Since       | 1.0
@@ -1497,7 +1497,7 @@ The mechanism is *ineffective* if:
 [[op_ElementaryFile_getHeader]]
 ===== Get Header
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getHeader() -> FileHeader?`
 | Since       | 1.0
@@ -1509,7 +1509,7 @@ The mechanism is *ineffective* if:
 [[op_ElementaryFile_getSfi]]
 ===== Get SFI
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSfi() -> byte`
 | Since       | 1.0
@@ -1521,7 +1521,7 @@ The mechanism is *ineffective* if:
 [[type_FileData]]
 ==== File Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `FileData`
 | Kind     | Interface
@@ -1533,7 +1533,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getAllCountersValue]]
 ===== Get All Counters Value
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAllCountersValue() -> sortedMap<integer, integer>`
 | Since       | 1.0
@@ -1545,7 +1545,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getAllRecordsContent]]
 ===== Get All Records Content
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
 | Since       | 1.0
@@ -1557,7 +1557,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getContent]]
 ===== Get Content (No Args)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getContent() -> byte array`
 | Since       | 1.0
@@ -1569,7 +1569,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getContent_byRecord]]
 ===== Get Content (Num Record)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer) -> byte array`
 | Since       | 1.0
@@ -1582,7 +1582,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getContent_byRange]]
 ===== Get Content (Num Record, Data Offset, Data Length)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array`
 | Since       | 1.0
@@ -1599,7 +1599,7 @@ The mechanism is *ineffective* if:
 [[op_FileData_getContentAsCounterValue]]
 ===== Get Content As Counter Value
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getContentAsCounterValue(numCounter: integer) -> integer?`
 | Since       | 1.0
@@ -1613,7 +1613,7 @@ The mechanism is *ineffective* if:
 [[type_FileHeader]]
 ==== File Header
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `FileHeader`
 | Kind     | Interface
@@ -1625,7 +1625,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getAccessConditions]]
 ===== Get Access Conditions
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAccessConditions() -> byte array`
 | Since       | 1.0
@@ -1637,7 +1637,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getDfStatus]]
 ===== Get DF Status
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDfStatus() -> byte?`
 | Since       | 1.0
@@ -1649,7 +1649,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getEfType]]
 ===== Get EF Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getEfType() -> ElementaryFile.Type`
 | Since       | 1.0
@@ -1661,7 +1661,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getKeyIndexes]]
 ===== Get Key Indexes
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKeyIndexes() -> byte array`
 | Since       | 1.0
@@ -1673,7 +1673,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getLid]]
 ===== Get LID
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getLid() -> short`
 | Since       | 1.0
@@ -1685,7 +1685,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getRecordSize]]
 ===== Get Record Size
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getRecordSize() -> integer`
 | Since       | 1.0
@@ -1700,7 +1700,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getRecordsNumber]]
 ===== Get Records Number
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getRecordsNumber() -> integer`
 | Since       | 1.0
@@ -1715,7 +1715,7 @@ The mechanism is *ineffective* if:
 [[op_FileHeader_getSharedReference]]
 ===== Get Shared Reference
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSharedReference() -> short?`
 | Since       | 1.0
@@ -1727,7 +1727,7 @@ The mechanism is *ineffective* if:
 [[type_FreeTransactionManager]]
 ==== Free Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `FreeTransactionManager`
 | Kind     | Interface
@@ -1742,7 +1742,7 @@ The mechanism is *ineffective* if:
 [[type_SearchCommandData]]
 ==== Search Command Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SearchCommandData`
 | Kind     | Interface
@@ -1754,7 +1754,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_enableRepeatedOffset]]
 ===== Enable Repeated Offset
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `enableRepeatedOffset() -> SearchCommandData`
 | Since       | 1.1
@@ -1766,7 +1766,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_fetchFirstMatchingResult]]
 ===== Fetch First Matching Result
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `fetchFirstMatchingResult() -> SearchCommandData`
 | Since       | 1.1
@@ -1778,7 +1778,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_getMatchingRecordNumbers]]
 ===== Get Matching Record Numbers
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getMatchingRecordNumbers() -> list<integer>`
 | Since       | 1.1
@@ -1790,7 +1790,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_setMask]]
 ===== Set Mask
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setMask(mask: byte array) -> SearchCommandData`
 | Since       | 1.1
@@ -1803,7 +1803,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_setOffset]]
 ===== Set Offset
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setOffset(offset: integer) -> SearchCommandData`
 | Since       | 1.1
@@ -1816,7 +1816,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_setSearchData]]
 ===== Set Search Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setSearchData(data: byte array) -> SearchCommandData`
 | Since       | 1.1
@@ -1829,7 +1829,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_setSfi]]
 ===== Set SFI
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setSfi(sfi: byte) -> SearchCommandData`
 | Since       | 1.1
@@ -1842,7 +1842,7 @@ The mechanism is *ineffective* if:
 [[op_SearchCommandData_startAtRecord]]
 ===== Start At Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
 | Since       | 1.1
@@ -1855,7 +1855,7 @@ The mechanism is *ineffective* if:
 [[type_SecureExtendedModeTransactionManager]]
 ==== Secure Extended Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureExtendedModeTransactionManager`
 | Kind     | Interface
@@ -1868,7 +1868,7 @@ The mechanism is *ineffective* if:
 [[op_SecureExtendedModeTransactionManager_prepareActivateEncryption]]
 ===== Prepare Activate Encryption
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareActivateEncryption() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
@@ -1890,7 +1890,7 @@ The mechanism is *ineffective* if:
 [[op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption]]
 ===== Prepare Deactivate Encryption
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareDeactivateEncryption() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
@@ -1910,7 +1910,7 @@ The mechanism is *ineffective* if:
 [[op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication]]
 ===== Prepare Early Mutual Authentication
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareEarlyMutualAuthentication() -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
@@ -1927,7 +1927,7 @@ sending sensitive commands).
 [[type_SecurePkiModeTransactionManager]]
 ==== Secure PKI Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecurePkiModeTransactionManager`
 | Kind     | Interface
@@ -1940,7 +1940,7 @@ sending sensitive commands).
 [[op_SecurePkiModeTransactionManager_prepareOpenSecureSession]]
 ===== Prepare Open Secure Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareOpenSecureSession() -> SecurePkiModeTransactionManager`
 | Since       | 2.1
@@ -1954,7 +1954,7 @@ sending sensitive commands).
 [[type_SecureRegularModeTransactionManager]]
 ==== Secure Regular Mode Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureRegularModeTransactionManager`
 | Kind     | Interface
@@ -1969,7 +1969,7 @@ No additional operation declared.
 [[type_SecureSessionStatus]]
 ==== Secure Session Status
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureSessionStatus`
 | Kind     | Interface
@@ -1984,7 +1984,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 [[op_SecureSessionStatus_getType]]
 ===== Get Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getType() -> SecureSessionType`
 | Since       | 3.0
@@ -1996,7 +1996,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 [[op_SecureSessionStatus_getWriteAccessLevel]]
 ===== Get Write Access Level
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getWriteAccessLevel() -> WriteAccessLevel?`
 | Since       | 3.0
@@ -2008,7 +2008,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 [[op_SecureSessionStatus_isOpen]]
 ===== Is Open
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `isOpen() -> boolean`
 | Since       | 3.0
@@ -2020,7 +2020,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 [[type_SecureSymmetricCryptoTransactionManager]]
 ==== Secure Symmetric Crypto Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureSymmetricCryptoTransactionManager`
 | Kind     | Interface
@@ -2034,7 +2034,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 [[op_SecureSymmetricCryptoTransactionManager_prepareChangeKey]]
 ===== Prepare Change Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareChangeKey(keyIndex: integer, newKif: byte, newKvc: byte, issuerKif: byte, issuerKvc: byte) -> T`
 | Since       | 2.0
@@ -2057,7 +2057,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareInvalidate]]
 ===== Prepare Invalidate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareInvalidate() -> T`
 | Since       | 2.0
@@ -2075,7 +2075,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession]]
 ===== Prepare Open Secure Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> T`
 | Since       | 2.0
@@ -2099,7 +2099,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareRehabilitate]]
 ===== Prepare Rehabilitate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareRehabilitate() -> T`
 | Since       | 2.0
@@ -2117,7 +2117,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
 ===== Prepare SV Debit (Date)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvDebit(amount: integer, date: byte array, time: byte array) -> T`
 | Since       | 2.0
@@ -2142,7 +2142,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
 ===== Prepare SV Debit (No Date)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvDebit(amount: integer) -> T`
 | Since       | 2.0
@@ -2162,7 +2162,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvGet]]
 ===== Prepare SV Get
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T`
 | Since       | 2.0
@@ -2180,7 +2180,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
 ===== Prepare SV Reload (Date)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T`
 | Since       | 2.0
@@ -2203,7 +2203,7 @@ in the crypto module.
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
 ===== Prepare SV Reload (No Date)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvReload(amount: integer) -> T`
 | Since       | 2.0
@@ -2222,7 +2222,7 @@ in the crypto module.
 [[type_SecureTransactionManager]]
 ==== Secure Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureTransactionManager`
 | Kind     | Interface
@@ -2236,7 +2236,7 @@ in the crypto module.
 [[op_SecureTransactionManager_getCryptoExtension]]
 ===== Get Crypto Extension
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getCryptoExtension(cryptoExtensionClass: Class<E>) -> E extends CardTransactionCryptoExtension`
 | Since       | 2.0
@@ -2249,7 +2249,7 @@ in the crypto module.
 [[op_SecureTransactionManager_prepareCancelSecureSession]]
 ===== Prepare Cancel Secure Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareCancelSecureSession() -> T`
 | Since       | 2.0
@@ -2261,7 +2261,7 @@ in the crypto module.
 [[op_SecureTransactionManager_prepareCloseSecureSession]]
 ===== Prepare Close Secure Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareCloseSecureSession() -> T`
 | Since       | 2.0
@@ -2277,7 +2277,7 @@ mode.
 [[type_SvDebitLogRecord]]
 ==== SV Debit Log Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SvDebitLogRecord`
 | Kind     | Interface
@@ -2289,7 +2289,7 @@ mode.
 [[op_SvDebitLogRecord_getAmount]]
 ===== Get Amount
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAmount() -> integer`
 | Since       | 1.0
@@ -2301,7 +2301,7 @@ mode.
 [[op_SvDebitLogRecord_getBalance]]
 ===== Get Balance
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getBalance() -> integer`
 | Since       | 1.0
@@ -2313,7 +2313,7 @@ mode.
 [[op_SvDebitLogRecord_getDebitDate]]
 ===== Get Debit Date
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDebitDate() -> byte array`
 | Since       | 1.0
@@ -2325,7 +2325,7 @@ mode.
 [[op_SvDebitLogRecord_getDebitTime]]
 ===== Get Debit Time
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getDebitTime() -> byte array`
 | Since       | 1.0
@@ -2337,7 +2337,7 @@ mode.
 [[op_SvDebitLogRecord_getKvc]]
 ===== Get KVC
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKvc() -> byte`
 | Since       | 1.0
@@ -2349,7 +2349,7 @@ mode.
 [[op_SvDebitLogRecord_getRawData]]
 ===== Get Raw Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
@@ -2361,7 +2361,7 @@ mode.
 [[op_SvDebitLogRecord_getSamId]]
 ===== Get SAM ID
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
@@ -2373,7 +2373,7 @@ mode.
 [[op_SvDebitLogRecord_getSamTNum]]
 ===== Get SAM T Num
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSamTNum() -> integer`
 | Since       | 1.0
@@ -2385,7 +2385,7 @@ mode.
 [[op_SvDebitLogRecord_getSvTNum]]
 ===== Get SV T Num
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvTNum() -> integer`
 | Since       | 1.0
@@ -2397,7 +2397,7 @@ mode.
 [[type_SvLoadLogRecord]]
 ==== SV Load Log Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SvLoadLogRecord`
 | Kind     | Interface
@@ -2409,7 +2409,7 @@ mode.
 [[op_SvLoadLogRecord_getAmount]]
 ===== Get Amount
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getAmount() -> integer`
 | Since       | 1.0
@@ -2421,7 +2421,7 @@ mode.
 [[op_SvLoadLogRecord_getBalance]]
 ===== Get Balance
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getBalance() -> integer`
 | Since       | 1.0
@@ -2433,7 +2433,7 @@ mode.
 [[op_SvLoadLogRecord_getFreeData]]
 ===== Get Free Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getFreeData() -> byte array`
 | Since       | 1.0
@@ -2445,7 +2445,7 @@ mode.
 [[op_SvLoadLogRecord_getKvc]]
 ===== Get KVC
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getKvc() -> byte`
 | Since       | 1.0
@@ -2457,7 +2457,7 @@ mode.
 [[op_SvLoadLogRecord_getLoadDate]]
 ===== Get Load Date
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getLoadDate() -> byte array`
 | Since       | 1.0
@@ -2469,7 +2469,7 @@ mode.
 [[op_SvLoadLogRecord_getLoadTime]]
 ===== Get Load Time
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getLoadTime() -> byte array`
 | Since       | 1.0
@@ -2481,7 +2481,7 @@ mode.
 [[op_SvLoadLogRecord_getRawData]]
 ===== Get Raw Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getRawData() -> byte array`
 | Since       | 1.0
@@ -2493,7 +2493,7 @@ mode.
 [[op_SvLoadLogRecord_getSamId]]
 ===== Get SAM ID
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSamId() -> byte array`
 | Since       | 1.0
@@ -2505,7 +2505,7 @@ mode.
 [[op_SvLoadLogRecord_getSamTNum]]
 ===== Get SAM T Num
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSamTNum() -> integer`
 | Since       | 1.0
@@ -2517,7 +2517,7 @@ mode.
 [[op_SvLoadLogRecord_getSvTNum]]
 ===== Get SV T Num
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSvTNum() -> integer`
 | Since       | 1.0
@@ -2529,7 +2529,7 @@ mode.
 [[type_SymmetricCryptoSecuritySetting]]
 ==== Symmetric Crypto Security Setting
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SymmetricCryptoSecuritySetting`
 | Kind     | Interface
@@ -2541,7 +2541,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_addAuthorizedSessionKey]]
 ===== Add Authorized Session Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2556,7 +2556,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_addAuthorizedSvKey]]
 ===== Add Authorized SV Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2571,7 +2571,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignDefaultKif]]
 ===== Assign Default KIF
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2586,7 +2586,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignDefaultKvc]]
 ===== Assign Default KVC
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2601,7 +2601,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignKif]]
 ===== Assign KIF
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2617,7 +2617,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
 ===== Assign Open Secure Session Max Duration (All DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -2634,7 +2634,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
 ===== Assign Open Secure Session Max Duration (Per DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -2650,7 +2650,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_allDf]]
 ===== Assign SV Operation Max Duration (All DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -2667,7 +2667,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf]]
 ===== Assign SV Operation Max Duration (Per DF)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
@@ -2683,7 +2683,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_authorizeSvNegativeBalance]]
 ===== Authorize SV Negative Balance
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `authorizeSvNegativeBalance() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2695,7 +2695,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening]]
 ===== Disable Read On Session Opening
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `disableReadOnSessionOpening() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2709,7 +2709,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_enableMultipleSession]]
 ===== Enable Multiple Session
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `enableMultipleSession() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2721,7 +2721,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_enablePinPlainTransmission]]
 ===== Enable PIN Plain Transmission
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `enablePinPlainTransmission() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2733,7 +2733,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_enableRatificationMechanism]]
 ===== Enable Ratification Mechanism
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `enableRatificationMechanism() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2745,7 +2745,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_enableSvLoadAndDebitLog]]
 ===== Enable SV Load And Debit Log
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `enableSvLoadAndDebitLog() -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2757,7 +2757,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_initCryptoContextForNextTransaction]]
 ===== Init Crypto Context For Next Transaction
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `initCryptoContextForNextTransaction() -> void`
 | Since       | 2.0
@@ -2776,7 +2776,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_setPinModificationCipheringKey]]
 ===== Set PIN Modification Ciphering Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2791,7 +2791,7 @@ mode.
 [[op_SymmetricCryptoSecuritySetting_setPinVerificationCipheringKey]]
 ===== Set PIN Verification Ciphering Key
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
@@ -2816,7 +2816,7 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 [[type_TransactionManager]]
 ==== Transaction Manager
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `TransactionManager`
 | Kind     | Interface
@@ -2842,7 +2842,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`Ses
 [[op_TransactionManager_getSecureSessionStatus]]
 ===== Get Secure Session Status
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getSecureSessionStatus() -> SecureSessionStatus`
 | Since       | 3.0
@@ -2856,7 +2856,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_getTransactionAuditData]]
 ===== Get Transaction Audit Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `getTransactionAuditData() -> list<byte array>`
 | Since       | 1.2
@@ -2868,7 +2868,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareAppendRecord]]
 ===== Prepare Append Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareAppendRecord(sfi: byte, recordData: byte array) -> T`
 | Since       | 1.0
@@ -2887,7 +2887,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareChangePin]]
 ===== Prepare Change PIN
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareChangePin(newPin: byte array) -> T`
 | Since       | 1.6
@@ -2908,7 +2908,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareCheckPinStatus]]
 ===== Prepare Check PIN Status
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareCheckPinStatus() -> T`
 | Since       | 1.0
@@ -2924,7 +2924,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareDecreaseCounter]]
 ===== Prepare Decrease Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T`
 | Since       | 1.0
@@ -2947,7 +2947,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareDecreaseCounters]]
 ===== Prepare Decrease Counters
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T`
 | Since       | 1.1
@@ -2967,7 +2967,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareGenerateAsymmetricKeyPair]]
 ===== Prepare Generate Asymmetric Key Pair
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareGenerateAsymmetricKeyPair() -> T`
 | Since       | 2.1
@@ -2979,7 +2979,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareGetData]]
 ===== Prepare Get Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareGetData(tag: GetDataTag) -> T`
 | Since       | 1.0
@@ -3000,7 +3000,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareIncreaseCounter]]
 ===== Prepare Increase Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T`
 | Since       | 1.0
@@ -3022,7 +3022,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareIncreaseCounters]]
 ===== Prepare Increase Counters
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T`
 | Since       | 1.1
@@ -3042,7 +3042,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_preparePutData]]
 ===== Prepare Put Data
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `preparePutData(tag: PutDataTag, data: byte array) -> T`
 | Since       | 2.1
@@ -3060,7 +3060,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareReadBinary]]
 ===== Prepare Read Binary
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1
@@ -3087,7 +3087,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareReadCounter]]
 ===== Prepare Read Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T`
 | Since       | 1.1
@@ -3112,7 +3112,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareReadRecord]]
 ===== Prepare Read Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecord(sfi: byte, recordNumber: integer) -> T`
 | Since       | 1.1
@@ -3136,7 +3136,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareReadRecords]]
 ===== Prepare Read Records
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T`
 | Since       | 1.1
@@ -3162,7 +3162,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareReadRecordsPartially]]
 ===== Prepare Read Records Partially
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T`
 | Since       | 1.1
@@ -3192,7 +3192,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareSearchRecords]]
 ===== Prepare Search Records
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSearchRecords(data: SearchCommandData) -> T`
 | Since       | 1.1
@@ -3221,7 +3221,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareSelectFile_byLid]]
 ===== Prepare Select File (LID)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(lid: short) -> T`
 | Since       | 1.1
@@ -3240,7 +3240,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareSelectFile_byControl]]
 ===== Prepare Select File (Select Control)
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
 | Since       | 1.0
@@ -3257,7 +3257,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareSetCounter]]
 ===== Prepare Set Counter
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T`
 | Since       | 1.0
@@ -3286,7 +3286,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareSvReadAllLogs]]
 ===== Prepare SV Read All Logs
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareSvReadAllLogs() -> T`
 | Since       | 1.0
@@ -3309,7 +3309,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareUpdateBinary]]
 ===== Prepare Update Binary
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1
@@ -3332,7 +3332,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareUpdateRecord]]
 ===== Prepare Update Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0
@@ -3352,7 +3352,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareVerifyPin]]
 ===== Prepare Verify PIN
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareVerifyPin(pin: byte array) -> T`
 | Since       | 1.6
@@ -3374,7 +3374,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareWriteBinary]]
 ===== Prepare Write Binary
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T`
 | Since       | 1.1
@@ -3397,7 +3397,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[op_TransactionManager_prepareWriteRecord]]
 ===== Prepare Write Record
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature   | `prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T`
 | Since       | 1.0
@@ -3419,7 +3419,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[type_AsymmetricCryptoCardTransactionManagerFactory]]
 ==== Asymmetric Crypto Card Transaction Manager Factory
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `AsymmetricCryptoCardTransactionManagerFactory`
 | Kind     | Marker interface (SPI)
@@ -3431,7 +3431,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[type_CardTransactionCryptoExtension]]
 ==== Card Transaction Crypto Extension
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CardTransactionCryptoExtension`
 | Kind     | Marker interface (SPI)
@@ -3443,7 +3443,7 @@ state. The returned object is immutable and captures the state at the moment of 
 [[type_PcaCertificate]]
 ==== PCA Certificate
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `PcaCertificate`
 | Kind     | Marker interfaces (SPI)
@@ -3458,7 +3458,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_PcaCertificateParser]]
 ==== PCA Certificate Parser
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `PcaCertificateParser`
 | Kind     | Marker interfaces (SPI)
@@ -3470,7 +3470,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_SymmetricCryptoCardTransactionManagerFactory]]
 ==== Symmetric Crypto Card Transaction Manager Factory
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SymmetricCryptoCardTransactionManagerFactory`
 | Kind     | Marker interface (SPI)
@@ -3484,7 +3484,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_ProductType]]
 ==== Calypso Card Product Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `ProductType`
 | Kind     | Enumeration
@@ -3507,7 +3507,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_Type]]
 ==== Elementary File Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `Type`
 | Kind     | Enumeration
@@ -3529,7 +3529,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_GetDataTag]]
 ==== Get Data Tag
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `GetDataTag`
 | Kind     | Enumeration
@@ -3553,7 +3553,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_PutDataTag]]
 ==== Put Data Tag
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `PutDataTag`
 | Kind     | Enumeration
@@ -3573,7 +3573,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 [[type_SecureSessionType]]
 ==== Secure Session Type
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SecureSessionType`
 | Kind     | Enumeration
@@ -3596,7 +3596,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_SelectFileControl]]
 ==== Select File Control
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SelectFileControl`
 | Kind     | Enumeration
@@ -3616,7 +3616,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_SvAction]]
 ==== SV Action
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SvAction`
 | Kind     | Enumeration
@@ -3635,7 +3635,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_SvOperation]]
 ==== SV Operation
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SvOperation`
 | Kind     | Enumeration
@@ -3654,7 +3654,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_WriteAccessLevel]]
 ==== Write Access Level
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `WriteAccessLevel`
 | Kind     | Enumeration
@@ -3677,7 +3677,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_CardSignatureNotVerifiableException]]
 ==== Card Signature Not Verifiable Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CardSignatureNotVerifiableException`
 | Kind     | Runtime exception
@@ -3689,7 +3689,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_CryptoException]]
 ==== Crypto Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CryptoException`
 | Kind     | Runtime exception
@@ -3701,7 +3701,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_CryptoIOException]]
 ==== Crypto IO Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `CryptoIOException`
 | Kind     | Runtime exception
@@ -3713,7 +3713,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[type_InconsistentDataException]]
 ==== Inconsistent Data Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `InconsistentDataException`
 | Kind     | Runtime exception
@@ -3732,7 +3732,7 @@ The inconsistency falls into one of the following cases:
 [[type_InvalidCardSignatureException]]
 ==== Invalid Card Signature Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `InvalidCardSignatureException`
 | Kind     | Runtime exception
@@ -3752,7 +3752,7 @@ The inconsistency falls into one of the following cases:
 [[type_InvalidCertificateException]]
 ==== Invalid Certificate Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `InvalidCertificateException`
 | Kind     | Runtime exception
@@ -3764,7 +3764,7 @@ The inconsistency falls into one of the following cases:
 [[type_InvalidPinException]]
 ==== Invalid PIN Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `InvalidPinException`
 | Kind     | Runtime exception
@@ -3776,7 +3776,7 @@ The inconsistency falls into one of the following cases:
 [[type_SelectFileException]]
 ==== Select File Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SelectFileException`
 | Kind     | Runtime exception
@@ -3788,7 +3788,7 @@ The inconsistency falls into one of the following cases:
 [[type_SessionBufferOverflowException]]
 ==== Session Buffer Overflow Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `SessionBufferOverflowException`
 | Kind     | Runtime exception
@@ -3800,7 +3800,7 @@ The inconsistency falls into one of the following cases:
 [[type_UnauthorizedKeyException]]
 ==== Unauthorized Key Exception
 
-[cols="1h,4", grid=rows, frame=all]
+[cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `UnauthorizedKeyException`
 | Kind     | Runtime exception

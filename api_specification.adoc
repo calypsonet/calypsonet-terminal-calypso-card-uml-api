@@ -3493,7 +3493,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | Purpose  | Product type of a Calypso card.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value               | Since | Description
 | `PRIME_REVISION_1`  | 1.0 | Calypso Prime revision 1.x.
@@ -3516,7 +3516,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | Purpose  | Type of a Calypso Elementary File.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value                | Since | Description
 | `LINEAR`             | 1.0 | Linear EF (1 to several records).
@@ -3538,7 +3538,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | Purpose  | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value                       | Since | Description
 | `FCP_FOR_CURRENT_FILE`      | 1.0 | FCP for the current file, as returned by *Select File*.
@@ -3562,7 +3562,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | Purpose  | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value             | Since | Description
 | `CARD_KEY_PAIR`   | 2.1 | Card key pair.
@@ -3582,7 +3582,7 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | Purpose  | Cryptographic nature of a Calypso secure session.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value        | Since | Description
 | `SYMMETRIC`  | 3.0 | PSO/SAM sessions, Regular and Extended modes.
@@ -3605,7 +3605,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Purpose  | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value         | Since | Description
 | `FIRST_EF`    | 1.0 | The first EF of the current Calypso DF.
@@ -3625,7 +3625,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Purpose  | Direction of an SV action.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value  | Since | Description
 | `DO`   | 1.0 | In a `RELOAD`, load a positive amount; in a `DEBIT`, debit a positive amount.
@@ -3644,7 +3644,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Purpose  | Type of Stored Value operation.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value     | Since | Description
 | `RELOAD`  | 1.0 | Increase the SV balance.
@@ -3663,7 +3663,7 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Purpose  | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
 |===
 
-[cols=".^3,^.^1,.^5", options="header"]
+[cols="^.^3,^.^1,.^5", options="header"]
 |===
 | Value              | Since | Description
 | `PERSONALIZATION`  | 1.0 | Personalisation, load and debit operations -- uses the *issuer* key.

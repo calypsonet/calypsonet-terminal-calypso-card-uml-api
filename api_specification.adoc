@@ -2,9 +2,9 @@
 Calypso Networks Association <https://calypsonet.org>
 //
 // Document identity
-:spec-name: Terminal Calypso Card API
-:spec-id: CNA-TCC-API
-:spec-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
+:doc-name: Terminal Calypso Card API
+:doc-id: CNA-TCC-API
+:doc-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
 :organization: Calypso Networks Association
 //
 // Revision
@@ -50,12 +50,12 @@ Calypso Networks Association <https://calypsonet.org>
 [abstract]
 == Abstract
 
-This document is the official technical specification of the **{spec-name}** standardised
+This document is the official technical specification of the **{doc-name}** standardised
 by the **{organization}** (CNA).
 It defines, in a language-agnostic way, the interfaces, classes, enumerations, exceptions, structural
-relationships and behavioural requirements that any conforming implementation of the {spec-name} MUST satisfy.
+relationships and behavioural requirements that any conforming implementation of the {doc-name} MUST satisfy.
 
-The {spec-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
+The {doc-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
 It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and delegates every cryptographic operation to a symmetric (<<ref_cna_tccs,CNA-TCCS-API>>) or asymmetric (<<ref_cna_tcca,CNA-TCCA-API>>) crypto module.
 
 [discrete]
@@ -63,15 +63,15 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 
 [cols="^.^1h,.^3", grid=rows, frame=all]
 |===
-| Reference           | {spec-ref}
-| Short name          | {spec-id}
+| Reference           | {doc-ref}
+| Short name          | {doc-id}
 | Version             | {revnumber}
 | Revision date       | {revdate}
 | Editor              | {organization}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===
 
-NOTE: The present document specifies the {revnumber} of the {spec-name}. It defines a single, coherent
+NOTE: The present document specifies the {revnumber} of the {doc-name}. It defines a single, coherent
 baseline against which conforming implementations are evaluated; the *Since* column indicates the version in
 which each member was introduced.
 
@@ -92,7 +92,7 @@ which each member was introduced.
 
 === Purpose
 
-The {spec-name} defines the public surface used by terminal applications to:
+The {doc-name} defines the public surface used by terminal applications to:
 
 * select a Calypso card through a <<ref_cna_tr,CNA-TR-API>> selection scenario enriched with Calypso-specific commands;
 * operate read-only transactions without involving a crypto module (*free* transaction);
@@ -386,7 +386,7 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 | Kind     | Final class
 | Namespace  | `calypso.card`
 | Since    | 1.0
-| Purpose  | Exposes the immutable properties of the {spec-name}.
+| Purpose  | Exposes the immutable properties of the {doc-name}.
 |===
 
 ===== Constants

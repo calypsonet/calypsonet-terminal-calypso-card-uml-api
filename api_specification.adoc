@@ -11,6 +11,7 @@
 :doc-classification: Public
 :doc-id: CNA-TCC-API
 :doc-ref: YYMMDD-SP-CNATerminalAPI-CalypsoCard
+:doc-repo: https://github.com/calypsonet/calypsonet-terminal-calypso-card-uml-api
 //
 // Revision (bumped every edition)
 :revnumber: 3.0.0-SNAPSHOT
@@ -98,6 +99,7 @@ It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and de
 | Version             | {revnumber}
 | Revision date       | {revdate}
 | Editor              | {organization}
+| Source repository   | {doc-repo}
 | Reference license   | Eclipse Public License -- v 2.0 (EPL-2.0)
 |===
 

@@ -523,8 +523,8 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -544,9 +544,9 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -1128,8 +1128,8 @@ secure session.
 |===
 | Signature
 | `createFreeTransactionManager(` +
-`{nbsp}{nbsp}cardReader: CardReader,` +
-`{nbsp}{nbsp}card: CalypsoCard` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard` +
 `) -> FreeTransactionManager`
 | Since       | 2.0
 | Description
@@ -1164,9 +1164,9 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 |===
 | Signature
 | `createSecureExtendedModeTransactionManager(` +
-`{nbsp}{nbsp}cardReader: CardReader,` +
-`{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
 `) -> SecureExtendedModeTransactionManager`
 | Since       | 2.0
 | Description
@@ -1190,9 +1190,9 @@ Cryptographic operations rely on the supplied `securitySetting`.
 |===
 | Signature
 | `createSecurePkiModeTransactionManager(` +
-`{nbsp}{nbsp}cardReader: CardReader,` +
-`{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}securitySetting: AsymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: AsymmetricCryptoSecuritySetting` +
 `) -> SecurePkiModeTransactionManager`
 | Since       | 2.1
 | Description
@@ -1217,9 +1217,9 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 |===
 | Signature
 | `createSecureRegularModeTransactionManager(` +
-`{nbsp}{nbsp}cardReader: CardReader,` +
-`{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
 `) -> SecureRegularModeTransactionManager`
 | Since       | 2.0
 | Description
@@ -1354,9 +1354,9 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadBinary(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
@@ -1381,8 +1381,8 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadCounter(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}nbCountersToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: integer` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
@@ -1407,8 +1407,8 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadRecord(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}recordNumber: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
 | Description
@@ -1657,9 +1657,9 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `getContent(` +
-`{nbsp}{nbsp}numRecord: integer,` +
-`{nbsp}{nbsp}dataOffset: integer,` +
-`{nbsp}{nbsp}dataLength: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}numRecord: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dataOffset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dataLength: integer` +
 `) -> byte array`
 | Since       | 1.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
@@ -2114,11 +2114,11 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 |===
 | Signature
 | `prepareChangeKey(` +
-`{nbsp}{nbsp}keyIndex: integer,` +
-`{nbsp}{nbsp}newKif: byte,` +
-`{nbsp}{nbsp}newKvc: byte,` +
-`{nbsp}{nbsp}issuerKif: byte,` +
-`{nbsp}{nbsp}issuerKvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}keyIndex: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newKif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newKvc: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}issuerKif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}issuerKvc: byte` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2204,9 +2204,9 @@ in the crypto module.
 |===
 | Signature
 | `prepareSvDebit(` +
-`{nbsp}{nbsp}amount: integer,` +
-`{nbsp}{nbsp}date: byte array,` +
-`{nbsp}{nbsp}time: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}amount: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: byte array` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2254,8 +2254,8 @@ in the crypto module.
 |===
 | Signature
 | `prepareSvGet(` +
-`{nbsp}{nbsp}svOperation: SvOperation,` +
-`{nbsp}{nbsp}svAction: SvAction` +
+`{nbsp}{nbsp}{nbsp}{nbsp}svOperation: SvOperation,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}svAction: SvAction` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2276,10 +2276,10 @@ in the crypto module.
 |===
 | Signature
 | `prepareSvReload(` +
-`{nbsp}{nbsp}amount: integer,` +
-`{nbsp}{nbsp}date: byte array,` +
-`{nbsp}{nbsp}time: byte array,` +
-`{nbsp}{nbsp}free: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}amount: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}free: byte array` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2643,8 +2643,8 @@ mode.
 |===
 | Signature
 | `addAuthorizedSessionKey(` +
-`{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
@@ -2662,8 +2662,8 @@ mode.
 |===
 | Signature
 | `addAuthorizedSvKey(` +
-`{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
@@ -2681,8 +2681,8 @@ mode.
 |===
 | Signature
 | `assignDefaultKif(` +
-`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}kif: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KIF for a write access level.
@@ -2700,8 +2700,8 @@ mode.
 |===
 | Signature
 | `assignDefaultKvc(` +
-`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KVC for a write access level.
@@ -2719,9 +2719,9 @@ mode.
 |===
 | Signature
 | `assignKif(` +
-`{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}kvc: byte,` +
-`{nbsp}{nbsp}kif: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines, for a write access level, the KIF to use when the card only provides a KVC.
@@ -2740,8 +2740,8 @@ mode.
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -2761,9 +2761,9 @@ mode.
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
@@ -2782,8 +2782,8 @@ mode.
 |===
 | Signature
 | `assignSvOperationMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -2803,9 +2803,9 @@ mode.
 |===
 | Signature
 | `assignSvOperationMaxDuration(` +
-`{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
@@ -2917,8 +2917,8 @@ mode.
 |===
 | Signature
 | `setPinModificationCipheringKey(` +
-`{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
@@ -2936,8 +2936,8 @@ mode.
 |===
 | Signature
 | `setPinVerificationCipheringKey(` +
-`{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
@@ -3017,8 +3017,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareAppendRecord(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3077,9 +3077,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareDecreaseCounter(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}decValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}decValue: integer` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3105,8 +3105,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareDecreaseCounters(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}counterNumberToDecValueMap: map<integer, integer>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToDecValueMap: map<integer, integer>` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3162,9 +3162,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareIncreaseCounter(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}incValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}incValue: integer` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3189,8 +3189,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareIncreaseCounters(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}counterNumberToIncValueMap: map<integer, integer>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToIncValueMap: map<integer, integer>` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3213,8 +3213,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `preparePutData(` +
-`{nbsp}{nbsp}tag: PutDataTag,` +
-`{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}tag: PutDataTag,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
 `) -> T`
 | Since       | 2.1
 | Description | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
@@ -3235,9 +3235,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadBinary(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3267,8 +3267,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadCounter(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}nbCountersToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: integer` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3296,8 +3296,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecord(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}recordNumber: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3324,10 +3324,10 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecords(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}fromRecordNumber: integer,` +
-`{nbsp}{nbsp}toRecordNumber: integer,` +
-`{nbsp}{nbsp}recordSize: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordSize: integer` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3356,11 +3356,11 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecordsPartially(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}fromRecordNumber: integer,` +
-`{nbsp}{nbsp}toRecordNumber: integer,` +
-`{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3458,9 +3458,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareSetCounter(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}newValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newValue: integer` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3515,9 +3515,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareUpdateBinary(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3543,9 +3543,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareUpdateRecord(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}recordNumber: integer,` +
-`{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3590,9 +3590,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareWriteBinary(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3618,9 +3618,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareWriteRecord(` +
-`{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}recordNumber: integer,` +
-`{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
 `) -> T`
 | Since       | 1.0
 | Description

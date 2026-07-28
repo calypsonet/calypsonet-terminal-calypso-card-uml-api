@@ -446,7 +446,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `addCaCertificate(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}caCertificate: CaCertificate` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
 | Registers a CA certificate. The issuer's certificate MUST be loaded first. Preloading a CA certificate avoids
@@ -469,7 +472,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `addCaCertificateParser(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}caCertificateParser: CaCertificateParser` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
 | Registers a CA certificate parser, used when the CA certificate is not already available. The parser provides
@@ -484,7 +490,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `addCardCertificateParser(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cardCertificateParser: CardCertificateParser` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
 | Registers a card certificate parser. The parser provides the means to build a card certificate from the raw data
@@ -499,7 +508,10 @@ include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=ce
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `addPcaCertificate(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}pcaCertificate: PcaCertificate` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
 | Registers a self-signed PCA certificate.
@@ -1094,7 +1106,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting`
+| Signature
+| `createAsymmetricCryptoSecuritySetting(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory` +
+`) -> AsymmetricCryptoSecuritySetting`
 | Since       | 2.1
 | Description
 | Creates the <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>> that carries the
@@ -1242,7 +1257,10 @@ PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting`
+| Signature
+| `createSymmetricCryptoSecuritySetting(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory` +
+`) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description
 | Creates the <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> that carries the
@@ -1319,7 +1337,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension`
+| Signature
+| `preparePreOpenSecureSession(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel` +
+`) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
 a| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange
@@ -1443,7 +1464,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension`
+| Signature
+| `prepareSelectFile(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}selectControl: SelectFileControl` +
+`) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description
 | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
@@ -2336,7 +2360,10 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getCryptoExtension(cryptoExtensionClass: Class<E>) -> E extends CardTransactionCryptoExtension`
+| Signature
+| `getCryptoExtension(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}cryptoExtensionClass: Class<E>` +
+`) -> E extends CardTransactionCryptoExtension`
 | Since       | 2.0
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.

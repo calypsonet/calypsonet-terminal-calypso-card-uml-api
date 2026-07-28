@@ -364,26 +364,9 @@ is backward-compatible per that API's evolution policy.
 === Functional positioning
 
 [plantuml,target=architecture-overview,format=svg]
-....
-@startuml
-skinparam shadowing false
-skinparam roundCorner 8
-
-component "Terminal Application" as App
-component "Terminal Reader API\n[CNA-TR-API]" as TR
-component "Terminal Calypso Card API\n(this specification)" as TCC #LightYellow
-component "Terminal Calypso Crypto\nSymmetric / Asymmetric APIs\n[CNA-TCCS-API] / [CNA-TCCA-API]" as TCCx
-component "Crypto Module\n(SAM, PKI library)" as Mod
-component "Reader / Card" as RC
-
-App  --> TR  : selection / observation
-App  --> TCC : transactions
-TCC  --> TCCx: delegates crypto
-TCC  --> TR  : uses
-TCCx --> Mod : implemented by
-TR   --> RC  : drives
-@enduml
-....
+----
+include::uml/architecture-overview.puml[]
+----
 
 === Logical namespaces
 
@@ -409,9 +392,9 @@ TR   --> RC  : drives
 
 The following UML class diagram provides a visual representation of the types and relationships defined by this specification:
 
-[plantuml,target="api_class_diagram",format="svg"]
+[plantuml,target="class-diagram",format="svg"]
 ----
-include::api_class_diagram.puml[Terminal Calypso Card API class diagram,align=center]
+include::uml/class-diagram.puml[Terminal Calypso Card API class diagram,align=center]
 ----
 
 // =============================================================================

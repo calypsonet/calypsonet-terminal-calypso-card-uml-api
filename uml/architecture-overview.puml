@@ -1,0 +1,18 @@
+@startuml
+skinparam shadowing false
+skinparam roundCorner 8
+
+component "Terminal Application" as App
+component "Terminal Reader API\n[CNA-TR-API]" as TR
+component "Terminal Calypso Card API\n(this specification)" as TCC #LightYellow
+component "Terminal Calypso Crypto\nSymmetric / Asymmetric APIs\n[CNA-TCCS-API] / [CNA-TCCA-API]" as TCCx
+component "Crypto Module\n(SAM, PKI library)" as Mod
+component "Reader / Card" as RC
+
+App  --> TR  : selection / observation
+App  --> TCC : transactions
+TCC  --> TCCx: delegates crypto
+TCC  --> TR  : uses
+TCCx --> Mod : implemented by
+TR   --> RC  : drives
+@enduml

@@ -72,20 +72,20 @@ end legend
 package "calypso.card" as calypsoCard {
 
 +class "**final** CalypsoCardApiProperties" as ApiProperties <<green>> {
-    +{static} **final** String VERSION
+    +{static} **final** VERSION: string
 }
 +interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
-    +CalypsoCardSelectionExtension createCalypsoCardSelectionExtension ()
+    +createCalypsoCardSelectionExtension() -> CalypsoCardSelectionExtension
 
-    +SymmetricCryptoSecuritySetting createSymmetricCryptoSecuritySetting (SymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
-    +AsymmetricCryptoSecuritySetting createAsymmetricCryptoSecuritySetting (AsymmetricCryptoCardTransactionManagerFactory cryptoCardTransactionManagerFactory)
+    +createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) -> SymmetricCryptoSecuritySetting
+    +createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) -> AsymmetricCryptoSecuritySetting
 
-    +FreeTransactionManager createFreeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card)
-    +SecureRegularModeTransactionManager createSecureRegularModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +SecureExtendedModeTransactionManager createSecureExtendedModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, SymmetricCryptoSecuritySetting securitySetting)
-    +SecurePkiModeTransactionManager createSecurePkiModeTransactionManager (<back:yellow>CardReader</back> cardReader, CalypsoCard card, AsymmetricCryptoSecuritySetting securitySetting)
+    +createFreeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard) -> FreeTransactionManager
+    +createSecureRegularModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureRegularModeTransactionManager
+    +createSecureExtendedModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) -> SecureExtendedModeTransactionManager
+    +createSecurePkiModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) -> SecurePkiModeTransactionManager
 
-    +SearchCommandData createSearchCommandData ()
+    +createSearchCommandData() -> SearchCommandData
 }
 +enum WriteAccessLevel <<green>> {
     PERSONALIZATION
@@ -113,93 +113,93 @@ package "calypso.card" as calypsoCard {
 }
 package "card" as card {
     +interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
-        +CalypsoCardSelectionExtension acceptInvalidatedCard ()
+        +acceptInvalidatedCard() -> CalypsoCardSelectionExtension
 
-        +CalypsoCardSelectionExtension prepareSelectFile (short lid)
-        +CalypsoCardSelectionExtension prepareSelectFile (SelectFileControl selectControl)
+        +prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension
+        +prepareSelectFile(selectControl: SelectFileControl) -> CalypsoCardSelectionExtension
 
-        +CalypsoCardSelectionExtension prepareGetData (GetDataTag tag)
+        +prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension
 
-        +CalypsoCardSelectionExtension prepareReadRecord (byte sfi, int recordNumber)
-        +CalypsoCardSelectionExtension prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
-        +CalypsoCardSelectionExtension prepareReadCounter (byte sfi, int nbCountersToRead)
+        +prepareReadRecord(sfi: byte, recordNumber: integer) -> CalypsoCardSelectionExtension
+        +prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> CalypsoCardSelectionExtension
+        +prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> CalypsoCardSelectionExtension
 
-        +CalypsoCardSelectionExtension preparePreOpenSecureSession (WriteAccessLevel writeAccessLevel)
+        +preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> CalypsoCardSelectionExtension
     }
     +interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
-        +ProductType getProductType ()
-        +boolean isHce ()
+        +getProductType() -> ProductType
+        +isHce() -> boolean
 
-        +boolean isDfInvalidated ()
+        +isDfInvalidated() -> boolean
 
-        +byte[] getDfName ()
-        +byte[] getApplicationSerialNumber ()
+        +getDfName() -> byte array
+        +getApplicationSerialNumber() -> byte array
 
-        +byte[] getStartupInfoRawData ()
-        +byte getPlatform ()
-        +byte getApplicationType ()
-        +byte getApplicationSubtype ()
-        +byte getSoftwareIssuer ()
-        +byte getSoftwareVersion ()
-        +byte getSoftwareRevision ()
-        +byte getSessionModification ()
+        +getStartupInfoRawData() -> byte array
+        +getPlatform() -> byte
+        +getApplicationType() -> byte
+        +getApplicationSubtype() -> byte
+        +getSoftwareIssuer() -> byte
+        +getSoftwareVersion() -> byte
+        +getSoftwareRevision() -> byte
+        +getSessionModification() -> byte
 
-        +byte[] getTraceabilityInformation ()
+        +getTraceabilityInformation() -> byte array
 
-        +byte[] getCardPublicKey ()
-        +byte[] getCardCertificate ()
-        +byte[] getCaCertificate ()
+        +getCardPublicKey() -> byte array
+        +getCardCertificate() -> byte array
+        +getCaCertificate() -> byte array
 
-        +DirectoryHeader getDirectoryHeader ()
-        +ElementaryFile getFileBySfi (byte sfi)
-        +ElementaryFile getFileByLid (short lid)
-        +Set<ElementaryFile> getFiles ()
+        +getDirectoryHeader() -> DirectoryHeader?
+        +getFileBySfi(sfi: byte) -> ElementaryFile?
+        +getFileByLid(lid: short) -> ElementaryFile?
+        +getFiles() -> set<ElementaryFile>
 
-        +boolean isDfRatified ()
-        +int getTransactionCounter ()
+        +isDfRatified() -> boolean
+        +getTransactionCounter() -> integer
 
-        +boolean isPkiModeSupported ()
-        +boolean isExtendedModeSupported ()
-        +boolean isRatificationOnDeselectSupported ()
+        +isPkiModeSupported() -> boolean
+        +isExtendedModeSupported() -> boolean
+        +isRatificationOnDeselectSupported() -> boolean
 
-        +boolean isPinFeatureAvailable ()
-        +boolean isPinBlocked ()
-        +int getPinAttemptRemaining ()
+        +isPinFeatureAvailable() -> boolean
+        +isPinBlocked() -> boolean
+        +getPinAttemptRemaining() -> integer
 
-        +boolean isSvFeatureAvailable ()
-        +int getSvBalance ()
-        +int getSvLastTNum ()
-        +SvLoadLogRecord getSvLoadLogRecord ()
-        +SvDebitLogRecord getSvDebitLogLastRecord ()
-        +List<SvDebitLogRecord> getSvDebitLogAllRecords ()
+        +isSvFeatureAvailable() -> boolean
+        +getSvBalance() -> integer
+        +getSvLastTNum() -> integer
+        +getSvLoadLogRecord() -> SvLoadLogRecord?
+        +getSvDebitLogLastRecord() -> SvDebitLogRecord?
+        +getSvDebitLogAllRecords() -> list<SvDebitLogRecord>
     }
     +interface DirectoryHeader {
-        +short getLid ()
-        +Byte getDfStatus ()
+        +getLid() -> short
+        +getDfStatus() -> byte
 
-        +byte[] getAccessConditions ()
-        +byte[] getKeyIndexes ()
+        +getAccessConditions() -> byte array
+        +getKeyIndexes() -> byte array
 
-        +byte getKif (WriteAccessLevel writeAccessLevel)
-        +byte getKvc (WriteAccessLevel writeAccessLevel)
+        +getKif(writeAccessLevel: WriteAccessLevel) -> byte
+        +getKvc(writeAccessLevel: WriteAccessLevel) -> byte
     }
     +interface ElementaryFile {
-        +byte getSfi ()
-        +FileHeader getHeader ()
-        +FileData getData ()
+        +getSfi() -> byte
+        +getHeader() -> FileHeader?
+        +getData() -> FileData
     }
     +interface FileHeader {
-        +short getLid ()
-        +byte getDfStatus ()
-        +ElementaryFile.Type getEfType ()
+        +getLid() -> short
+        +getDfStatus() -> byte?
+        +getEfType() -> ElementaryFile.Type
 
-        +int getRecordsNumber ()
-        +int getRecordSize ()
+        +getRecordsNumber() -> integer
+        +getRecordSize() -> integer
 
-        +byte[] getAccessConditions ()
-        +byte[] getKeyIndexes ()
+        +getAccessConditions() -> byte array
+        +getKeyIndexes() -> byte array
 
-        +Short getSharedReference ()
+        +getSharedReference() -> short?
     }
     +enum "Type" as FileType <<green>> {
         LINEAR
@@ -209,13 +209,13 @@ package "card" as card {
         SIMULATED_COUNTERS
     }
     +interface FileData {
-        +byte[] getContent ()
-        +byte[] getContent (int numRecord)
-        +byte[] getContent (int numRecord, int dataOffset, int dataLength)
-        +SortedMap<Integer, byte[]> getAllRecordsContent ()
+        +getContent() -> byte array
+        +getContent(numRecord: integer) -> byte array
+        +getContent(numRecord: integer, dataOffset: integer, dataLength: integer) -> byte array
+        +getAllRecordsContent() -> sortedMap<integer, byte array>
 
-        +Integer getContentAsCounterValue (int numCounter)
-        +SortedMap<Integer, Integer> getAllCountersValue ()
+        +getContentAsCounterValue(numCounter: integer) -> integer?
+        +getAllCountersValue() -> sortedMap<integer, integer>
     }
     +enum "ProductType" as CardProductType <<green>> {
         PRIME_REVISION_1
@@ -226,81 +226,81 @@ package "card" as card {
         UNKNOWN
     }
     +interface SvLoadLogRecord {
-        +byte[] getRawData ()
+        +getRawData() -> byte array
 
-        +byte[] getLoadDate ()
-        +byte[] getLoadTime ()
+        +getLoadDate() -> byte array
+        +getLoadTime() -> byte array
 
-        +int getAmount ()
-        +int getBalance ()
-        +byte[] getFreeData ()
+        +getAmount() -> integer
+        +getBalance() -> integer
+        +getFreeData() -> byte array
 
-        +byte getKvc ()
-        +byte[] getSamId ()
-        +int getSamTNum ()
-        +int getSvTNum ()
+        +getKvc() -> byte
+        +getSamId() -> byte array
+        +getSamTNum() -> integer
+        +getSvTNum() -> integer
     }
     +interface SvDebitLogRecord {
-        +byte[] getRawData ()
+        +getRawData() -> byte array
 
-        +byte[] getDebitDate ()
-        +byte[] getDebitTime ()
+        +getDebitDate() -> byte array
+        +getDebitTime() -> byte array
 
-        +int getAmount ()
-        +int getBalance ()
+        +getAmount() -> integer
+        +getBalance() -> integer
 
-        +byte getKvc ()
-        +byte[] getSamId ()
-        +int getSamTNum ()
-        +int getSvTNum ()
+        +getKvc() -> byte
+        +getSamId() -> byte array
+        +getSamTNum() -> integer
+        +getSvTNum() -> integer
     }
 }
 package "transaction" as transaction {
     ' Card
-    +interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T extends TransactionManager<T>> {
-        +T prepareSelectFile (short lid)
-        +T prepareSelectFile (SelectFileControl selectFileControl)
+    +interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T : TransactionManager<T>> {
+        +prepareSelectFile(lid: short) -> T
+        +prepareSelectFile(selectFileControl: SelectFileControl) -> T
 
-        +T prepareGetData (GetDataTag tag)
-        +T preparePutData (PutDataTag tag, byte[] data)
+        +prepareGetData(tag: GetDataTag) -> T
+        +preparePutData(tag: PutDataTag, data: byte array) -> T
 
-        +T prepareReadRecord (byte sfi, int recordNumber)
-        +T prepareReadRecords (byte sfi, int fromRecordNumber, int toRecordNumber, int recordSize)
-        +T prepareReadRecordsPartially (byte sfi, int fromRecordNumber, int toRecordNumber, int offset, int nbBytesToRead)
-        +T prepareReadBinary (byte sfi, int offset, int nbBytesToRead)
-        +T prepareReadCounter (byte sfi, int nbCountersToRead)
+        +prepareReadRecord(sfi: byte, recordNumber: integer) -> T
+        +prepareReadRecords(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, recordSize: integer) -> T
+        +prepareReadRecordsPartially(sfi: byte, fromRecordNumber: integer, toRecordNumber: integer, offset: integer, nbBytesToRead: integer) -> T
+        +prepareReadBinary(sfi: byte, offset: integer, nbBytesToRead: integer) -> T
+        +prepareReadCounter(sfi: byte, nbCountersToRead: integer) -> T
 
-        +T prepareSearchRecords (SearchCommandData data)
+        +prepareSearchRecords(data: SearchCommandData) -> T
 
-        +T prepareCheckPinStatus ()
+        +prepareCheckPinStatus() -> T
 
-        +T prepareAppendRecord (byte sfi, byte[] recordData)
-        +T prepareUpdateRecord (byte sfi, int recordNumber, byte[] recordData)
-        +T prepareWriteRecord (byte sfi, int recordNumber, byte[] recordData)
+        +prepareAppendRecord(sfi: byte, recordData: byte array) -> T
+        +prepareUpdateRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T
+        +prepareWriteRecord(sfi: byte, recordNumber: integer, recordData: byte array) -> T
 
-        +T prepareUpdateBinary (byte sfi, int offset, byte[] data)
-        +T prepareWriteBinary (byte sfi, int offset, byte[] data)
+        +prepareUpdateBinary(sfi: byte, offset: integer, data: byte array) -> T
+        +prepareWriteBinary(sfi: byte, offset: integer, data: byte array) -> T
 
-        +T prepareIncreaseCounter (byte sfi, int counterNumber, int incValue)
-        +T prepareIncreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToIncValueMap)
-        +T prepareDecreaseCounter (byte sfi, int counterNumber, int decValue)
-        +T prepareDecreaseCounters (byte sfi, Map<Integer, Integer> counterNumberToDecValueMap)
-        +T prepareSetCounter (byte sfi, int counterNumber, int newValue)
+        +prepareIncreaseCounter(sfi: byte, counterNumber: integer, incValue: integer) -> T
+        +prepareIncreaseCounters(sfi: byte, counterNumberToIncValueMap: map<integer, integer>) -> T
+        +prepareDecreaseCounter(sfi: byte, counterNumber: integer, decValue: integer) -> T
+        +prepareDecreaseCounters(sfi: byte, counterNumberToDecValueMap: map<integer, integer>) -> T
+        +prepareSetCounter(sfi: byte, counterNumber: integer, newValue: integer) -> T
 
-        +T prepareSvReadAllLogs ()
+        +prepareSvReadAllLogs() -> T
 
-        +T prepareVerifyPin (byte[] pin)
-        +T prepareChangePin (byte[] newPin)
+        +prepareVerifyPin(pin: byte array) -> T
+        +prepareChangePin(newPin: byte array) -> T
 
-        +T prepareGenerateAsymmetricKeyPair ()
+        +prepareGenerateAsymmetricKeyPair() -> T
 
-        +<color:blue>SecureSessionStatus getSecureSessionStatus ()
-        +List<byte[]> getTransactionAuditData ()
+        +<color:blue>getSecureSessionStatus() -> SecureSessionStatus
+        +getTransactionAuditData() -> list<byte array>
     }
     +interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
-        +<color:blue>boolean isOpen ()
-        +<color:blue>SecureSessionType getType ()
-        +<color:blue>WriteAccessLevel getWriteAccessLevel ()
+        +<color:blue>isOpen() -> boolean
+        +<color:blue>getType() -> SecureSessionType
+        +<color:blue>getWriteAccessLevel() -> WriteAccessLevel?
     }
     +enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
         <color:blue>SYMMETRIC
@@ -308,35 +308,35 @@ package "transaction" as transaction {
     }
     +interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
-    +interface "SecureTransactionManager" as SecureTransactionManager<T extends SecureTransactionManager<T>> extends TransactionManager {
-        +<E extends CardTransactionCryptoExtension> E getCryptoExtension (Class<E> cryptoExtensionClass)
+    +interface "SecureTransactionManager" as SecureTransactionManager<T : SecureTransactionManager<T>> extends TransactionManager {
+        +<E : CardTransactionCryptoExtension> getCryptoExtension(cryptoExtensionClass: Class<E>) -> E
 
-        +T prepareCloseSecureSession ()
-        +T prepareCancelSecureSession ()
+        +prepareCloseSecureSession() -> T
+        +prepareCancelSecureSession() -> T
     }
-    +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T extends SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
-        +T prepareOpenSecureSession (WriteAccessLevel writeAccessLevel)
+    +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T : SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
+        +prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> T
 
-        +T prepareSvGet (SvOperation svOperation, SvAction svAction)
-        +T prepareSvReload (int amount, byte[] date, byte[] time, byte[] free)
-        +T prepareSvReload (int amount)
-        +T prepareSvDebit (int amount, byte[] date, byte[] time)
-        +T prepareSvDebit (int amount)
+        +prepareSvGet(svOperation: SvOperation, svAction: SvAction) -> T
+        +prepareSvReload(amount: integer, date: byte array, time: byte array, free: byte array) -> T
+        +prepareSvReload(amount: integer) -> T
+        +prepareSvDebit(amount: integer, date: byte array, time: byte array) -> T
+        +prepareSvDebit(amount: integer) -> T
 
-        +T prepareInvalidate ()
-        +T prepareRehabilitate ()
+        +prepareInvalidate() -> T
+        +prepareRehabilitate() -> T
 
-        +T prepareChangeKey (int keyIndex, byte newKif, byte newKvc, byte issuerKif, byte issuerKvc)
+        +prepareChangeKey(keyIndex: integer, newKif: byte, newKvc: byte, issuerKif: byte, issuerKvc: byte) -> T
     }
     +interface "SecureRegularModeTransactionManager" as SecureRegularModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
     }
     +interface "SecureExtendedModeTransactionManager" as SecureExtendedModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
-        +SecureExtendedModeTransactionManager prepareEarlyMutualAuthentication ()
-        +SecureExtendedModeTransactionManager prepareActivateEncryption ()
-        +SecureExtendedModeTransactionManager prepareDeactivateEncryption ()
+        +prepareEarlyMutualAuthentication() -> SecureExtendedModeTransactionManager
+        +prepareActivateEncryption() -> SecureExtendedModeTransactionManager
+        +prepareDeactivateEncryption() -> SecureExtendedModeTransactionManager
     }
     +interface "SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
-        +SecurePkiModeTransactionManager prepareOpenSecureSession ()
+        +prepareOpenSecureSession() -> SecurePkiModeTransactionManager
     }
 
     +enum SvOperation <<green>> {
@@ -348,50 +348,50 @@ package "transaction" as transaction {
         UNDO
     }
     +interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
-        +AsymmetricCryptoSecuritySetting addPcaCertificate (PcaCertificate pcaCertificate)
-        +AsymmetricCryptoSecuritySetting addCaCertificate (CaCertificate caCertificate)
+        +addPcaCertificate(pcaCertificate: PcaCertificate) -> AsymmetricCryptoSecuritySetting
+        +addCaCertificate(caCertificate: CaCertificate) -> AsymmetricCryptoSecuritySetting
 
-        +AsymmetricCryptoSecuritySetting addCaCertificateParser (CaCertificateParser caCertificateParser)
-        +AsymmetricCryptoSecuritySetting addCardCertificateParser (CardCertificateParser cardCertificateParser)
+        +addCaCertificateParser(caCertificateParser: CaCertificateParser) -> AsymmetricCryptoSecuritySetting
+        +addCardCertificateParser(cardCertificateParser: CardCertificateParser) -> AsymmetricCryptoSecuritySetting
 
-		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, byte[] dfName, long maxDuration)
-		+<color:blue>AsymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, long maxDuration)
+		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> AsymmetricCryptoSecuritySetting
+		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> AsymmetricCryptoSecuritySetting
     }
     +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
-        +SymmetricCryptoSecuritySetting enableMultipleSession ()
-        +SymmetricCryptoSecuritySetting enableRatificationMechanism ()
-        +SymmetricCryptoSecuritySetting enablePinPlainTransmission ()
-        +SymmetricCryptoSecuritySetting enableSvLoadAndDebitLog ()
-        +SymmetricCryptoSecuritySetting authorizeSvNegativeBalance ()
-        +SymmetricCryptoSecuritySetting disableReadOnSessionOpening ()
+        +enableMultipleSession() -> SymmetricCryptoSecuritySetting
+        +enableRatificationMechanism() -> SymmetricCryptoSecuritySetting
+        +enablePinPlainTransmission() -> SymmetricCryptoSecuritySetting
+        +enableSvLoadAndDebitLog() -> SymmetricCryptoSecuritySetting
+        +authorizeSvNegativeBalance() -> SymmetricCryptoSecuritySetting
+        +disableReadOnSessionOpening() -> SymmetricCryptoSecuritySetting
 
-        +SymmetricCryptoSecuritySetting assignKif (WriteAccessLevel writeAccessLevel, byte kvc, byte kif)
-        +SymmetricCryptoSecuritySetting assignDefaultKif (WriteAccessLevel writeAccessLevel, byte kif)
-        +SymmetricCryptoSecuritySetting assignDefaultKvc (WriteAccessLevel writeAccessLevel, byte kvc)
+        +assignKif(writeAccessLevel: WriteAccessLevel, kvc: byte, kif: byte) -> SymmetricCryptoSecuritySetting
+        +assignDefaultKif(writeAccessLevel: WriteAccessLevel, kif: byte) -> SymmetricCryptoSecuritySetting
+        +assignDefaultKvc(writeAccessLevel: WriteAccessLevel, kvc: byte) -> SymmetricCryptoSecuritySetting
 
-        +SymmetricCryptoSecuritySetting addAuthorizedSessionKey (byte kif, byte kvc)
-        +SymmetricCryptoSecuritySetting addAuthorizedSvKey (byte kif, byte kvc)
+        +addAuthorizedSessionKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting
+        +addAuthorizedSvKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting
 
-        +SymmetricCryptoSecuritySetting setPinVerificationCipheringKey (byte kif, byte kvc)
-        +SymmetricCryptoSecuritySetting setPinModificationCipheringKey (byte kif, byte kvc)
+        +setPinVerificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting
+        +setPinModificationCipheringKey(kif: byte, kvc: byte) -> SymmetricCryptoSecuritySetting
 
-		+<color:blue>SymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, byte[] dfName, long maxDuration)
-		+<color:blue>SymmetricCryptoSecuritySetting assignOpenSecureSessionMaxDuration (long csnMin, long maxDuration)
-		+<color:blue>SymmetricCryptoSecuritySetting assignSvOperationMaxDuration (long csnMin, byte[] dfName, long maxDuration)
-		+<color:blue>SymmetricCryptoSecuritySetting assignSvOperationMaxDuration (long csnMin, long maxDuration)
+		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting
+		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting
+		+<color:blue>assignSvOperationMaxDuration(csnMin: long, dfName: byte array, maxDuration: long) -> SymmetricCryptoSecuritySetting
+		+<color:blue>assignSvOperationMaxDuration(csnMin: long, maxDuration: long) -> SymmetricCryptoSecuritySetting
 
-        +void initCryptoContextForNextTransaction ()
+        +initCryptoContextForNextTransaction() -> unit
     }
     +interface SearchCommandData <<blue>> {
-        +SearchCommandData setSfi (byte sfi)
-        +SearchCommandData startAtRecord (int recordNumber)
-        +SearchCommandData setOffset (int offset)
-        +SearchCommandData enableRepeatedOffset ()
-        +SearchCommandData setSearchData (byte[] data)
-        +SearchCommandData setMask (byte[] mask)
-        +SearchCommandData fetchFirstMatchingResult ()
+        +setSfi(sfi: byte) -> SearchCommandData
+        +startAtRecord(recordNumber: integer) -> SearchCommandData
+        +setOffset(offset: integer) -> SearchCommandData
+        +enableRepeatedOffset() -> SearchCommandData
+        +setSearchData(data: byte array) -> SearchCommandData
+        +setMask(mask: byte array) -> SearchCommandData
+        +fetchFirstMatchingResult() -> SearchCommandData
 
-        +List<Integer> getMatchingRecordNumbers ()
+        +getMatchingRecordNumbers() -> list<integer>
     }
     ' Exceptions
     +class "<<RuntimeException>>" as RuntimeException <<green>> {

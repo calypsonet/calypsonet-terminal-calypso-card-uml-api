@@ -216,7 +216,7 @@ as-is in the UML class diagram (<<sec_class_diagram>>).
 | `map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.| `Map<K,V>`, `Dictionary<K,V>`.
 | `sortedMap<K,V>` | Associative array sorted by key.                                 | `SortedMap<K,V>`, `BTreeMap<K,V>`.
 | `T?`             | Nullable value: either a `T` value or the absence of value (`null`). | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`.
-| `void`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`.
+| `unit`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`.
 |===
 
 ==== Type tables
@@ -228,7 +228,7 @@ Each interface, class, enumeration and exception defined in this document is des
 | Name       | The type's normalized name.
 | Kind       | The category of the type (interface, class, enumeration, exception, etc.).
 | Namespace  | The namespace in which the type is defined.
-| Generics   | The generic type parameter of this type, when applicable.
+| Generics   | The generic type parameter of this type, when applicable. A constraint on that parameter is written `<T : Bound>`.
 | Extends    | The type extended by this type, when applicable.
 | Implements | The interface implemented by this type, when applicable.
 | Since      | The version of the API in which the type was introduced.
@@ -2136,7 +2136,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Name     | `SecureSymmetricCryptoTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T extends SecureSymmetricCryptoTransactionManager<T>>`
+| Generics | `<T : SecureSymmetricCryptoTransactionManager<T>>`
 | Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
 | Since    | 2.0
 | Purpose  | Common operations for every transaction manager backed by *symmetric* cryptography.
@@ -2360,7 +2360,7 @@ in the crypto module.
 | Name     | `SecureTransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T extends SecureTransactionManager<T>>`
+| Generics | `<T : SecureTransactionManager<T>>`
 | Extends  | <<type_TransactionManager,`TransactionManager<T>`>>
 | Since    | 2.0
 | Purpose  | Common operations for every secure (cryptographically-backed) transaction manager.
@@ -2372,13 +2372,13 @@ in the crypto module.
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `getCryptoExtension(` +
+| `<E : CardTransactionCryptoExtension> getCryptoExtension(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cryptoExtensionClass: Class<E>` +
-`) -> E extends CardTransactionCryptoExtension`
+`) -> E`
 | Since       | 2.0
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
-| Returns     | An `E extends CardTransactionCryptoExtension`.
+| Returns     | An `E : CardTransactionCryptoExtension`.
 | Throws      | None.
 |===
 
@@ -2934,7 +2934,7 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `initCryptoContextForNextTransaction() -> void`
+| Signature   | `initCryptoContextForNextTransaction() -> unit`
 | Since       | 2.0
 | Description
 | Prepares the crypto module for the next transaction by anticipating the security context configuration.
@@ -3004,7 +3004,7 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 | Name     | `TransactionManager`
 | Kind     | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T extends TransactionManager<T>>`
+| Generics | `<T : TransactionManager<T>>`
 | Extends  | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
 | Since    | 2.0
 | Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.

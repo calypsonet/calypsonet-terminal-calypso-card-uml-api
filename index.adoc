@@ -100,8 +100,9 @@ include::assets/layout/_colophon.adoc[]
 
 This document is the official technical specification of the **{doc-name}** standardised
 by the **{organization}** (CNA).
-It defines, in a language-agnostic way, the interfaces, classes, enumerations, exceptions, structural
-relationships and behavioural requirements that any conforming implementation of the {doc-name} MUST satisfy.
+It defines, in a language-agnostic way (using a notation inspired by the Kotlin language), the interfaces,
+classes, enumerations, exceptions, structural relationships and behavioural requirements that any conforming
+implementation of the {doc-name} MUST satisfy.
 
 The {doc-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
 It builds on top of the *Terminal Reader API* (<<ref_cna_tr,CNA-TR-API>>) and delegates every cryptographic operation to a symmetric (<<ref_cna_tccs,CNA-TCCS-API>>) or asymmetric (<<ref_cna_tcca,CNA-TCCA-API>>) crypto module.
@@ -200,23 +201,27 @@ Type names follow `UpperCamelCase`; operation, parameter and enumeration-member 
 except for enumeration values which use `UPPER_SNAKE_CASE`. Names defined by this specification are reproduced
 as-is in the UML class diagram (<<sec_class_diagram>>).
 
-==== Language-agnostic types
+==== Data types
+
+The following type names, whose notation is inspired by the Kotlin language, are used in operation signatures
+and are mapped, in each binding, to the closest equivalent native type. Implementations MUST preserve the
+semantic intent rather than the syntactic form.
 
 [cols="^.^1,.^3,.^3", options="header"]
 |===
-| Symbolic type    | Description                                                     | Typical bindings
-| `string`         | Sequence of characters, UTF-8 encoded by default.                | `String`, `string`, `str`.
-| `boolean`        | Two-state truth value.                                           | `boolean`, `bool`.
-| `byte`           | Signed 8-bit value.                                              | `byte`, `i8`.
-| `short`          | Signed 16-bit integer.                                           | `short`, `Int16`.
-| `integer`        | Signed 32-bit integer.                                           | `int`, `Int32`.
-| `byte array`     | Ordered sequence of octets.                                      | `byte[]`, `[u8]`, `bytes`.
-| `list<T>`        | Ordered collection of `T` values, may contain duplicates.        | `List<T>`, `Vec<T>`.
-| `set<T>`         | Unordered collection of unique `T` values.                       | `Set<T>`, `HashSet<T>`.
-| `map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.| `Map<K,V>`, `Dictionary<K,V>`.
-| `sortedMap<K,V>` | Associative array sorted by key.                                 | `SortedMap<K,V>`, `BTreeMap<K,V>`.
-| `T?`             | Nullable value: either a `T` value or the absence of value (`null`). | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`.
-| `unit`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`.
+| Type             | Description                                                     | Typical bindings
+| `String`         | Sequence of characters, UTF-8 encoded by default.                | `String`, `string`, `str`.
+| `Boolean`        | Two-state truth value.                                           | `boolean`, `bool`.
+| `Byte`           | Signed 8-bit value.                                              | `byte`, `i8`.
+| `Short`          | Signed 16-bit integer.                                           | `short`, `Int16`, `i16`.
+| `Int`            | Signed 32-bit integer.                                           | `int`, `Int32`, `i32`.
+| `ByteArray`      | Ordered sequence of octets.                                      | `byte[]`, `[u8]`, `bytes`.
+| `List<T>`        | Ordered collection of `T` values, may contain duplicates.        | `List<T>`, `Vec<T>`.
+| `Set<T>`         | Unordered collection of unique `T` values.                       | `Set<T>`, `HashSet<T>`.
+| `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.| `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
+| `SortedMap<K,V>` | Associative array sorted by key.                                 | `SortedMap<K,V>`, `BTreeMap<K,V>`.
+| `T?`             | Nullable value: either a `T` value or the absence of value (`null`). | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
+| `Unit`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`, `()`.
 |===
 
 ==== Type tables
@@ -246,7 +251,7 @@ Each operation defined in this document is described by a table of the form:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | The operation's language-agnostic signature.
+| Signature   | The operation's signature.
 | Since       | The version of the API in which the operation was introduced.
 | Description | A normative description of the operation's behaviour.
 | Parameters  | A description of each input parameter.
@@ -266,7 +271,7 @@ not restated for each operation:
 * *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
   operation returns a non-`null` value.
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
-  (e.g. `list`, `set`, `map`) returns an empty collection rather than `null`.
+  (e.g. `List`, `Set`, `Map`) returns an empty collection rather than `null`.
 * *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
 
 ==== Concurrency
@@ -435,7 +440,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 [cols="^.^1,^.^1,^.^1,.^4", options="header"]
 |===
 | Name      | Type     | Since | Description
-| `VERSION` | `string` | 1.0 | String representation of the API version (e.g. `"3.0"`).
+| `VERSION` | `String` | 1.0 | String representation of the API version (e.g. `"3.0"`).
 |===
 
 === API Interfaces
@@ -546,8 +551,8 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -567,9 +572,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> AsymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -609,10 +614,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getApplicationSerialNumber() -> byte array`
+| Signature   | `getApplicationSerialNumber() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the Application Serial Number, an 8-byte value uniquely identifying the card application.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -621,10 +626,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getApplicationSubtype() -> byte`
+| Signature   | `getApplicationSubtype() -> Byte`
 | Since       | 1.0
 | Description | Returns the application subtype byte, which references the card's file structure.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -633,10 +638,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getApplicationType() -> byte`
+| Signature   | `getApplicationType() -> Byte`
 | Since       | 1.0
 | Description | Returns the application type byte, which encodes the product type together with its options.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -645,10 +650,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getCaCertificate() -> byte array`
+| Signature   | `getCaCertificate() -> ByteArray`
 | Since       | 2.1
 | Description | CA certificate; empty if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -660,10 +665,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getCardCertificate() -> byte array`
+| Signature   | `getCardCertificate() -> ByteArray`
 | Since       | 2.1
 | Description | Card certificate; empty if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -675,10 +680,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getCardPublicKey() -> byte array`
+| Signature   | `getCardPublicKey() -> ByteArray`
 | Since       | 2.1
 | Description | Card public key; empty if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -690,13 +695,13 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getDfName() -> byte array`
+| Signature   | `getDfName() -> ByteArray`
 | Since       | 1.0
 | Description
 | DF name (5 to 16 bytes), as per <<ref_iso7816,ISO/IEC 7816-4>>. It also corresponds to the complete
   representation of the target covered by the AID value supplied in the selection command: the AID selects the
   application by specifying all or part of the targeted DF name (5 bytes minimum).
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -721,7 +726,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getFileByLid(lid: short) -> ElementaryFile?`
+| Signature   | `getFileByLid(lid: Short) -> ElementaryFile?`
 | Since       | 1.0
 | Description
 | EF whose LID matches; `null` if not found.
@@ -738,7 +743,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getFileBySfi(sfi: byte) -> ElementaryFile?`
+| Signature   | `getFileBySfi(sfi: Byte) -> ElementaryFile?`
 | Since       | 1.0
 | Description
 | EF whose SFI matches; `null` if not found, or if `sfi == 0`.
@@ -755,10 +760,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getFiles() -> set<ElementaryFile>`
+| Signature   | `getFiles() -> Set<ElementaryFile>`
 | Since       | 1.1
 | Description | All known EFs of the current DF. During a secure session, this set reflects every in-session modification (which is rolled back on session failure).
-| Returns     | A `set<ElementaryFile>`; empty if no EF is known.
+| Returns     | A `Set<ElementaryFile>`; empty if no EF is known.
 | Throws      | None.
 |===
 
@@ -767,10 +772,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getPinAttemptRemaining() -> integer`
+| Signature   | `getPinAttemptRemaining() -> Int`
 | Since       | 1.0
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | `IllegalStateException` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
@@ -781,10 +786,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getPlatform() -> byte`
+| Signature   | `getPlatform() -> Byte`
 | Since       | 1.0
 | Description | Returns the platform identification byte, which references the card's chip.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -805,10 +810,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSessionModification() -> byte`
+| Signature   | `getSessionModification() -> Byte`
 | Since       | 1.0
 | Description | Returns the session modification byte, which -- depending on the card -- caps either the number of bytes modifiable or the number of write commands allowed within a secure session.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -817,10 +822,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSoftwareIssuer() -> byte`
+| Signature   | `getSoftwareIssuer() -> Byte`
 | Since       | 1.0
 | Description | Returns the software issuer byte, identifying the issuer of the card's embedded software.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -829,10 +834,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSoftwareRevision() -> byte`
+| Signature   | `getSoftwareRevision() -> Byte`
 | Since       | 1.0
 | Description | Returns the software revision byte of the card's embedded software.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -841,10 +846,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSoftwareVersion() -> byte`
+| Signature   | `getSoftwareVersion() -> Byte`
 | Since       | 1.0
 | Description | Returns the software version byte of the card's embedded software.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -853,10 +858,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getStartupInfoRawData() -> byte array`
+| Signature   | `getStartupInfoRawData() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the raw Calypso startup information block -- the sequence of bytes from which the individual startup fields (platform, application type and subtype, software issuer, version and revision, etc.) are derived.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -865,10 +870,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSvBalance() -> integer`
+| Signature   | `getSvBalance() -> Int`
 | Since       | 1.0
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | `IllegalStateException` -- if no SV Get has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -882,10 +887,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSvDebitLogAllRecords() -> list<SvDebitLogRecord>`
+| Signature   | `getSvDebitLogAllRecords() -> List<SvDebitLogRecord>`
 | Since       | 1.0
 | Description | All SV debit log records read from the card.
-| Returns     | A `list<SvDebitLogRecord>`; empty if no debit log record has been read.
+| Returns     | A `List<SvDebitLogRecord>`; empty if no debit log record has been read.
 | Throws      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -916,10 +921,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSvLastTNum() -> integer`
+| Signature   | `getSvLastTNum() -> Int`
 | Since       | 1.0
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | `IllegalStateException` -- if no SV Get command has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -950,10 +955,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getTraceabilityInformation() -> byte array`
+| Signature   | `getTraceabilityInformation() -> ByteArray`
 | Since       | 1.1
 | Description | Traceability information (software issuer ID and discretionary data); empty if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>>
@@ -964,12 +969,12 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getTransactionCounter() -> integer`
+| Signature   | `getTransactionCounter() -> Int`
 | Since       | 1.2
 | Description | Transaction counter from the output of the last successful *Open Secure Session*.
 
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | `IllegalStateException` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
@@ -980,7 +985,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isDfInvalidated() -> boolean`
+| Signature   | `isDfInvalidated() -> Boolean`
 | Since       | 1.0
 | Description
 | Tells whether the current DF is invalidated. The invalidation status is determined either from the response to
@@ -998,10 +1003,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isDfRatified() -> boolean`
+| Signature   | `isDfRatified() -> Boolean`
 | Since       | 1.0
 | Description | Tells whether the last session has been ratified.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | `IllegalStateException` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
@@ -1012,13 +1017,13 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isExtendedModeSupported() -> boolean`
+| Signature   | `isExtendedModeSupported() -> Boolean`
 | Since       | 1.0
 | Description
 | Indicates whether the Extended Mode is supported. This indication is initially interpreted from the *Application
   Type* byte, but MAY be updated once the secure session is opened: depending on the type of key used, the
   extended mode functionalities may not be available (for example with a non-AES key).
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | None.
 |===
 
@@ -1027,10 +1032,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isHce() -> boolean`
+| Signature   | `isHce() -> Boolean`
 | Since       | 1.0
 | Description | Indicates whether the card is a Calypso HCE.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | None.
 |===
 
@@ -1039,10 +1044,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isPinBlocked() -> boolean`
+| Signature   | `isPinBlocked() -> Boolean`
 | Since       | 1.0
 | Description | Indicates whether the PIN is blocked.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | `IllegalStateException` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
@@ -1053,7 +1058,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isPinFeatureAvailable() -> boolean`
+| Signature   | `isPinFeatureAvailable() -> Boolean`
 | Since       | 1.0
 | Description | Indicates whether the Calypso PIN feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the PIN feature, `false` otherwise.
@@ -1065,12 +1070,12 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isPkiModeSupported() -> boolean`
+| Signature   | `isPkiModeSupported() -> Boolean`
 | Since       | 1.0
 | Description
 | Indicates whether Public Key Authentication is supported. This indication is interpreted from the *Application
   Type* byte.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | None.
 |===
 
@@ -1079,12 +1084,12 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isRatificationOnDeselectSupported() -> boolean`
+| Signature   | `isRatificationOnDeselectSupported() -> Boolean`
 | Since       | 1.0
 | Description
 | Indicates whether ratification happens on deselect (ratification command not required). This indication is
   interpreted from the *Application Type* byte.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | None.
 |===
 
@@ -1093,7 +1098,7 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isSvFeatureAvailable() -> boolean`
+| Signature   | `isSvFeatureAvailable() -> Boolean`
 | Since       | 1.0
 | Description | Indicates whether the SV feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the Stored Value feature, `false` otherwise.
@@ -1386,9 +1391,9 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadBinary(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
@@ -1413,8 +1418,8 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadCounter(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: Int` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.7
 | Description
@@ -1439,8 +1444,8 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `prepareReadRecord(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int` +
 `) -> CalypsoCardSelectionExtension`
 | Since       | 1.1
 | Description
@@ -1462,7 +1467,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSelectFile(lid: short) -> CalypsoCardSelectionExtension`
+| Signature   | `prepareSelectFile(lid: Short) -> CalypsoCardSelectionExtension`
 | Since       | 1.0
 | Description | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
 | Parameters  | `lid` -- the LID of the EF to select.
@@ -1507,10 +1512,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAccessConditions() -> byte array`
+| Signature   | `getAccessConditions() -> ByteArray`
 | Since       | 1.0
 | Description | Returns a reference to the access conditions.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -1519,10 +1524,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getDfStatus() -> byte`
+| Signature   | `getDfStatus() -> Byte`
 | Since       | 1.0
 | Description | Returns the status byte of the DF (Dedicated File) described by this header.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -1531,10 +1536,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKeyIndexes() -> byte array`
+| Signature   | `getKeyIndexes() -> ByteArray`
 | Since       | 1.0
 | Description | Returns a reference to the keys indexes.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -1543,11 +1548,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> byte`
+| Signature   | `getKif(writeAccessLevel: WriteAccessLevel) -> Byte`
 | Since       | 1.0
 | Description | Returns the KIF associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -1556,11 +1561,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> byte`
+| Signature   | `getKvc(writeAccessLevel: WriteAccessLevel) -> Byte`
 | Since       | 1.0
 | Description | Returns the KVC associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -1569,10 +1574,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getLid() -> short`
+| Signature   | `getLid() -> Short`
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
-| Returns     | A `short` value.
+| Returns     | A `Short` value.
 | Throws      | None.
 |===
 
@@ -1617,10 +1622,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSfi() -> byte`
+| Signature   | `getSfi() -> Byte`
 | Since       | 1.0
 | Description | Returns the Short File Identifier (SFI) of this Elementary File.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -1641,10 +1646,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAllCountersValue() -> sortedMap<integer, integer>`
+| Signature   | `getAllCountersValue() -> SortedMap<Int, Int>`
 | Since       | 1.0
 | Description | Returns the values of all counters extracted from record #1.
-| Returns     | A `sortedMap<integer, integer>`; empty if no counter is known.
+| Returns     | A `SortedMap<Int, Int>`; empty if no counter is known.
 | Throws      | None.
 |===
 
@@ -1653,10 +1658,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAllRecordsContent() -> sortedMap<integer, byte array>`
+| Signature   | `getAllRecordsContent() -> SortedMap<Int, ByteArray>`
 | Since       | 1.0
 | Description | Returns the known content of every record, keyed by record number.
-| Returns     | A `sortedMap<integer, byte array>`; empty if no record content is known.
+| Returns     | A `SortedMap<Int, ByteArray>`; empty if no record content is known.
 | Throws      | None.
 |===
 
@@ -1665,10 +1670,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getContent() -> byte array`
+| Signature   | `getContent() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
-| Returns     | A `byte array`; empty if the content is not known.
+| Returns     | A `ByteArray`; empty if the content is not known.
 | Throws      | None.
 |===
 
@@ -1677,11 +1682,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getContent(numRecord: integer) -> byte array`
+| Signature   | `getContent(numRecord: Int) -> ByteArray`
 | Since       | 1.0
 | Description | Returns the known content of the supplied record number.
 | Parameters  | `numRecord` -- the record number.
-| Returns     | A `byte array`; empty if the record content is not known.
+| Returns     | A `ByteArray`; empty if the record content is not known.
 | Throws      | None.
 |===
 
@@ -1692,17 +1697,17 @@ The mechanism is *ineffective* if:
 |===
 | Signature
 | `getContent(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}numRecord: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dataOffset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dataLength: integer` +
-`) -> byte array`
+`{nbsp}{nbsp}{nbsp}{nbsp}numRecord: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dataOffset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dataLength: Int` +
+`) -> ByteArray`
 | Since       | 1.0
 | Description | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
 | Parameters
 | `numRecord` -- the record number. +
   `dataOffset` -- the offset index (should be >= 0). +
   `dataLength` -- the data length (should be >= 1).
-| Returns     | A `byte array`; empty if the content is not known.
+| Returns     | A `ByteArray`; empty if the content is not known.
 | Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. +
   `IndexOutOfBoundsException` -- if the range exceeds the record content.
 |===
@@ -1712,11 +1717,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getContentAsCounterValue(numCounter: integer) -> integer?`
+| Signature   | `getContentAsCounterValue(numCounter: Int) -> Int?`
 | Since       | 1.0
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
 | Parameters  | `numCounter` -- the counter number (should be >= 1).
-| Returns     | An `integer` value, or `null` if record #1 or the requested counter is not set.
+| Returns     | An `Int` value, or `null` if record #1 or the requested counter is not set.
 | Throws      | `IllegalArgumentException` -- if `numCounter < 1`. +
   `IndexOutOfBoundsException` -- if the counter is truncated.
 |===
@@ -1738,10 +1743,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAccessConditions() -> byte array`
+| Signature   | `getAccessConditions() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the access conditions; empty array if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 |===
 
@@ -1750,10 +1755,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getDfStatus() -> byte?`
+| Signature   | `getDfStatus() -> Byte?`
 | Since       | 1.0
 | Description | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
-| Returns     | A `byte` value, or `null` if not available.
+| Returns     | A `Byte` value, or `null` if not available.
 | Throws      | None.
 |===
 
@@ -1774,10 +1779,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKeyIndexes() -> byte array`
+| Signature   | `getKeyIndexes() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the key indexes; empty array if not available.
-| Returns     | A `byte array`; empty if not available.
+| Returns     | A `ByteArray`; empty if not available.
 | Throws      | None.
 |===
 
@@ -1786,10 +1791,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getLid() -> short`
+| Signature   | `getLid() -> Short`
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
-| Returns     | A `short` value.
+| Returns     | A `Short` value.
 | Throws      | None.
 |===
 
@@ -1798,13 +1803,13 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getRecordSize() -> integer`
+| Signature   | `getRecordSize() -> Int`
 | Since       | 1.0
 | Description
 | Returns the size of a record. For a *counter* file, this is the original size of record #1; the extra bytes --
   the remainder of the division of the file size by 3 -- are not accessible. For a *binary* file, this is the size
   of the file.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -1813,13 +1818,13 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getRecordsNumber() -> integer`
+| Signature   | `getRecordsNumber() -> Int`
 | Since       | 1.0
 | Description
 | Returns the number of records. For a *counter* file the number of records is always `1`, and for a *binary*
   file it is always `1` as well. For a counter file, the extra bytes -- the remainder of the division of the file
   size by 3 -- are not accessible.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -1828,10 +1833,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSharedReference() -> short?`
+| Signature   | `getSharedReference() -> Short?`
 | Since       | 1.0
 | Description | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
-| Returns     | A `short` value (`0` if not shared), or `null` if the information is not available.
+| Returns     | A `Short` value (`0` if not shared), or `null` if the information is not available.
 | Throws      | None.
 |===
 
@@ -1891,10 +1896,10 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getMatchingRecordNumbers() -> list<integer>`
+| Signature   | `getMatchingRecordNumbers() -> List<Int>`
 | Since       | 1.1
 | Description | Returns the record numbers that matched.
-| Returns     | A `list<integer>`; empty if no record matched or if the command has not yet been processed.
+| Returns     | A `List<Int>`; empty if no record matched or if the command has not yet been processed.
 | Throws      | None.
 |===
 
@@ -1903,7 +1908,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setMask(mask: byte array) -> SearchCommandData`
+| Signature   | `setMask(mask: ByteArray) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
 | Parameters  | `mask` -- the mask.
@@ -1916,7 +1921,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setOffset(offset: integer) -> SearchCommandData`
+| Signature   | `setOffset(offset: Int) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
 | Parameters  | `offset` -- the offset.
@@ -1929,7 +1934,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setSearchData(data: byte array) -> SearchCommandData`
+| Signature   | `setSearchData(data: ByteArray) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the byte sequence to search for within the targeted record.
 | Parameters  | `data` -- the data to search.
@@ -1942,7 +1947,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `setSfi(sfi: byte) -> SearchCommandData`
+| Signature   | `setSfi(sfi: Byte) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the SFI of the EF in which the search is performed.
 | Parameters  | `sfi` -- the SFI of the EF.
@@ -1955,7 +1960,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `startAtRecord(recordNumber: integer) -> SearchCommandData`
+| Signature   | `startAtRecord(recordNumber: Int) -> SearchCommandData`
 | Since       | 1.1
 | Description | Sets the record number at which the search begins (default: 1).
 | Parameters  | `recordNumber` -- the number of the record where the search should begin.
@@ -2121,10 +2126,10 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `isOpen() -> boolean`
+| Signature   | `isOpen() -> Boolean`
 | Since       | 3.0
 | Description | Indicates whether a secure session is open at the snapshot moment.
-| Returns     | A `boolean` value.
+| Returns     | A `Boolean` value.
 | Throws      | None.
 |===
 
@@ -2149,11 +2154,11 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 |===
 | Signature
 | `prepareChangeKey(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}keyIndex: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}newKif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}newKvc: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}issuerKif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}issuerKvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}keyIndex: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newKif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newKvc: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}issuerKif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}issuerKvc: Byte` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2239,9 +2244,9 @@ in the crypto module.
 |===
 | Signature
 | `prepareSvDebit(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}amount: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2267,7 +2272,7 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSvDebit(amount: integer) -> T`
+| Signature   | `prepareSvDebit(amount: Int) -> T`
 | Since       | 2.0
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero. It decreases the
@@ -2311,10 +2316,10 @@ in the crypto module.
 |===
 | Signature
 | `prepareSvReload(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}amount: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}free: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray` +
 `) -> T`
 | Since       | 2.0
 | Description
@@ -2338,7 +2343,7 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSvReload(amount: integer) -> T`
+| Signature   | `prepareSvReload(amount: Int) -> T`
 | Since       | 2.0
 | Description
 | Schedules an *SV Reload* command with the optional data fields set to zero. The key used is the *reload* key.
@@ -2427,10 +2432,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAmount() -> integer`
+| Signature   | `getAmount() -> Int`
 | Since       | 1.0
 | Description | Returns the debit amount.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2439,10 +2444,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getBalance() -> integer`
+| Signature   | `getBalance() -> Int`
 | Since       | 1.0
 | Description | Returns the SV balance after the debit.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2451,10 +2456,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getDebitDate() -> byte array`
+| Signature   | `getDebitDate() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 2-byte debit date.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2463,10 +2468,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getDebitTime() -> byte array`
+| Signature   | `getDebitTime() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 2-byte debit time.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2475,10 +2480,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKvc() -> byte`
+| Signature   | `getKvc() -> Byte`
 | Since       | 1.0
 | Description | Returns the KVC of the debit key.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -2487,10 +2492,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getRawData() -> byte array`
+| Signature   | `getRawData() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the raw bytes of the debit log record.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2499,10 +2504,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSamId() -> byte array`
+| Signature   | `getSamId() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2511,10 +2516,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSamTNum() -> integer`
+| Signature   | `getSamTNum() -> Int`
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2523,10 +2528,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSvTNum() -> integer`
+| Signature   | `getSvTNum() -> Int`
 | Since       | 1.0
 | Description | Returns the SV transaction number.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2547,10 +2552,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getAmount() -> integer`
+| Signature   | `getAmount() -> Int`
 | Since       | 1.0
 | Description | Returns the load amount.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2559,10 +2564,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getBalance() -> integer`
+| Signature   | `getBalance() -> Int`
 | Since       | 1.0
 | Description | Returns the SV balance after the load.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2571,10 +2576,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getFreeData() -> byte array`
+| Signature   | `getFreeData() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 2-byte free data.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2583,10 +2588,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getKvc() -> byte`
+| Signature   | `getKvc() -> Byte`
 | Since       | 1.0
 | Description | Returns the KVC of the load key.
-| Returns     | A `byte` value.
+| Returns     | A `Byte` value.
 | Throws      | None.
 |===
 
@@ -2595,10 +2600,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getLoadDate() -> byte array`
+| Signature   | `getLoadDate() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 2-byte load date.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2607,10 +2612,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getLoadTime() -> byte array`
+| Signature   | `getLoadTime() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 2-byte load time.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2619,10 +2624,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getRawData() -> byte array`
+| Signature   | `getRawData() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the raw bytes of the load log record.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2631,10 +2636,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSamId() -> byte array`
+| Signature   | `getSamId() -> ByteArray`
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
-| Returns     | A non-empty `byte array`.
+| Returns     | A non-empty `ByteArray`.
 | Throws      | None.
 |===
 
@@ -2643,10 +2648,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSamTNum() -> integer`
+| Signature   | `getSamTNum() -> Int`
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2655,10 +2660,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getSvTNum() -> integer`
+| Signature   | `getSvTNum() -> Int`
 | Since       | 1.0
 | Description | Returns the SV transaction number.
-| Returns     | An `integer` value.
+| Returns     | An `Int` value.
 | Throws      | None.
 |===
 
@@ -2681,8 +2686,8 @@ mode.
 |===
 | Signature
 | `addAuthorizedSessionKey(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
@@ -2700,8 +2705,8 @@ mode.
 |===
 | Signature
 | `addAuthorizedSvKey(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
@@ -2720,7 +2725,7 @@ mode.
 | Signature
 | `assignDefaultKif(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KIF for a write access level.
@@ -2739,7 +2744,7 @@ mode.
 | Signature
 | `assignDefaultKvc(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines the default KVC for a write access level.
@@ -2758,8 +2763,8 @@ mode.
 | Signature
 | `assignKif(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Defines, for a write access level, the KIF to use when the card only provides a KVC.
@@ -2778,8 +2783,8 @@ mode.
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -2799,9 +2804,9 @@ mode.
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
@@ -2820,8 +2825,8 @@ mode.
 |===
 | Signature
 | `assignSvOperationMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description
@@ -2841,9 +2846,9 @@ mode.
 |===
 | Signature
 | `assignSvOperationMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: byte array,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 3.0
 | Description | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
@@ -2934,7 +2939,7 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `initCryptoContextForNextTransaction() -> unit`
+| Signature   | `initCryptoContextForNextTransaction() -> Unit`
 | Since       | 2.0
 | Description
 | Prepares the crypto module for the next transaction by anticipating the security context configuration.
@@ -2955,8 +2960,8 @@ mode.
 |===
 | Signature
 | `setPinModificationCipheringKey(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
@@ -2974,8 +2979,8 @@ mode.
 |===
 | Signature
 | `setPinVerificationCipheringKey(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kif: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}kvc: byte` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
 `) -> SymmetricCryptoSecuritySetting`
 | Since       | 2.0
 | Description | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
@@ -3041,10 +3046,10 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `getTransactionAuditData() -> list<byte array>`
+| Signature   | `getTransactionAuditData() -> List<ByteArray>`
 | Since       | 1.2
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
-| Returns     | A `list<byte array>`; empty if no exchange has taken place.
+| Returns     | A `List<ByteArray>`; empty if no exchange has taken place.
 | Throws      | None.
 |===
 
@@ -3055,8 +3060,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareAppendRecord(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3076,7 +3081,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareChangePin(newPin: byte array) -> T`
+| Signature   | `prepareChangePin(newPin: ByteArray) -> T`
 | Since       | 1.6
 | Description
 | Adds a *Change PIN* command. It MUST be performed outside a secure session. If transmitted plain, the command
@@ -3084,7 +3089,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
-| Parameters  | `newPin` -- the new PIN code value (4-byte long `byte array`).
+| Parameters  | `newPin` -- the new PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
@@ -3115,9 +3120,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareDecreaseCounter(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}decValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}decValue: Int` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3143,8 +3148,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareDecreaseCounters(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToDecValueMap: map<integer, integer>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToDecValueMap: Map<Int, Int>` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3200,9 +3205,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareIncreaseCounter(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}incValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}incValue: Int` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3227,8 +3232,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareIncreaseCounters(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToIncValueMap: map<integer, integer>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToIncValueMap: Map<Int, Int>` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3252,7 +3257,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Signature
 | `preparePutData(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}tag: PutDataTag,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
 `) -> T`
 | Since       | 2.1
 | Description | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
@@ -3273,9 +3278,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadBinary(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3305,8 +3310,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadCounter(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: Int` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3334,8 +3339,8 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecord(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3362,10 +3367,10 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecords(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordSize: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordSize: Int` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3394,11 +3399,11 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareReadRecordsPartially(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3458,7 +3463,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareSelectFile(lid: short) -> T`
+| Signature   | `prepareSelectFile(lid: Short) -> T`
 | Since       | 1.1
 | Description
 | Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
@@ -3496,9 +3501,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareSetCounter(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}newValue: integer` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}newValue: Int` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3553,9 +3558,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareUpdateBinary(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3581,9 +3586,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareUpdateRecord(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
 `) -> T`
 | Since       | 1.0
 | Description
@@ -3604,7 +3609,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature   | `prepareVerifyPin(pin: byte array) -> T`
+| Signature   | `prepareVerifyPin(pin: ByteArray) -> T`
 | Since       | 1.6
 | Description
 | Adds a *Verify PIN* command. This command MAY be performed both inside and outside a secure session. The PIN
@@ -3614,7 +3619,7 @@ state. The returned object is immutable and captures the state at the moment of 
   Once processed, the PIN status is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
-| Parameters  | `pin` -- the PIN code value (4-byte long `byte array`).
+| Parameters  | `pin` -- the PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
 | Throws
 | `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
@@ -3628,9 +3633,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareWriteBinary(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}offset: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}data: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
 `) -> T`
 | Since       | 1.1
 | Description
@@ -3656,9 +3661,9 @@ state. The returned object is immutable and captures the state at the moment of 
 |===
 | Signature
 | `prepareWriteRecord(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}sfi: byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: integer,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}recordData: byte array` +
+`{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
 `) -> T`
 | Since       | 1.0
 | Description

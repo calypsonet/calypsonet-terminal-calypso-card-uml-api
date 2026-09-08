@@ -394,17 +394,9 @@ package "transaction" as transaction {
         +getMatchingRecordNumbers() → List<Int>
     }
     ' Errors
-    +class "<i>«errors»" as errors <<green>> {
-        +**SessionBufferOverflow**: Session buffer would overflow for atomic session.
-        +**UnauthorizedKey**
-        +**InvalidPin**
-        +**InvalidCertificate**
-        +**InconsistentData**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
-        +**InvalidCardSignature**
-        +**CardSignatureNotVerifiable**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
-        +**SelectFile**
-        +**Crypto**
-        +**CryptoIO**: Crypto reader or Crypto card communication is broken.
+    +exception "<i>«error»\nSessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<purple>>  {
+        +val message: String
+        +val cause: Any?
     }
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {

@@ -66,7 +66,7 @@ legend top
     *** <back:#EBF5FB><color:#3498DB><b>Factory or interface provided by the factory
     *** <back:#FEFECE><color:#D4AC0D><b>Interface that cannot be instantiated directly by the factory
     *** <back:#FDEDEC><color:#E74C3C><b>SPI (Service Provider Interface) to be provided by the end-user
-    *** <back:#E9F7EF><color:#27AE60><b>Class, enum or exception
+    *** <back:#E9F7EF><color:#27AE60><b>Class, enum or error
 end legend
 
 package "calypso.card" as calypsoCard {
@@ -393,21 +393,18 @@ package "transaction" as transaction {
 
         +getMatchingRecordNumbers() → List<Int>
     }
-    ' Exceptions
-    +class "<<RuntimeException>>" as RuntimeException <<green>> {
-        +**SessionBufferOverflowException**: Session buffer would overflow for atomic session.
-        +**UnauthorizedKeyException**
-        +**InvalidPinException**
-        +**InvalidCertificateException**
-        +**InconsistentDataException**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
-        +**InvalidCardSignatureException**
-        +**CardSignatureNotVerifiableException**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
-        +**SelectFileException**
-        +<s>**UnexpectedCommandStatusException**
-        +<s>**ReaderIOException**: Card reader communication is broken.
-        +<s>**CardIOException**
-        +**CryptoException**
-        +**CryptoIOException**: Crypto reader or Crypto card communication is broken.
+    ' Errors
+    +class "<i>«errors»" as errors <<green>> {
+        +**SessionBufferOverflow**: Session buffer would overflow for atomic session.
+        +**UnauthorizedKey**
+        +**InvalidPin**
+        +**InvalidCertificate**
+        +**InconsistentData**: Number of R-APDUs != number of C-APDUs **or** data read in session != data read outside session.
+        +**InvalidCardSignature**
+        +**CardSignatureNotVerifiable**: CloseSecureSession is successful but crypto resource is no more available to check the card MAC.
+        +**SelectFile**
+        +**Crypto**
+        +**CryptoIO**: Crypto reader or Crypto card communication is broken.
     }
     package "spi" as spi {
         +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
@@ -477,7 +474,7 @@ FileHeader .up.> FileType #C_LINK : provide >
 ' == LAYOUT ==
 
 'SymmetricCryptoSecuritySetting -[hidden]- AsymmetricCryptoSecuritySetting
-AsymmetricCryptoSecuritySetting -[hidden]left- RuntimeException
+AsymmetricCryptoSecuritySetting -[hidden]left- errors
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
 PcaCertificate -[hidden]right- CaCertificate

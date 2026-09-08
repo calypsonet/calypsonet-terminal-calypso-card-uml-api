@@ -101,7 +101,7 @@ include::assets/layout/_colophon.adoc[]
 This document is the official technical specification of the **{doc-name}** standardised
 by the **{organization}** (CNA).
 It defines, in a language-agnostic way (using a notation inspired by the Kotlin language), the interfaces,
-classes, enumerations, exceptions, structural relationships and behavioural requirements that any conforming
+classes, enumerations, errors, structural relationships and behavioural requirements that any conforming
 implementation of the {doc-name} MUST satisfy.
 
 The {doc-name} is the *application-facing* surface used by terminal applications to operate Calypso transit and ticketing cards.
@@ -169,7 +169,7 @@ This specification covers:
 * the *symmetric* and *asymmetric* security setting carriers;
 * the *Stored Value* operations and *Search Record Multiple* support;
 * the SPIs implemented by *crypto modules* to plug into the secure transaction managers;
-* the family of exceptions raised during a Calypso transaction.
+* the family of errors raised during a Calypso transaction.
 
 The following topics are *out of scope*:
 
@@ -183,7 +183,7 @@ A software product conforms to this specification if and only if:
 
 . it implements every interface and class defined in <<sec_specification>> with the operations and semantics
   prescribed in this document,
-. it raises exceptions exclusively of the types defined in <<sec_exceptions>> for the situations described,
+. it raises errors exclusively of the types defined in <<sec_errors>> for the situations described,
 . it preserves the structural relationships described in <<sec_architecture>>.
 
 Throughout this specification, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,
@@ -226,12 +226,12 @@ semantic intent rather than the syntactic form.
 
 ==== Type tables
 
-Each interface, class, enumeration and exception defined in this document is described by a table of the form:
+Each interface, class, enumeration and error defined in this document is described by a table of the form:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name       | The type's normalized name.
-| Kind       | The category of the type (interface, class, enumeration, exception, etc.).
+| Kind       | The category of the type (interface, class, enumeration, error, etc.).
 | Namespace  | The namespace in which the type is defined.
 | Generics   | The generic type parameter of this type, when applicable. A constraint on that parameter is written `<T : Bound>`.
 | Extends    | The type extended by this type, when applicable.
@@ -256,7 +256,7 @@ Each operation defined in this document is described by a table of the form:
 | Description | A normative description of the operation's behaviour.
 | Parameters  | A description of each input parameter.
 | Returns     | A description of the returned value, if any.
-| Throws      | A list of exceptional conditions, each mapped to a specific exception type.
+| Throws      | A list of error conditions, each mapped to a specific error type.
 | See also    | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
@@ -266,8 +266,8 @@ To avoid repetition, the following rules apply to every operation table in <<sec
 not restated for each operation:
 
 * *Non-`null` arguments.* Unless explicitly stated otherwise, every input parameter MUST be non-`null`. An
-  implementation MUST raise `IllegalArgumentException` if a `null` value is supplied. This implicit `null` check is
-  not repeated in the *Throws* row, which states `None.` when no other exception can occur.
+  implementation MUST raise `IllegalArgumentError` if a `null` value is supplied. This implicit `null` check is
+  not repeated in the *Throws* row, which states `None.` when no other error can occur.
 * *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
   operation returns a non-`null` value.
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
@@ -400,7 +400,7 @@ include::uml/architecture-overview.puml[]
 | Data model of a Calypso card: `CalypsoCard`, files, headers, SV logs and selection extension.
 
 | `calypso.card.transaction`               | Public API
-| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security setting carriers, `SearchCommandData`, `SvAction`, `SvOperation` and the family of exceptions.
+| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security setting carriers, `SearchCommandData`, `SvAction`, `SvOperation` and the family of errors.
 
 | `calypso.card.transaction.spi`           | SPI
 | Marker interfaces implemented by crypto extensions (`SymmetricCryptoCardTransactionManagerFactory`, `AsymmetricCryptoCardTransactionManagerFactory`, certificate markers, `CardTransactionCryptoExtension`).
@@ -475,11 +475,11 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   of the certificate's signature using the issuer's public key, check of the validity period to ensure the
   certificate is neither expired nor prematurely valid, confirmation of the authenticity of the issuer and subject
   details, and compliance with any constraints or extensions required for CA certificates.
-| Parameters  | `caCertificate` (<<type_PcaCertificate,`CaCertificate`>>) -- the CA certificate to register.
+| Parameters  | `caCertificate` (<<type_CaCertificate,`CaCertificate`>>) -- the CA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws
-| `IllegalStateException` -- if the contained public key has already been registered. +
-  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the check of the supplied certificate failed.
+| `IllegalStateError` -- if the contained public key has already been registered. +
+  <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 | See also    | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
 |===
 
@@ -496,9 +496,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Description
 | Registers a CA certificate parser, used when the CA certificate is not already available. The parser provides
   the means to build a CA certificate from the raw data read from the card.
-| Parameters  | `caCertificateParser` (<<type_PcaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
+| Parameters  | `caCertificateParser` (<<type_CaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | `IllegalStateException` -- if a parser is already registered for the same certificate type.
+| Throws      | `IllegalStateError` -- if a parser is already registered for the same certificate type.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
@@ -514,9 +514,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Description
 | Registers a card certificate parser. The parser provides the means to build a card certificate from the raw data
   read from the card. Only one parser MAY be registered per certificate type.
-| Parameters  | `cardCertificateParser` (<<type_PcaCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
+| Parameters  | `cardCertificateParser` (<<type_CardCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | `IllegalStateException` -- if a parser associated with the same certificate type is already registered.
+| Throws      | `IllegalStateError` -- if a parser associated with the same certificate type is already registered.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
@@ -539,9 +539,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
 | Throws
-| `IllegalArgumentException` -- if the certificate is invalid. +
-  `IllegalStateException` -- if the contained public key has already been registered. +
-  <<type_InvalidCertificateException,`InvalidCertificateException`>> -- if the check of the supplied certificate failed.
+| `IllegalArgumentError` -- if the certificate is invalid. +
+  `IllegalStateError` -- if the contained public key has already been registered. +
+  <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
@@ -776,7 +776,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateException` -- if the PIN has not been checked.
+| Throws      | `IllegalStateError` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -874,7 +874,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateException` -- if no SV Get has been executed.
+| Throws      | `IllegalStateError` -- if no SV Get has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -925,7 +925,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateException` -- if no SV Get command has been executed.
+| Throws      | `IllegalStateError` -- if no SV Get command has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -975,7 +975,7 @@ Failed write commands do not update the in-memory image.
 
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateException` -- if no session has been opened.
+| Throws      | `IllegalStateError` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -1007,7 +1007,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Tells whether the last session has been ratified.
 | Returns     | A `Boolean` value.
-| Throws      | `IllegalStateException` -- if no session has been opened.
+| Throws      | `IllegalStateError` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -1048,7 +1048,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the PIN is blocked.
 | Returns     | A `Boolean` value.
-| Throws      | `IllegalStateException` -- if the PIN has not been checked.
+| Throws      | `IllegalStateError` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -1134,7 +1134,7 @@ asymmetric-key (PKI) cryptographic configuration required by
 supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentException` -- if the factory is invalid.
+| Throws      | `IllegalArgumentError` -- if the factory is invalid.
 |===
 
 [[op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension]]
@@ -1238,7 +1238,7 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
-| Throws      | `IllegalStateException` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
+| Throws      | `IllegalStateError` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
 |===
 
 [[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
@@ -1284,7 +1284,7 @@ symmetric-key (e.g. SAM-backed) cryptographic configuration required by the regu
 transaction managers. The supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentException` -- if the factory is invalid.
+| Throws      | `IllegalArgumentError` -- if the factory is invalid.
 |===
 
 [[type_CalypsoCardSelectionExtension]]
@@ -1381,7 +1381,7 @@ The mechanism is *ineffective* if:
 * asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalStateException` -- if pre-open is already prepared.
+| Throws      | `IllegalStateError` -- if pre-open is already prepared.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadBinary]]
@@ -1408,7 +1408,7 @@ The mechanism is *ineffective* if:
   `offset` -- the offset (0 indicates the first byte). +
   `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadCounter]]
@@ -1434,7 +1434,7 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF. +
   `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadRecord]]
@@ -1459,7 +1459,7 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF to read. +
   `recordNumber` -- the record number to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
@@ -1708,8 +1708,8 @@ The mechanism is *ineffective* if:
   `dataOffset` -- the offset index (should be >= 0). +
   `dataLength` -- the data length (should be >= 1).
 | Returns     | A `ByteArray`; empty if the content is not known.
-| Throws      | `IllegalArgumentException` -- if `dataOffset < 0` or `dataLength < 1`. +
-  `IndexOutOfBoundsException` -- if the range exceeds the record content.
+| Throws      | `IllegalArgumentError` -- if `dataOffset < 0` or `dataLength < 1`. +
+  `IndexOutOfBoundsError` -- if the range exceeds the record content.
 |===
 
 [[op_FileData_getContentAsCounterValue]]
@@ -1722,8 +1722,8 @@ The mechanism is *ineffective* if:
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
 | Parameters  | `numCounter` -- the counter number (should be >= 1).
 | Returns     | An `Int` value, or `null` if record #1 or the requested counter is not set.
-| Throws      | `IllegalArgumentException` -- if `numCounter < 1`. +
-  `IndexOutOfBoundsException` -- if the counter is truncated.
+| Throws      | `IllegalArgumentError` -- if `numCounter < 1`. +
+  `IndexOutOfBoundsError` -- if the counter is truncated.
 |===
 
 [[type_FileHeader]]
@@ -1998,7 +1998,7 @@ The mechanism is *ineffective* if:
   <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
   and `prepareActivateEncryption` calls consecutively (in any order).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>>
 |===
@@ -2017,7 +2017,7 @@ The mechanism is *ineffective* if:
 
   NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>> +
                 <<op_SecureTransactionManager_prepareCloseSecureSession,`SecureTransactionManager.prepareCloseSecureSession`>>
@@ -2035,7 +2035,7 @@ The mechanism is *ineffective* if:
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationException` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>>
 |===
@@ -2172,9 +2172,9 @@ in the crypto module.
 `issuerKvc` -- the KVC of the current card's issuer key.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the *Change Key* command is not available for this card. +
-`IllegalArgumentException` -- if the provided key index is out of range. +
-`IllegalStateException` -- if the command is executed while a secure session is open.
+| `UnsupportedOperationError` -- if the *Change Key* command is not available for this card. +
+`IllegalArgumentError` -- if the provided key index is out of range. +
+`IllegalStateError` -- if the command is executed while a secure session is open.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareInvalidate]]
@@ -2191,8 +2191,8 @@ in the crypto module.
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalStateException` -- if the card is already invalidated. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalStateError` -- if the card is already invalidated. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession]]
@@ -2215,7 +2215,7 @@ in the crypto module.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalStateException` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
+| `IllegalStateError` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
 
@@ -2233,8 +2233,8 @@ in the crypto module.
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalStateException` -- if the card is not invalidated. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalStateError` -- if the card is not invalidated. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
@@ -2262,9 +2262,9 @@ in the crypto module.
 `time`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalArgumentException` -- if one of the provided arguments is out of range. +
-`IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalArgumentError` -- if one of the provided arguments is out of range. +
+`IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
@@ -2282,9 +2282,9 @@ in the crypto module.
 | Parameters  | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalArgumentException` -- if the provided argument is out of range. +
-`IllegalStateException` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalArgumentError` -- if the provided argument is out of range. +
+`IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvGet]]
@@ -2306,7 +2306,7 @@ in the crypto module.
 | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
 `svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
+| Throws      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
@@ -2333,9 +2333,9 @@ in the crypto module.
 `free`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalArgumentException` -- if one of the provided arguments is out of range. +
-`IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalArgumentError` -- if one of the provided arguments is out of range. +
+`IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
@@ -2352,9 +2352,9 @@ in the crypto module.
 | Parameters  | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalArgumentException` -- if the provided argument is out of range. +
-`IllegalStateException` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| `IllegalArgumentError` -- if the provided argument is out of range. +
+`IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
+<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[type_SecureTransactionManager]]
@@ -2394,7 +2394,7 @@ in the crypto module.
 |===
 | Signature   | `prepareCancelSecureSession() -> T`
 | Since       | 2.0
-| Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises exceptions.
+| Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises errors.
 | Returns     | The current instance (`T`).
 | Throws      | None.
 |===
@@ -2412,7 +2412,7 @@ via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enable
 this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
 mode.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalStateException` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
+| Throws      | `IllegalStateError` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
 |===
 
 [[type_SvDebitLogRecord]]
@@ -2949,8 +2949,8 @@ mode.
   validation. For the optimisation to be effective, this operation MUST be called at the very end of the current
   transaction, that is, *after* the user has been notified of the access right (e.g. after opening the gate).
 | Throws
-| <<type_CryptoException,`CryptoException`>> -- if an error occurred when computing a crypto operation. +
-<<type_CryptoIOException,`CryptoIOException`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
+| <<type_Crypto,`Crypto`>> -- if an error occurred when computing a crypto operation. +
+<<type_CryptoIO,`CryptoIO`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
 |===
 
 [[op_SymmetricCryptoSecuritySetting_setPinModificationCipheringKey]]
@@ -3025,7 +3025,7 @@ Processing of prepared commands is inherited from `CardTransactionManager` (<<re
 The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
 Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of <<ref_cna_tr,CNA-TR-API>> when the underlying card supports multi-channel.
 
-NOTE: Every write operation MAY raise <<type_SessionBufferOverflowException,`SessionBufferOverflowException`>> if the command would overflow the modification buffer and the multiple-session mode is not allowed.
+NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBufferOverflow`>> if the command would overflow the modification buffer and the multiple-session mode is not allowed.
 
 [[op_TransactionManager_getSecureSessionStatus]]
 ===== Get Secure Session Status
@@ -3073,7 +3073,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareChangePin]]
@@ -3092,9 +3092,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters  | `newPin` -- the new PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
-`IllegalArgumentException` -- if the provided argument is out of range. +
-`IllegalStateException` -- if the command is executed while a secure session is open.
+| `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
+`IllegalArgumentError` -- if the provided argument is out of range. +
+`IllegalStateError` -- if the command is executed while a secure session is open.
 |===
 
 [[op_TransactionManager_prepareCheckPinStatus]]
@@ -3110,7 +3110,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationException` -- if the PIN feature is not available for this card.
+| Throws      | `UnsupportedOperationError` -- if the PIN feature is not available for this card.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounter]]
@@ -3138,7 +3138,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounters]]
@@ -3194,8 +3194,8 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the *Get Data* command with the provided tag is not supported. +
-`IllegalStateException` -- if a secure session is open.
+| `UnsupportedOperationError` -- if the *Get Data* command with the provided tag is not supported. +
+`IllegalStateError` -- if a secure session is open.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounter]]
@@ -3222,7 +3222,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounters]]
@@ -3266,9 +3266,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `data` -- the data to inject.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the *Put Data* command with the provided tag is not supported. +
-`IllegalArgumentException` -- if `data` is empty. +
-`IllegalStateException` -- if a secure session is open.
+| `UnsupportedOperationError` -- if the *Put Data* command with the provided tag is not supported. +
+`IllegalArgumentError` -- if `data` is empty. +
+`IllegalStateError` -- if a secure session is open.
 |===
 
 [[op_TransactionManager_prepareReadBinary]]
@@ -3299,8 +3299,8 @@ state. The returned object is immutable and captures the state at the moment of 
 `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if this command is not supported by this card. +
-  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| `UnsupportedOperationError` -- if this command is not supported by this card. +
+  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadCounter]]
@@ -3329,7 +3329,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`              -- the SFI of the EF. +
 `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecord]]
@@ -3357,7 +3357,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecords]]
@@ -3389,7 +3389,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `toRecordNumber`   -- the number of the last record to read. +
 `recordSize`       -- the record length.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecordsPartially]]
@@ -3424,9 +3424,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `nbBytesToRead`    -- the number of bytes to read from each record.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if this command is not supported by this card. +
-`IllegalArgumentException` -- if one of the provided arguments is out of range. +
-`IllegalStateException` -- if a secure session is open.
+| `UnsupportedOperationError` -- if this command is not supported by this card. +
+`IllegalArgumentError` -- if one of the provided arguments is out of range. +
+`IllegalStateError` -- if a secure session is open.
 |===
 
 [[op_TransactionManager_prepareSearchRecords]]
@@ -3452,9 +3452,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters  | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the *Search Record Multiple* command is not available for this card. +
-`IllegalArgumentException` -- if the input data is inconsistent. +
-`IllegalStateException` -- if a secure session is open.
+| `UnsupportedOperationError` -- if the *Search Record Multiple* command is not available for this card. +
+`IllegalArgumentError` -- if the input data is inconsistent. +
+`IllegalStateError` -- if a secure session is open.
 | See also    | <<type_SearchCommandData,`SearchCommandData`>>
 |===
 
@@ -3524,8 +3524,8 @@ state. The returned object is immutable and captures the state at the moment of 
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
 | Throws
-| `IllegalStateException` -- if the current counter value is unknown. +
-  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| `IllegalStateError` -- if the current counter value is unknown. +
+  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareSvReadAllLogs]]
@@ -3548,7 +3548,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>> and
   <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>.
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationException` -- if the SV feature is not available for this card.
+| Throws      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
 |===
 
 [[op_TransactionManager_prepareUpdateBinary]]
@@ -3575,8 +3575,8 @@ state. The returned object is immutable and captures the state at the moment of 
 `data`   -- the new data.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if this command is not supported by this card. +
-  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| `UnsupportedOperationError` -- if this command is not supported by this card. +
+  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareUpdateRecord]]
@@ -3601,7 +3601,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareVerifyPin]]
@@ -3622,8 +3622,8 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters  | `pin` -- the PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if the PIN feature is not available for this card. +
-`IllegalArgumentException` -- if the provided argument is out of range.
+| `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
+`IllegalArgumentError` -- if the provided argument is out of range.
 |===
 
 [[op_TransactionManager_prepareWriteBinary]]
@@ -3650,8 +3650,8 @@ state. The returned object is immutable and captures the state at the moment of 
 `data`   -- the data to write over the existing data.
 | Returns     | The current instance (`T`).
 | Throws
-| `UnsupportedOperationException` -- if this command is not supported by this card. +
-  `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| `UnsupportedOperationError` -- if this command is not supported by this card. +
+  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareWriteRecord]]
@@ -3676,7 +3676,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentException` -- if one of the supplied arguments is out of range.
+| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 === SPI Interfaces
@@ -3693,6 +3693,53 @@ state. The returned object is immutable and captures the state at the moment of 
 | Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
 |===
 
+[[type_CaCertificate]]
+==== CA Certificate
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name     | `CaCertificate`
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Marker for a CA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificate,`AsymmetricCryptoSecuritySetting.addCaCertificate`>>.
+|===
+
+[[type_CaCertificateParser]]
+==== CA Certificate Parser
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name     | `CaCertificateParser`
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Marker for a CA certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificateParser,`AsymmetricCryptoSecuritySetting.addCaCertificateParser`>>.
+|===
+
+[[type_CardCertificate]]
+==== Card Certificate
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name     | `CardCertificate`
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Marker for a card certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Consumed by the asymmetric crypto extension when authenticating a card; it is not registered directly through <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+|===
+
+[[type_CardCertificateParser]]
+==== Card Certificate Parser
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name     | `CardCertificateParser`
+| Kind     | Marker interface (SPI)
+| Namespace  | `calypso.card.transaction.spi`
+| Since    | 2.1
+| Purpose  | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCardCertificateParser,`AsymmetricCryptoSecuritySetting.addCardCertificateParser`>>.
+|===
 [[type_CardTransactionCryptoExtension]]
 ==== Card Transaction Crypto Extension
 
@@ -3711,26 +3758,14 @@ state. The returned object is immutable and captures the state at the moment of 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name     | `PcaCertificate`
-| Kind     | Marker interfaces (SPI)
+| Kind     | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since    | 2.1
-| Purpose  | Markers for PCA, CA and card certificates exposed by <<ref_cna_tcca,CNA-TCCA-API>> extensions.
+| Purpose  | Marker for a self-signed PCA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`AsymmetricCryptoSecuritySetting.addPcaCertificate`>>.
 |===
 
 `PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.
 Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> extension that produced them.
-
-[[type_PcaCertificateParser]]
-==== PCA Certificate Parser
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name     | `PcaCertificateParser`
-| Kind     | Marker interfaces (SPI)
-| Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Markers for CA and card certificate parsers exposed by <<ref_cna_tcca,CNA-TCCA-API>> extensions. Used by `AsymmetricCryptoSecuritySetting.addCaCertificateParser` / `addCardCertificateParser`.
-|===
 
 [[type_SymmetricCryptoCardTransactionManagerFactory]]
 ==== Symmetric Crypto Card Transaction Manager Factory
@@ -3936,52 +3971,52 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | `DEBIT`            | 1.0 | Debit operations only -- uses the *debit* key.
 |===
 
-[[sec_exceptions]]
-=== Exceptions
+[[sec_errors]]
+=== Errors
 
-[[type_CardSignatureNotVerifiableException]]
-==== Card Signature Not Verifiable Exception
+[[type_CardSignatureNotVerifiable]]
+==== Card Signature Not Verifiable
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CardSignatureNotVerifiableException`
-| Kind     | Runtime exception
+| Name     | `CardSignatureNotVerifiable`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
 | Purpose  | Indicates that the card has correctly closed the secure session but that the authenticity of the session cannot be verified because the crypto module is no longer available (timeout, network problem, etc.).
 |===
 
-[[type_CryptoException]]
-==== Crypto Exception
+[[type_Crypto]]
+==== Crypto
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CryptoException`
-| Kind     | Runtime exception
+| Name     | `Crypto`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
 | Purpose  | Indicates that an error occurred when computing a crypto operation.
 |===
 
-[[type_CryptoIOException]]
-==== Crypto IO Exception
+[[type_CryptoIO]]
+==== Crypto IO
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CryptoIOException`
-| Kind     | Runtime exception
+| Name     | `CryptoIO`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
 | Purpose  | Indicates a communication error with the crypto module.
 |===
 
-[[type_InconsistentDataException]]
-==== Inconsistent Data Exception
+[[type_InconsistentData]]
+==== Inconsistent Data
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InconsistentDataException`
-| Kind     | Runtime exception
+| Name     | `InconsistentData`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
 | Purpose  | Indicates the detection of inconsistent data.
@@ -3994,13 +4029,13 @@ The inconsistency falls into one of the following cases:
 * an *inconsistency in the card data*, which can happen for example when the data read outside the secure session
   differs from the data read inside it.
 
-[[type_InvalidCardSignatureException]]
-==== Invalid Card Signature Exception
+[[type_InvalidCardSignature]]
+==== Invalid Card Signature
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidCardSignatureException`
-| Kind     | Runtime exception
+| Name     | `InvalidCardSignature`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
 | Purpose
@@ -4014,61 +4049,61 @@ The inconsistency falls into one of the following cases:
   is incorrect.
 |===
 
-[[type_InvalidCertificateException]]
-==== Invalid Certificate Exception
+[[type_InvalidCertificate]]
+==== Invalid Certificate
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidCertificateException`
-| Kind     | Runtime exception
+| Name     | `InvalidCertificate`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.1
 | Purpose  | Indicates that a certificate failed validation (signature, validity period, issuer or subject details, constraints, extensions, expiration, revocation).
 |===
 
-[[type_InvalidPinException]]
-==== Invalid PIN Exception
+[[type_InvalidPin]]
+==== Invalid PIN
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidPinException`
-| Kind     | Runtime exception
+| Name     | `InvalidPin`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 2.0
 | Purpose  | Indicates that the provided PIN is invalid.
 |===
 
-[[type_SelectFileException]]
-==== Select File Exception
+[[type_SelectFile]]
+==== Select File
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SelectFileException`
-| Kind     | Runtime exception
+| Name     | `SelectFile`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.4
 | Purpose  | Indicates that file selection failed because the file was not found (status word `6A82h`).
 |===
 
-[[type_SessionBufferOverflowException]]
-==== Session Buffer Overflow Exception
+[[type_SessionBufferOverflow]]
+==== Session Buffer Overflow
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SessionBufferOverflowException`
-| Kind     | Runtime exception
+| Name     | `SessionBufferOverflow`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.2
 | Purpose  | Indicates that the secure session cannot be performed atomically because the modification buffer capacity is insufficient.
 |===
 
-[[type_UnauthorizedKeyException]]
-==== Unauthorized Key Exception
+[[type_UnauthorizedKey]]
+==== Unauthorized Key
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `UnauthorizedKeyException`
-| Kind     | Runtime exception
+| Name     | `UnauthorizedKey`
+| Kind     | Error
 | Namespace  | `calypso.card.transaction`
 | Since    | 1.0
 | Purpose  | Indicates that the card requires an unauthorised session key.

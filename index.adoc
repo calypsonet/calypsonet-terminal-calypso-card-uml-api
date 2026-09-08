@@ -256,7 +256,7 @@ Each operation defined in this document is described by a table of the form:
 | Description | A normative description of the operation's behaviour.
 | Parameters  | A description of each input parameter.
 | Returns     | A description of the returned value, if any.
-| Throws      | A list of error conditions, each mapped to a specific error type.
+| Errors      | A list of error conditions, each mapped to a specific error type.
 | See also    | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
@@ -265,9 +265,10 @@ Each operation defined in this document is described by a table of the form:
 To avoid repetition, the following rules apply to every operation table in <<sec_specification>> and are therefore
 not restated for each operation:
 
-* *Non-`null` arguments.* Unless explicitly stated otherwise, every input parameter MUST be non-`null`. An
-  implementation MUST raise `IllegalArgumentError` if a `null` value is supplied. This implicit `null` check is
-  not repeated in the *Throws* row, which states `None.` when no other error can occur.
+* *Non-`null` arguments.* Unless explicitly stated otherwise, every input parameter being non-`null` is an
+  implicit pre-condition of the operation. Checking it is the responsibility of the implementation, and failing
+  to meet that pre-condition MUST raise an illegal argument error. This implicit check is not restated in the
+  *Errors* row, which states `None.` when no other error can occur.
 * *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
   operation returns a non-`null` value.
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
@@ -477,7 +478,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   details, and compliance with any constraints or extensions required for CA certificates.
 | Parameters  | `caCertificate` (<<type_CaCertificate,`CaCertificate`>>) -- the CA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws
+| Errors
 | `IllegalStateError` -- if the contained public key has already been registered. +
   <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 | See also    | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
@@ -498,7 +499,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   the means to build a CA certificate from the raw data read from the card.
 | Parameters  | `caCertificateParser` (<<type_CaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | `IllegalStateError` -- if a parser is already registered for the same certificate type.
+| Errors      | `IllegalStateError` -- if a parser is already registered for the same certificate type.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
@@ -516,7 +517,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   read from the card. Only one parser MAY be registered per certificate type.
 | Parameters  | `cardCertificateParser` (<<type_CardCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | `IllegalStateError` -- if a parser associated with the same certificate type is already registered.
+| Errors      | `IllegalStateError` -- if a parser associated with the same certificate type is already registered.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
@@ -538,7 +539,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   details, and compliance with any constraints or extensions required for PCA certificates.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws
+| Errors
 | `IllegalArgumentError` -- if the certificate is invalid. +
   `IllegalStateError` -- if the contained public key has already been registered. +
   <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
@@ -562,7 +563,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
@@ -585,7 +586,7 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_CalypsoCard]]
@@ -618,7 +619,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the Application Serial Number, an 8-byte value uniquely identifying the card application.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getApplicationSubtype]]
@@ -630,7 +631,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the application subtype byte, which references the card's file structure.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getApplicationType]]
@@ -642,7 +643,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the application type byte, which encodes the product type together with its options.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getCaCertificate]]
@@ -654,7 +655,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | CA certificate; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
                 <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
@@ -669,7 +670,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | Card certificate; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
                 <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
@@ -684,7 +685,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | Card public key; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
                 <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
@@ -702,7 +703,7 @@ Failed write commands do not update the in-memory image.
   representation of the target covered by the AID value supplied in the selection command: the AID selects the
   application by specifying all or part of the targeted DF name (5 bytes minimum).
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getDirectoryHeader]]
@@ -714,7 +715,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Metadata of the current DF; `null` if not set.
 | Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(short)`>> +
                 <<op_CalypsoCardSelectionExtension_prepareSelectFile_byControl,`CalypsoCardSelectionExtension.prepareSelectFile(SelectFileControl)`>> +
                 <<op_TransactionManager_prepareSelectFile_byLid,`TransactionManager.prepareSelectFile(short)`>> +
@@ -735,7 +736,7 @@ Failed write commands do not update the in-memory image.
   which are rolled back if the secure session fails.
 | Parameters  | `lid` -- the LID to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getFileBySfi]]
@@ -752,7 +753,7 @@ Failed write commands do not update the in-memory image.
   which are rolled back if the secure session fails.
 | Parameters  | `sfi` -- the SFI to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found, or if `sfi == 0`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getFiles]]
@@ -764,7 +765,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.1
 | Description | All known EFs of the current DF. During a secure session, this set reflects every in-session modification (which is rolled back on session failure).
 | Returns     | A `Set<ElementaryFile>`; empty if no EF is known.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getPinAttemptRemaining]]
@@ -776,7 +777,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateError` -- if the PIN has not been checked.
+| Errors      | `IllegalStateError` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -790,7 +791,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the platform identification byte, which references the card's chip.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getProductType]]
@@ -802,7 +803,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the card product type (`PRIME_REVISION_1` / `PRIME_REVISION_2` / `PRIME_REVISION_3` / `LIGHT` / `BASIC` / `UNKNOWN`).
 | Returns     | A <<type_ProductType,`ProductType`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getSessionModification]]
@@ -814,7 +815,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the session modification byte, which -- depending on the card -- caps either the number of bytes modifiable or the number of write commands allowed within a secure session.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getSoftwareIssuer]]
@@ -826,7 +827,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software issuer byte, identifying the issuer of the card's embedded software.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getSoftwareRevision]]
@@ -838,7 +839,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software revision byte of the card's embedded software.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getSoftwareVersion]]
@@ -850,7 +851,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software version byte of the card's embedded software.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getStartupInfoRawData]]
@@ -862,7 +863,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the raw Calypso startup information block -- the sequence of bytes from which the individual startup fields (platform, application type and subtype, software issuer, version and revision, etc.) are derived.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_getSvBalance]]
@@ -874,7 +875,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateError` -- if no SV Get has been executed.
+| Errors      | `IllegalStateError` -- if no SV Get has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -891,7 +892,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | All SV debit log records read from the card.
 | Returns     | A `List<SvDebitLogRecord>`; empty if no debit log record has been read.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -908,7 +909,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Last SV debit log record; `null` if not available.
 | Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>, or `null` if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -925,7 +926,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateError` -- if no SV Get command has been executed.
+| Errors      | `IllegalStateError` -- if no SV Get command has been executed.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -942,7 +943,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Last SV load log record; `null` if not available.
 | Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>, or `null` if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -959,7 +960,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.1
 | Description | Traceability information (software issuer ID and discretionary data); empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>>
 |===
@@ -975,7 +976,7 @@ Failed write commands do not update the in-memory image.
 
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `Int` value.
-| Throws      | `IllegalStateError` -- if no session has been opened.
+| Errors      | `IllegalStateError` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -995,7 +996,7 @@ Failed write commands do not update the in-memory image.
   when the corresponding DF is invalidated. For older Calypso cards, it may be necessary to execute a *Select
   File* command in order to determine the invalidation status.
 | Returns     | `true` if the current DF has been invalidated, `false` otherwise.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isDfRatified]]
@@ -1007,7 +1008,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Tells whether the last session has been ratified.
 | Returns     | A `Boolean` value.
-| Throws      | `IllegalStateError` -- if no session has been opened.
+| Errors      | `IllegalStateError` -- if no session has been opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -1024,7 +1025,7 @@ Failed write commands do not update the in-memory image.
   Type* byte, but MAY be updated once the secure session is opened: depending on the type of key used, the
   extended mode functionalities may not be available (for example with a non-AES key).
 | Returns     | A `Boolean` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isHce]]
@@ -1036,7 +1037,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the card is a Calypso HCE.
 | Returns     | A `Boolean` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isPinBlocked]]
@@ -1048,7 +1049,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the PIN is blocked.
 | Returns     | A `Boolean` value.
-| Throws      | `IllegalStateError` -- if the PIN has not been checked.
+| Errors      | `IllegalStateError` -- if the PIN has not been checked.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -1062,7 +1063,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the Calypso PIN feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the PIN feature, `false` otherwise.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isPkiModeSupported]]
@@ -1076,7 +1077,7 @@ Failed write commands do not update the in-memory image.
 | Indicates whether Public Key Authentication is supported. This indication is interpreted from the *Application
   Type* byte.
 | Returns     | A `Boolean` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isRatificationOnDeselectSupported]]
@@ -1090,7 +1091,7 @@ Failed write commands do not update the in-memory image.
 | Indicates whether ratification happens on deselect (ratification command not required). This indication is
   interpreted from the *Application Type* byte.
 | Returns     | A `Boolean` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCard_isSvFeatureAvailable]]
@@ -1102,7 +1103,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the SV feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the Stored Value feature, `false` otherwise.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_CalypsoCardApiFactory]]
@@ -1134,7 +1135,7 @@ asymmetric-key (PKI) cryptographic configuration required by
 supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentError` -- if the factory is invalid.
+| Errors      | `IllegalArgumentError` -- if the factory is invalid.
 |===
 
 [[op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension]]
@@ -1149,7 +1150,7 @@ supplied factory provides the cryptographic module that performs those computati
 <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and the optional pre-opening of a
 secure session.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createFreeTransactionManager]]
@@ -1171,7 +1172,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
 | Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSearchCommandData]]
@@ -1185,7 +1186,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | Creates an empty <<type_SearchCommandData,`SearchCommandData`>> used to configure and collect the results of
 <<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>.
 | Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager]]
@@ -1211,7 +1212,7 @@ Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager]]
@@ -1238,7 +1239,7 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
-| Throws      | `IllegalStateError` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
+| Errors      | `IllegalStateError` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
 |===
 
 [[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
@@ -1265,7 +1266,7 @@ PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting]]
@@ -1284,7 +1285,7 @@ symmetric-key (e.g. SAM-backed) cryptographic configuration required by the regu
 transaction managers. The supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
-| Throws      | `IllegalArgumentError` -- if the factory is invalid.
+| Errors      | `IllegalArgumentError` -- if the factory is invalid.
 |===
 
 [[type_CalypsoCardSelectionExtension]]
@@ -1327,7 +1328,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Since       | 1.0
 | Description | Requests to accept invalidated cards during the selection stage. *Works only with cards that indicate their invalidation status at the time of selection* (e.g., all PRIME Revision 3+ cards and certain PRIME Revision 2 cards).
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareGetData]]
@@ -1345,7 +1346,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
   some earlier revision cards.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_preparePreOpenSecureSession]]
@@ -1381,7 +1382,7 @@ The mechanism is *ineffective* if:
 * asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalStateError` -- if pre-open is already prepared.
+| Errors      | `IllegalStateError` -- if pre-open is already prepared.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadBinary]]
@@ -1408,7 +1409,7 @@ The mechanism is *ineffective* if:
   `offset` -- the offset (0 indicates the first byte). +
   `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadCounter]]
@@ -1434,7 +1435,7 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF. +
   `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadRecord]]
@@ -1459,7 +1460,7 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF to read. +
   `recordNumber` -- the record number to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
@@ -1472,7 +1473,7 @@ The mechanism is *ineffective* if:
 | Description | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
 | Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byControl]]
@@ -1492,7 +1493,7 @@ The mechanism is *ineffective* if:
   some earlier revision cards.
 | Parameters  | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_DirectoryHeader]]
@@ -1516,7 +1517,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns a reference to the access conditions.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_DirectoryHeader_getDfStatus]]
@@ -1528,7 +1529,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the status byte of the DF (Dedicated File) described by this header.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_DirectoryHeader_getKeyIndexes]]
@@ -1540,7 +1541,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns a reference to the keys indexes.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_DirectoryHeader_getKif]]
@@ -1553,7 +1554,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the KIF associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_DirectoryHeader_getKvc]]
@@ -1566,7 +1567,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the KVC associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_DirectoryHeader_getLid]]
@@ -1578,7 +1579,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `Short` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_ElementaryFile]]
@@ -1602,7 +1603,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the `FileData` object carrying this Elementary File's content.
 | Returns     | A <<type_FileData,`FileData`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_ElementaryFile_getHeader]]
@@ -1614,7 +1615,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the file header, or `null` if not yet set.
 | Returns     | A <<type_FileHeader,`FileHeader`>>, or `null` if not yet set.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_ElementaryFile_getSfi]]
@@ -1626,7 +1627,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the Short File Identifier (SFI) of this Elementary File.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_FileData]]
@@ -1650,7 +1651,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the values of all counters extracted from record #1.
 | Returns     | A `SortedMap<Int, Int>`; empty if no counter is known.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileData_getAllRecordsContent]]
@@ -1662,7 +1663,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the known content of every record, keyed by record number.
 | Returns     | A `SortedMap<Int, ByteArray>`; empty if no record content is known.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileData_getContent]]
@@ -1674,7 +1675,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
 | Returns     | A `ByteArray`; empty if the content is not known.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileData_getContent_byRecord]]
@@ -1687,7 +1688,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the known content of the supplied record number.
 | Parameters  | `numRecord` -- the record number.
 | Returns     | A `ByteArray`; empty if the record content is not known.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileData_getContent_byRange]]
@@ -1708,7 +1709,7 @@ The mechanism is *ineffective* if:
   `dataOffset` -- the offset index (should be >= 0). +
   `dataLength` -- the data length (should be >= 1).
 | Returns     | A `ByteArray`; empty if the content is not known.
-| Throws      | `IllegalArgumentError` -- if `dataOffset < 0` or `dataLength < 1`. +
+| Errors      | `IllegalArgumentError` -- if `dataOffset < 0` or `dataLength < 1`. +
   `IndexOutOfBoundsError` -- if the range exceeds the record content.
 |===
 
@@ -1722,7 +1723,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
 | Parameters  | `numCounter` -- the counter number (should be >= 1).
 | Returns     | An `Int` value, or `null` if record #1 or the requested counter is not set.
-| Throws      | `IllegalArgumentError` -- if `numCounter < 1`. +
+| Errors      | `IllegalArgumentError` -- if `numCounter < 1`. +
   `IndexOutOfBoundsError` -- if the counter is truncated.
 |===
 
@@ -1747,7 +1748,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the access conditions; empty array if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getDfStatus]]
@@ -1759,7 +1760,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
 | Returns     | A `Byte` value, or `null` if not available.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getEfType]]
@@ -1771,7 +1772,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
 | Returns     | An <<type_Type,`ElementaryFile.Type`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getKeyIndexes]]
@@ -1783,7 +1784,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the key indexes; empty array if not available.
 | Returns     | A `ByteArray`; empty if not available.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getLid]]
@@ -1795,7 +1796,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `Short` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getRecordSize]]
@@ -1810,7 +1811,7 @@ The mechanism is *ineffective* if:
   the remainder of the division of the file size by 3 -- are not accessible. For a *binary* file, this is the size
   of the file.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getRecordsNumber]]
@@ -1825,7 +1826,7 @@ The mechanism is *ineffective* if:
   file it is always `1` as well. For a counter file, the extra bytes -- the remainder of the division of the file
   size by 3 -- are not accessible.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_FileHeader_getSharedReference]]
@@ -1837,7 +1838,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
 | Returns     | A `Short` value (`0` if not shared), or `null` if the information is not available.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_FreeTransactionManager]]
@@ -1876,7 +1877,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Analyse the data at the supplied offset, then repeatedly at each following offset until the end of the record.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_fetchFirstMatchingResult]]
@@ -1888,7 +1889,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Requests to fetch the content of the first matching record into the `CalypsoCard`.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_getMatchingRecordNumbers]]
@@ -1900,7 +1901,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Returns the record numbers that matched.
 | Returns     | A `List<Int>`; empty if no record matched or if the command has not yet been processed.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_setMask]]
@@ -1913,7 +1914,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
 | Parameters  | `mask` -- the mask.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_setOffset]]
@@ -1926,7 +1927,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
 | Parameters  | `offset` -- the offset.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_setSearchData]]
@@ -1939,7 +1940,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the byte sequence to search for within the targeted record.
 | Parameters  | `data` -- the data to search.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_setSfi]]
@@ -1952,7 +1953,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the SFI of the EF in which the search is performed.
 | Parameters  | `sfi` -- the SFI of the EF.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SearchCommandData_startAtRecord]]
@@ -1965,7 +1966,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the record number at which the search begins (default: 1).
 | Parameters  | `recordNumber` -- the number of the record where the search should begin.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_SecureExtendedModeTransactionManager]]
@@ -1998,7 +1999,7 @@ The mechanism is *ineffective* if:
   <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
   and `prepareActivateEncryption` calls consecutively (in any order).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>>
 |===
@@ -2017,7 +2018,7 @@ The mechanism is *ineffective* if:
 
   NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>> +
                 <<op_SecureTransactionManager_prepareCloseSecureSession,`SecureTransactionManager.prepareCloseSecureSession`>>
@@ -2035,7 +2036,7 @@ The mechanism is *ineffective* if:
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Throws      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>>
 |===
@@ -2064,7 +2065,7 @@ sending sensitive commands).
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
 *Read One Or More Counters*, it will be merged with the session opening for optimisation.
 | Returns     | The current instance (<<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_SecureRegularModeTransactionManager]]
@@ -2106,7 +2107,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Returns the cryptographic nature of the session (symmetric vs asymmetric).
 | Returns     | A <<type_SecureSessionType,`SecureSessionType`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SecureSessionStatus_getWriteAccessLevel]]
@@ -2118,7 +2119,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Returns the write access level requested at session opening. Returns `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
 | Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>, or `null` in PKI mode.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SecureSessionStatus_isOpen]]
@@ -2130,7 +2131,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Indicates whether a secure session is open at the snapshot moment.
 | Returns     | A `Boolean` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_SecureSymmetricCryptoTransactionManager]]
@@ -2171,7 +2172,7 @@ in the crypto module.
 `issuerKif` -- the KIF of the current card's issuer key. +
 `issuerKvc` -- the KVC of the current card's issuer key.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the *Change Key* command is not available for this card. +
 `IllegalArgumentError` -- if the provided key index is out of range. +
 `IllegalStateError` -- if the command is executed while a secure session is open.
@@ -2190,7 +2191,7 @@ in the crypto module.
   the access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalStateError` -- if the card is already invalidated. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2214,7 +2215,7 @@ in the crypto module.
   <<op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening,`SymmetricCryptoSecuritySetting.disableReadOnSessionOpening`>>.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalStateError` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
@@ -2232,7 +2233,7 @@ in the crypto module.
   access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalStateError` -- if the card is not invalidated. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2261,7 +2262,7 @@ in the crypto module.
 `date`   -- a 2-byte free value. +
 `time`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalArgumentError` -- if one of the provided arguments is out of range. +
 `IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
@@ -2281,7 +2282,7 @@ in the crypto module.
   management operations.
 | Parameters  | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalArgumentError` -- if the provided argument is out of range. +
 `IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
@@ -2306,7 +2307,7 @@ in the crypto module.
 | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
 `svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
+| Errors      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
@@ -2332,7 +2333,7 @@ in the crypto module.
 `time`   -- a 2-byte free value. +
 `free`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalArgumentError` -- if one of the provided arguments is out of range. +
 `IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
@@ -2351,7 +2352,7 @@ in the crypto module.
   management operations.
 | Parameters  | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalArgumentError` -- if the provided argument is out of range. +
 `IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
 <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
@@ -2384,7 +2385,7 @@ in the crypto module.
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
 | Returns     | An `E : CardTransactionCryptoExtension`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SecureTransactionManager_prepareCancelSecureSession]]
@@ -2396,7 +2397,7 @@ in the crypto module.
 | Since       | 2.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises errors.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SecureTransactionManager_prepareCloseSecureSession]]
@@ -2412,7 +2413,7 @@ via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enable
 this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
 mode.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalStateError` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
+| Errors      | `IllegalStateError` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
 |===
 
 [[type_SvDebitLogRecord]]
@@ -2436,7 +2437,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the debit amount.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getBalance]]
@@ -2448,7 +2449,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV balance after the debit.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getDebitDate]]
@@ -2460,7 +2461,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte debit date.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getDebitTime]]
@@ -2472,7 +2473,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte debit time.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getKvc]]
@@ -2484,7 +2485,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the KVC of the debit key.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getRawData]]
@@ -2496,7 +2497,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the raw bytes of the debit log record.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getSamId]]
@@ -2508,7 +2509,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getSamTNum]]
@@ -2520,7 +2521,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvDebitLogRecord_getSvTNum]]
@@ -2532,7 +2533,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV transaction number.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_SvLoadLogRecord]]
@@ -2556,7 +2557,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the load amount.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getBalance]]
@@ -2568,7 +2569,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV balance after the load.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getFreeData]]
@@ -2580,7 +2581,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte free data.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getKvc]]
@@ -2592,7 +2593,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the KVC of the load key.
 | Returns     | A `Byte` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getLoadDate]]
@@ -2604,7 +2605,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte load date.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getLoadTime]]
@@ -2616,7 +2617,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte load time.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getRawData]]
@@ -2628,7 +2629,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the raw bytes of the load log record.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getSamId]]
@@ -2640,7 +2641,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
 | Returns     | A non-empty `ByteArray`.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getSamTNum]]
@@ -2652,7 +2653,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SvLoadLogRecord_getSvTNum]]
@@ -2664,7 +2665,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV transaction number.
 | Returns     | An `Int` value.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[type_SymmetricCryptoSecuritySetting]]
@@ -2695,7 +2696,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_addAuthorizedSvKey]]
@@ -2714,7 +2715,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignDefaultKif]]
@@ -2733,7 +2734,7 @@ mode.
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kif` -- the default KIF to use.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignDefaultKvc]]
@@ -2752,7 +2753,7 @@ mode.
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kvc` -- the default KVC to use.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignKif]]
@@ -2773,7 +2774,7 @@ mode.
   `kvc` -- the KVC provided by the card. +
   `kif` -- the KIF to associate with that KVC.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
@@ -2794,7 +2795,7 @@ mode.
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
@@ -2815,7 +2816,7 @@ mode.
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_allDf]]
@@ -2836,7 +2837,7 @@ mode.
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf]]
@@ -2857,7 +2858,7 @@ mode.
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_authorizeSvNegativeBalance]]
@@ -2869,7 +2870,7 @@ mode.
 | Since       | 2.0
 | Description | Allows the SV balance to become negative. Default: disabled.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening]]
@@ -2883,7 +2884,7 @@ mode.
 | Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the
   optimisation is performed; it may however be incompatible with the security requirements in some cases.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_enableMultipleSession]]
@@ -2895,7 +2896,7 @@ mode.
 | Since       | 2.0
 | Description | Enables multiple-session mode to handle more changes than the session buffer allows.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_enablePinPlainTransmission]]
@@ -2907,7 +2908,7 @@ mode.
 | Since       | 2.0
 | Description | Enables the PIN transmission in plain text.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_enableRatificationMechanism]]
@@ -2919,7 +2920,7 @@ mode.
 | Since       | 2.0
 | Description | Enables the ratification mechanism to handle early card removal preventing reception of the closing ACK.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_enableSvLoadAndDebitLog]]
@@ -2931,7 +2932,7 @@ mode.
 | Since       | 2.0
 | Description | Enables retrieval of both load *and* debit log records. Default: disabled.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_initCryptoContextForNextTransaction]]
@@ -2948,7 +2949,7 @@ mode.
   transaction. It is particularly relevant to optimise the transaction time in a ticketing context of user card
   validation. For the optimisation to be effective, this operation MUST be called at the very end of the current
   transaction, that is, *after* the user has been notified of the access right (e.g. after opening the gate).
-| Throws
+| Errors
 | <<type_Crypto,`Crypto`>> -- if an error occurred when computing a crypto operation. +
 <<type_CryptoIO,`CryptoIO`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
 |===
@@ -2969,7 +2970,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_setPinVerificationCipheringKey]]
@@ -2988,7 +2989,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[sec_csnmin]]
@@ -3038,7 +3039,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns a <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
 state. The returned object is immutable and captures the state at the moment of the call.
 | Returns     | A <<type_SecureSessionStatus,`SecureSessionStatus`>>.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_getTransactionAuditData]]
@@ -3050,7 +3051,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.2
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
 | Returns     | A `List<ByteArray>`; empty if no exchange has taken place.
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareAppendRecord]]
@@ -3073,7 +3074,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareChangePin]]
@@ -3091,7 +3092,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `newPin` -- the new PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
 `IllegalArgumentError` -- if the provided argument is out of range. +
 `IllegalStateError` -- if the command is executed while a secure session is open.
@@ -3110,7 +3111,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationError` -- if the PIN feature is not available for this card.
+| Errors      | `UnsupportedOperationError` -- if the PIN feature is not available for this card.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounter]]
@@ -3138,7 +3139,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounters]]
@@ -3162,7 +3163,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareGenerateAsymmetricKeyPair]]
@@ -3174,7 +3175,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 2.1
 | Description | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareGetData]]
@@ -3193,7 +3194,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getDirectoryHeader,`getDirectoryHeader`>>, depending on the supplied tag.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the *Get Data* command with the provided tag is not supported. +
 `IllegalStateError` -- if a secure session is open.
 |===
@@ -3222,7 +3223,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounters]]
@@ -3246,7 +3247,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_preparePutData]]
@@ -3265,7 +3266,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the *Put Data* command with the provided tag is not supported. +
 `IllegalArgumentError` -- if `data` is empty. +
 `IllegalStateError` -- if a secure session is open.
@@ -3298,7 +3299,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset`        -- the offset (`0` indicates the first byte). +
 `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if this command is not supported by this card. +
   `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
@@ -3329,7 +3330,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`              -- the SFI of the EF. +
 `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecord]]
@@ -3357,7 +3358,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecords]]
@@ -3389,7 +3390,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `toRecordNumber`   -- the number of the last record to read. +
 `recordSize`       -- the record length.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareReadRecordsPartially]]
@@ -3423,7 +3424,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset`           -- the offset in the records where to start reading (`0` indicates the first byte). +
 `nbBytesToRead`    -- the number of bytes to read from each record.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if this command is not supported by this card. +
 `IllegalArgumentError` -- if one of the provided arguments is out of range. +
 `IllegalStateError` -- if a secure session is open.
@@ -3451,7 +3452,7 @@ state. The returned object is immutable and captures the state at the moment of 
   (*best-effort* mode).
 | Parameters  | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the *Search Record Multiple* command is not available for this card. +
 `IllegalArgumentError` -- if the input data is inconsistent. +
 `IllegalStateError` -- if a secure session is open.
@@ -3474,7 +3475,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareSelectFile_byControl]]
@@ -3491,7 +3492,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns     | The current instance (`T`).
-| Throws      | None.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareSetCounter]]
@@ -3523,7 +3524,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `IllegalStateError` -- if the current counter value is unknown. +
   `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
@@ -3548,7 +3549,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>> and
   <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>.
 | Returns     | The current instance (`T`).
-| Throws      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
+| Errors      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
 |===
 
 [[op_TransactionManager_prepareUpdateBinary]]
@@ -3574,7 +3575,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the new data.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if this command is not supported by this card. +
   `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
@@ -3601,7 +3602,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 [[op_TransactionManager_prepareVerifyPin]]
@@ -3621,7 +3622,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `pin` -- the PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
 `IllegalArgumentError` -- if the provided argument is out of range.
 |===
@@ -3649,7 +3650,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the data to write over the existing data.
 | Returns     | The current instance (`T`).
-| Throws
+| Errors
 | `UnsupportedOperationError` -- if this command is not supported by this card. +
   `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
@@ -3676,7 +3677,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Throws      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
 |===
 
 === SPI Interfaces

@@ -256,7 +256,7 @@ Each operation defined in this document is described by a table of the form:
 | Description | A normative description of the operation's behaviour.
 | Parameters  | A description of each input parameter.
 | Returns     | A description of the returned value, if any.
-| Pre-conditions | The conditions the caller MUST satisfy before invoking the operation, each prefixed by its nature. Present only when applicable.
+| Pre-conditions | The conditions the caller MUST satisfy before invoking the operation, each prefixed by its nature.
 | Errors      | A list of error conditions a correct caller must handle, each mapped to a specific error type.
 | See also    | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
@@ -630,6 +630,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the Application Serial Number, an 8-byte value uniquely identifying the card application.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -642,6 +643,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the application subtype byte, which references the card's file structure.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -654,6 +656,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the application type byte, which encodes the product type together with its options.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -666,6 +669,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | CA certificate; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -681,6 +685,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | Card certificate; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -696,6 +701,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 2.1
 | Description | Card public key; empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>> +
@@ -714,6 +720,7 @@ Failed write commands do not update the in-memory image.
   representation of the target covered by the AID value supplied in the selection command: the AID selects the
   application by specifying all or part of the targeted DF name (5 bytes minimum).
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -726,6 +733,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Metadata of the current DF; `null` if not set.
 | Returns     | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(short)`>> +
                 <<op_CalypsoCardSelectionExtension_prepareSelectFile_byControl,`CalypsoCardSelectionExtension.prepareSelectFile(SelectFileControl)`>> +
@@ -778,6 +786,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.1
 | Description | All known EFs of the current DF. During a secure session, this set reflects every in-session modification (which is rolled back on session failure).
 | Returns     | A `Set<ElementaryFile>`; empty if no EF is known.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -805,6 +814,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the platform identification byte, which references the card's chip.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -817,6 +827,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the card product type (`PRIME_REVISION_1` / `PRIME_REVISION_2` / `PRIME_REVISION_3` / `LIGHT` / `BASIC` / `UNKNOWN`).
 | Returns     | A <<type_ProductType,`ProductType`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -829,6 +840,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the session modification byte, which -- depending on the card -- caps either the number of bytes modifiable or the number of write commands allowed within a secure session.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -841,6 +853,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software issuer byte, identifying the issuer of the card's embedded software.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -853,6 +866,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software revision byte of the card's embedded software.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -865,6 +879,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the software version byte of the card's embedded software.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -877,6 +892,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the raw Calypso startup information block -- the sequence of bytes from which the individual startup fields (platform, application type and subtype, software issuer, version and revision, etc.) are derived.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -907,6 +923,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | All SV debit log records read from the card.
 | Returns     | A `List<SvDebitLogRecord>`; empty if no debit log record has been read.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -924,6 +941,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Last SV debit log record; `null` if not available.
 | Returns     | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>, or `null` if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -959,6 +977,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Last SV load log record; `null` if not available.
 | Returns     | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>, or `null` if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
@@ -976,6 +995,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.1
 | Description | Traceability information (software issuer ID and discretionary data); empty if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_prepareGetData,`CalypsoCardSelectionExtension.prepareGetData`>> +
                 <<op_TransactionManager_prepareGetData,`TransactionManager.prepareGetData`>>
@@ -1013,6 +1033,7 @@ Failed write commands do not update the in-memory image.
   when the corresponding DF is invalidated. For older Calypso cards, it may be necessary to execute a *Select
   File* command in order to determine the invalidation status.
 | Returns     | `true` if the current DF has been invalidated, `false` otherwise.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1043,6 +1064,7 @@ Failed write commands do not update the in-memory image.
   Type* byte, but MAY be updated once the secure session is opened: depending on the type of key used, the
   extended mode functionalities may not be available (for example with a non-AES key).
 | Returns     | A `Boolean` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1055,6 +1077,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the card is a Calypso HCE.
 | Returns     | A `Boolean` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1082,6 +1105,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the Calypso PIN feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the PIN feature, `false` otherwise.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1096,6 +1120,7 @@ Failed write commands do not update the in-memory image.
 | Indicates whether Public Key Authentication is supported. This indication is interpreted from the *Application
   Type* byte.
 | Returns     | A `Boolean` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1110,6 +1135,7 @@ Failed write commands do not update the in-memory image.
 | Indicates whether ratification happens on deselect (ratification command not required). This indication is
   interpreted from the *Application Type* byte.
 | Returns     | A `Boolean` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1122,6 +1148,7 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the SV feature is available. This indication is interpreted from the *Application Type* byte.
 | Returns     | `true` if the card has the Stored Value feature, `false` otherwise.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1171,6 +1198,7 @@ supplied factory provides the cryptographic module that performs those computati
 <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and the optional pre-opening of a
 secure session.
 | Returns     | A <<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1208,6 +1236,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | Creates an empty <<type_SearchCommandData,`SearchCommandData`>> used to configure and collect the results of
 <<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>.
 | Returns     | A <<type_SearchCommandData,`SearchCommandData`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1356,6 +1385,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Since       | 1.0
 | Description | Requests to accept invalidated cards during the selection stage. *Works only with cards that indicate their invalidation status at the time of selection* (e.g., all PRIME Revision 3+ cards and certain PRIME Revision 2 cards).
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1556,6 +1586,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns a reference to the access conditions.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1568,6 +1599,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the status byte of the DF (Dedicated File) described by this header.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1580,6 +1612,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns a reference to the keys indexes.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1620,6 +1653,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `Short` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1644,6 +1678,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the `FileData` object carrying this Elementary File's content.
 | Returns     | A <<type_FileData,`FileData`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1656,6 +1691,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the file header, or `null` if not yet set.
 | Returns     | A <<type_FileHeader,`FileHeader`>>, or `null` if not yet set.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1668,6 +1704,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the Short File Identifier (SFI) of this Elementary File.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1692,6 +1729,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the values of all counters extracted from record #1.
 | Returns     | A `SortedMap<Int, Int>`; empty if no counter is known.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1704,6 +1742,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the known content of every record, keyed by record number.
 | Returns     | A `SortedMap<Int, ByteArray>`; empty if no record content is known.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1716,6 +1755,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the known content of record #1 (or the entire content for a binary file).
 | Returns     | A `ByteArray`; empty if the content is not known.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1794,6 +1834,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the access conditions; empty array if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1806,6 +1847,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
 | Returns     | A `Byte` value, or `null` if not available.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1818,6 +1860,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
 | Returns     | An <<type_Type,`ElementaryFile.Type`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1830,6 +1873,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the key indexes; empty array if not available.
 | Returns     | A `ByteArray`; empty if not available.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1842,6 +1886,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
 | Returns     | A `Short` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1857,6 +1902,7 @@ The mechanism is *ineffective* if:
   the remainder of the division of the file size by 3 -- are not accessible. For a *binary* file, this is the size
   of the file.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1872,6 +1918,7 @@ The mechanism is *ineffective* if:
   file it is always `1` as well. For a counter file, the extra bytes -- the remainder of the division of the file
   size by 3 -- are not accessible.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1884,6 +1931,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.0
 | Description | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
 | Returns     | A `Short` value (`0` if not shared), or `null` if the information is not available.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1923,6 +1971,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Analyse the data at the supplied offset, then repeatedly at each following offset until the end of the record.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1935,6 +1984,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Requests to fetch the content of the first matching record into the `CalypsoCard`.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -1947,6 +1997,7 @@ The mechanism is *ineffective* if:
 | Since       | 1.1
 | Description | Returns the record numbers that matched.
 | Returns     | A `List<Int>`; empty if no record matched or if the command has not yet been processed.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2119,6 +2170,7 @@ sending sensitive commands).
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
 *Read One Or More Counters*, it will be merged with the session opening for optimisation.
 | Returns     | The current instance (<<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2161,6 +2213,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Returns the cryptographic nature of the session (symmetric vs asymmetric).
 | Returns     | A <<type_SecureSessionType,`SecureSessionType`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2173,6 +2226,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Returns the write access level requested at session opening. Returns `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
 | Returns     | A <<type_WriteAccessLevel,`WriteAccessLevel`>>, or `null` in PKI mode.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2185,6 +2239,7 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 | Since       | 3.0
 | Description | Indicates whether a secure session is open at the snapshot moment.
 | Returns     | A `Boolean` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2454,6 +2509,7 @@ in the crypto module.
 | Since       | 2.0
 | Description | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises errors.
 | Returns     | The current instance (`T`).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2495,6 +2551,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the debit amount.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2507,6 +2564,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV balance after the debit.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2519,6 +2577,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte debit date.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2531,6 +2590,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte debit time.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2543,6 +2603,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the KVC of the debit key.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2555,6 +2616,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the raw bytes of the debit log record.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2567,6 +2629,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2579,6 +2642,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2591,6 +2655,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV transaction number.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2615,6 +2680,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the load amount.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2627,6 +2693,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV balance after the load.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2639,6 +2706,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte free data.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2651,6 +2719,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the KVC of the load key.
 | Returns     | A `Byte` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2663,6 +2732,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte load date.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2675,6 +2745,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 2-byte load time.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2687,6 +2758,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the raw bytes of the load log record.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2699,6 +2771,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the 4-byte SAM ID.
 | Returns     | A non-empty `ByteArray`.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2711,6 +2784,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SAM transaction number.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2723,6 +2797,7 @@ mode.
 | Since       | 1.0
 | Description | Returns the SV transaction number.
 | Returns     | An `Int` value.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2937,6 +3012,7 @@ mode.
 | Since       | 2.0
 | Description | Allows the SV balance to become negative. Default: disabled.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2951,6 +3027,7 @@ mode.
 | Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the
   optimisation is performed; it may however be incompatible with the security requirements in some cases.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2963,6 +3040,7 @@ mode.
 | Since       | 2.0
 | Description | Enables multiple-session mode to handle more changes than the session buffer allows.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2975,6 +3053,7 @@ mode.
 | Since       | 2.0
 | Description | Enables the PIN transmission in plain text.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2987,6 +3066,7 @@ mode.
 | Since       | 2.0
 | Description | Enables the ratification mechanism to handle early card removal preventing reception of the closing ACK.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -2999,6 +3079,7 @@ mode.
 | Since       | 2.0
 | Description | Enables retrieval of both load *and* debit log records. Default: disabled.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -3016,6 +3097,7 @@ mode.
   transaction. It is particularly relevant to optimise the transaction time in a ticketing context of user card
   validation. For the optimisation to be effective, this operation MUST be called at the very end of the current
   transaction, that is, *after* the user has been notified of the access right (e.g. after opening the gate).
+| Pre-conditions | None.
 | Errors
 | <<type_Crypto,`Crypto`>> -- if an error occurred when computing a crypto operation. +
 <<type_CryptoIO,`CryptoIO`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
@@ -3108,6 +3190,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns a <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
 state. The returned object is immutable and captures the state at the moment of the call.
 | Returns     | A <<type_SecureSessionStatus,`SecureSessionStatus`>>.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -3120,6 +3203,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 1.2
 | Description | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
 | Returns     | A `List<ByteArray>`; empty if no exchange has taken place.
+| Pre-conditions | None.
 | Errors      | None.
 |===
 
@@ -3251,6 +3335,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since       | 2.1
 | Description | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
 | Returns     | The current instance (`T`).
+| Pre-conditions | None.
 | Errors      | None.
 |===
 

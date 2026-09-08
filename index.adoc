@@ -256,7 +256,8 @@ Each operation defined in this document is described by a table of the form:
 | Description | A normative description of the operation's behaviour.
 | Parameters  | A description of each input parameter.
 | Returns     | A description of the returned value, if any.
-| Errors      | A list of error conditions, each mapped to a specific error type.
+| Pre-conditions | The conditions the caller MUST satisfy before invoking the operation, each prefixed by its nature. Present only when applicable.
+| Errors      | A list of error conditions a correct caller must handle, each mapped to a specific error type.
 | See also    | Cross-references to related operations or types, each a hyperlink to the corresponding table. Present only when applicable.
 |===
 
@@ -265,10 +266,14 @@ Each operation defined in this document is described by a table of the form:
 To avoid repetition, the following rules apply to every operation table in <<sec_specification>> and are therefore
 not restated for each operation:
 
-* *Non-`null` arguments.* Unless explicitly stated otherwise, every input parameter being non-`null` is an
-  implicit pre-condition of the operation. Checking it is the responsibility of the implementation, and failing
-  to meet that pre-condition MUST raise an illegal argument error. This implicit check is not restated in the
-  *Errors* row, which states `None.` when no other error can occur.
+* *Pre-conditions.* The *Pre-conditions* row states what the caller MUST guarantee before invoking the
+  operation. Violating one is a contract error, never listed in the *Errors* row, which describes only the
+  outcomes a correct caller must handle. Each entry is prefixed by its nature, which determines the error
+  raised when the condition is not met:
+** *Argument* -- an illegal argument error.
+** *Range* -- an index out of bounds error.
+** *State* -- an illegal state error.
+** *Capability* -- an unsupported operation error.
 * *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
   operation returns a non-`null` value.
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
@@ -478,9 +483,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   details, and compliance with any constraints or extensions required for CA certificates.
 | Parameters  | `caCertificate` (<<type_CaCertificate,`CaCertificate`>>) -- the CA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Errors
-| `IllegalStateError` -- if the contained public key has already been registered. +
-  <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- the contained public key is not already registered.
+| Errors      | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 | See also    | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
 |===
 
@@ -499,7 +504,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   the means to build a CA certificate from the raw data read from the card.
 | Parameters  | `caCertificateParser` (<<type_CaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Errors      | `IllegalStateError` -- if a parser is already registered for the same certificate type.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- no parser is registered for the same certificate type.
+| Errors      | None.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
@@ -517,7 +524,9 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   read from the card. Only one parser MAY be registered per certificate type.
 | Parameters  | `cardCertificateParser` (<<type_CardCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Errors      | `IllegalStateError` -- if a parser associated with the same certificate type is already registered.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- no parser is registered for the same certificate type.
+| Errors      | None.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
@@ -539,10 +548,10 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   details, and compliance with any constraints or extensions required for PCA certificates.
 | Parameters  | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
-| Errors
-| `IllegalArgumentError` -- if the certificate is invalid. +
-  `IllegalStateError` -- if the contained public key has already been registered. +
-  <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- the certificate is valid. +
+  *State* -- the contained public key is not already registered.
+| Errors      | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
@@ -563,6 +572,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -586,6 +596,7 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -736,6 +747,7 @@ Failed write commands do not update the in-memory image.
   which are rolled back if the secure session fails.
 | Parameters  | `lid` -- the LID to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -753,6 +765,7 @@ Failed write commands do not update the in-memory image.
   which are rolled back if the secure session fails.
 | Parameters  | `sfi` -- the SFI to search.
 | Returns     | An <<type_ElementaryFile,`ElementaryFile`>>, or `null` if not found, or if `sfi == 0`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -777,7 +790,8 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of PIN presentation attempts still remaining before the PIN becomes blocked.
 | Returns     | An `Int` value.
-| Errors      | `IllegalStateError` -- if the PIN has not been checked.
+| Pre-conditions | *State* -- the PIN has been checked.
+| Errors      | None.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -875,7 +889,8 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the current Stored Value (SV) balance held by the card, expressed in its monetary unit.
 | Returns     | An `Int` value.
-| Errors      | `IllegalStateError` -- if no SV Get has been executed.
+| Pre-conditions | *State* -- an *SV Get* command has been executed.
+| Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -926,7 +941,8 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Returns the number of the last Stored Value (SV) transaction recorded on the card.
 | Returns     | An `Int` value.
-| Errors      | `IllegalStateError` -- if no SV Get command has been executed.
+| Pre-conditions | *State* -- an *SV Get* command has been executed.
+| Errors      | None.
 | See also    | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
@@ -976,7 +992,8 @@ Failed write commands do not update the in-memory image.
 
 *Note:* commands such as *Change Key*, *Change/Verify PIN*, *SV Debit/Undebit/Reload* decrement the card counter but do not update this returned value.
 | Returns     | An `Int` value.
-| Errors      | `IllegalStateError` -- if no session has been opened.
+| Pre-conditions | *State* -- a secure session is open.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -1008,7 +1025,8 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Tells whether the last session has been ratified.
 | Returns     | A `Boolean` value.
-| Errors      | `IllegalStateError` -- if no session has been opened.
+| Pre-conditions | *State* -- a secure session is open.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>> +
                 <<op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession,`SecureSymmetricCryptoTransactionManager.prepareOpenSecureSession`>>
 |===
@@ -1049,7 +1067,8 @@ Failed write commands do not update the in-memory image.
 | Since       | 1.0
 | Description | Indicates whether the PIN is blocked.
 | Returns     | A `Boolean` value.
-| Errors      | `IllegalStateError` -- if the PIN has not been checked.
+| Pre-conditions | *State* -- the PIN has been checked.
+| Errors      | None.
 | See also    | <<op_TransactionManager_prepareCheckPinStatus,`TransactionManager.prepareCheckPinStatus`>> +
                 <<op_TransactionManager_prepareVerifyPin,`TransactionManager.prepareVerifyPin`>>
 |===
@@ -1135,7 +1154,9 @@ asymmetric-key (PKI) cryptographic configuration required by
 supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
-| Errors      | `IllegalArgumentError` -- if the factory is invalid.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- the factory is valid.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension]]
@@ -1172,6 +1193,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction.
 | Returns     | A <<type_FreeTransactionManager,`FreeTransactionManager`>>.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1212,6 +1234,7 @@ Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1239,7 +1262,9 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
-| Errors      | `IllegalStateError` -- if the card does not support PKI mode (`isPkiModeSupported() == false`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- the card supports PKI mode (`isPkiModeSupported() == true`).
+| Errors      | None.
 |===
 
 [[op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager]]
@@ -1266,6 +1291,7 @@ PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
 `securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
 | Returns     | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1285,7 +1311,9 @@ symmetric-key (e.g. SAM-backed) cryptographic configuration required by the regu
 transaction managers. The supplied factory provides the cryptographic module that performs those computations.
 | Parameters  | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
 | Returns     | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
-| Errors      | `IllegalArgumentError` -- if the factory is invalid.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- the factory is valid.
+| Errors      | None.
 |===
 
 [[type_CalypsoCardSelectionExtension]]
@@ -1346,6 +1374,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
   some earlier revision cards.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1382,7 +1411,9 @@ The mechanism is *ineffective* if:
 * asymmetric cryptography is used.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Errors      | `IllegalStateError` -- if pre-open is already prepared.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- no pre-open is already prepared.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadBinary]]
@@ -1409,7 +1440,9 @@ The mechanism is *ineffective* if:
   `offset` -- the offset (0 indicates the first byte). +
   `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadCounter]]
@@ -1435,7 +1468,9 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF. +
   `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareReadRecord]]
@@ -1460,7 +1495,9 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF to read. +
   `recordNumber` -- the record number to read.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
@@ -1473,6 +1510,7 @@ The mechanism is *ineffective* if:
 | Description | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
 | Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1493,6 +1531,7 @@ The mechanism is *ineffective* if:
   some earlier revision cards.
 | Parameters  | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
 | Returns     | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1554,6 +1593,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the KIF associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
 | Returns     | A `Byte` value.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1567,6 +1607,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the KVC associated with the supplied write access level.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
 | Returns     | A `Byte` value.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1688,6 +1729,7 @@ The mechanism is *ineffective* if:
 | Description | Returns the known content of the supplied record number.
 | Parameters  | `numRecord` -- the record number.
 | Returns     | A `ByteArray`; empty if the record content is not known.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1709,8 +1751,10 @@ The mechanism is *ineffective* if:
   `dataOffset` -- the offset index (should be >= 0). +
   `dataLength` -- the data length (should be >= 1).
 | Returns     | A `ByteArray`; empty if the content is not known.
-| Errors      | `IllegalArgumentError` -- if `dataOffset < 0` or `dataLength < 1`. +
-  `IndexOutOfBoundsError` -- if the range exceeds the record content.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `dataOffset` is not negative and `dataLength` is at least 1. +
+  *Range* -- the range stays within the record content.
+| Errors      | None.
 |===
 
 [[op_FileData_getContentAsCounterValue]]
@@ -1723,8 +1767,10 @@ The mechanism is *ineffective* if:
 | Description | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
 | Parameters  | `numCounter` -- the counter number (should be >= 1).
 | Returns     | An `Int` value, or `null` if record #1 or the requested counter is not set.
-| Errors      | `IllegalArgumentError` -- if `numCounter < 1`. +
-  `IndexOutOfBoundsError` -- if the counter is truncated.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `numCounter` is at least 1. +
+  *Range* -- the counter is not truncated.
+| Errors      | None.
 |===
 
 [[type_FileHeader]]
@@ -1914,6 +1960,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
 | Parameters  | `mask` -- the mask.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1927,6 +1974,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
 | Parameters  | `offset` -- the offset.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1940,6 +1988,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the byte sequence to search for within the targeted record.
 | Parameters  | `data` -- the data to search.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1953,6 +2002,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the SFI of the EF in which the search is performed.
 | Parameters  | `sfi` -- the SFI of the EF.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1966,6 +2016,7 @@ The mechanism is *ineffective* if:
 | Description | Sets the record number at which the search begins (default: 1).
 | Parameters  | `recordNumber` -- the number of the record where the search should begin.
 | Returns     | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -1999,7 +2050,8 @@ The mechanism is *ineffective* if:
   <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
   and `prepareActivateEncryption` calls consecutively (in any order).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Errors      | None.
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>>
 |===
@@ -2018,7 +2070,8 @@ The mechanism is *ineffective* if:
 
   NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Errors      | None.
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>> +
                 <<op_SecureTransactionManager_prepareCloseSecureSession,`SecureTransactionManager.prepareCloseSecureSession`>>
@@ -2036,7 +2089,8 @@ The mechanism is *ineffective* if:
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
 | Returns     | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
-| Errors      | `UnsupportedOperationError` -- if the *Manage Secure Session* command is not available for this context (the card and/or the cryptographic module does not support the extended mode).
+| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Errors      | None.
 | See also    | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                 <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>>
 |===
@@ -2172,10 +2226,11 @@ in the crypto module.
 `issuerKif` -- the KIF of the current card's issuer key. +
 `issuerKvc` -- the KVC of the current card's issuer key.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the *Change Key* command is not available for this card. +
-`IllegalArgumentError` -- if the provided key index is out of range. +
-`IllegalStateError` -- if the command is executed while a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the *Change Key* command is available for this card. +
+  *Argument* -- the provided key index is within range. +
+  *State* -- no secure session is open.
+| Errors      | None.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareInvalidate]]
@@ -2191,9 +2246,8 @@ in the crypto module.
   the access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalStateError` -- if the card is already invalidated. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *State* -- the card is not already invalidated.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareOpenSecureSession]]
@@ -2215,8 +2269,9 @@ in the crypto module.
   <<op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening,`SymmetricCryptoSecuritySetting.disableReadOnSessionOpening`>>.
 | Parameters  | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalStateError` -- in one of the following cases: no <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, a secure session opening is already prepared, or a secure session is already opened.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- a <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, no secure session opening is already prepared, and no secure session is already open.
+| Errors      | None.
 | See also    | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
 
@@ -2233,9 +2288,8 @@ in the crypto module.
   access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalStateError` -- if the card is not invalidated. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *State* -- the card is invalidated.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
@@ -2262,10 +2316,10 @@ in the crypto module.
 `date`   -- a 2-byte free value. +
 `time`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalArgumentError` -- if one of the provided arguments is out of range. +
-`IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every provided argument is within range. +
+  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
@@ -2282,10 +2336,10 @@ in the crypto module.
   management operations.
 | Parameters  | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalArgumentError` -- if the provided argument is out of range. +
-`IllegalStateError` -- in one of the following cases: the new value is negative and negative balances are not allowed, another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- the provided argument is within range. +
+  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvGet]]
@@ -2307,7 +2361,9 @@ in the crypto module.
 | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
 `svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
 | Returns     | The current instance (`T`).
-| Errors      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the SV feature is available for this card.
+| Errors      | None.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
@@ -2333,10 +2389,10 @@ in the crypto module.
 `time`   -- a 2-byte free value. +
 `free`   -- a 2-byte free value.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalArgumentError` -- if one of the provided arguments is out of range. +
-`IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every provided argument is within range. +
+  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
@@ -2352,10 +2408,10 @@ in the crypto module.
   management operations.
 | Parameters  | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalArgumentError` -- if the provided argument is out of range. +
-`IllegalStateError` -- in one of the following cases: another SV command was already prepared inside the same secure session, the SV command is not placed in the first position in the list of prepared commands, the SV command does not follow an *SV Get* command, or the command and the SV operation are not consistent. +
-<<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- the provided argument is within range. +
+  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+| Errors      | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
 [[type_SecureTransactionManager]]
@@ -2385,6 +2441,7 @@ in the crypto module.
 | Description | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
 | Parameters  | `cryptoExtensionClass` -- the class of the crypto extension.
 | Returns     | An `E : CardTransactionCryptoExtension`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2413,7 +2470,8 @@ via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enable
 this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
 mode.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalStateError` -- in one of the following cases: no secure session is opened and no secure session opening is prepared, a secure session closing is already prepared, or a secure session cancelling is prepared.
+| Pre-conditions | *State* -- a secure session is open or its opening is prepared, and neither a closing nor a cancelling is already prepared.
+| Errors      | None.
 |===
 
 [[type_SvDebitLogRecord]]
@@ -2696,6 +2754,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2715,6 +2774,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2734,6 +2794,7 @@ mode.
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kif` -- the default KIF to use.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2753,6 +2814,7 @@ mode.
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kvc` -- the default KVC to use.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2774,6 +2836,7 @@ mode.
   `kvc` -- the KVC provided by the card. +
   `kif` -- the KIF to associate with that KVC.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2795,6 +2858,7 @@ mode.
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2816,6 +2880,7 @@ mode.
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2837,6 +2902,7 @@ mode.
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2858,6 +2924,7 @@ mode.
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2970,6 +3037,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -2989,6 +3057,7 @@ mode.
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
 | Returns     | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -3074,7 +3143,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareChangePin]]
@@ -3092,10 +3163,11 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `newPin` -- the new PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
-`IllegalArgumentError` -- if the provided argument is out of range. +
-`IllegalStateError` -- if the command is executed while a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the PIN feature is available for this card. +
+  *Argument* -- the provided argument is within range. +
+  *State* -- no secure session is open.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareCheckPinStatus]]
@@ -3111,7 +3183,8 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Returns     | The current instance (`T`).
-| Errors      | `UnsupportedOperationError` -- if the PIN feature is not available for this card.
+| Pre-conditions | *Capability* -- the PIN feature is available for this card.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounter]]
@@ -3139,7 +3212,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounters]]
@@ -3163,6 +3238,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
 | Returns     | The current instance (`T`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -3194,9 +3270,10 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getDirectoryHeader,`getDirectoryHeader`>>, depending on the supplied tag.
 | Parameters  | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the *Get Data* command with the provided tag is not supported. +
-`IllegalStateError` -- if a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the *Get Data* command is supported for the provided tag. +
+  *State* -- no secure session is open.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounter]]
@@ -3223,7 +3300,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounters]]
@@ -3247,6 +3326,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
 | Returns     | The current instance (`T`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -3266,10 +3346,11 @@ state. The returned object is immutable and captures the state at the moment of 
 | `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the *Put Data* command with the provided tag is not supported. +
-`IllegalArgumentError` -- if `data` is empty. +
-`IllegalStateError` -- if a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the *Put Data* command is supported for the provided tag. +
+  *Argument* -- `data` is not empty. +
+  *State* -- no secure session is open.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareReadBinary]]
@@ -3299,9 +3380,10 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset`        -- the offset (`0` indicates the first byte). +
 `nbBytesToRead` -- the number of bytes to read.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if this command is not supported by this card. +
-  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- this command is supported by this card. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareReadCounter]]
@@ -3330,7 +3412,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`              -- the SFI of the EF. +
 `nbCountersToRead` -- the number of counters to read.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareReadRecord]]
@@ -3358,7 +3442,9 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareReadRecords]]
@@ -3390,7 +3476,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `toRecordNumber`   -- the number of the last record to read. +
 `recordSize`       -- the record length.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareReadRecordsPartially]]
@@ -3424,10 +3512,11 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset`           -- the offset in the records where to start reading (`0` indicates the first byte). +
 `nbBytesToRead`    -- the number of bytes to read from each record.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if this command is not supported by this card. +
-`IllegalArgumentError` -- if one of the provided arguments is out of range. +
-`IllegalStateError` -- if a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- this command is supported by this card. +
+  *Argument* -- every provided argument is within range. +
+  *State* -- no secure session is open.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareSearchRecords]]
@@ -3452,10 +3541,11 @@ state. The returned object is immutable and captures the state at the moment of 
   (*best-effort* mode).
 | Parameters  | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the *Search Record Multiple* command is not available for this card. +
-`IllegalArgumentError` -- if the input data is inconsistent. +
-`IllegalStateError` -- if a secure session is open.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the *Search Record Multiple* command is available for this card. +
+  *Argument* -- the input data is consistent. +
+  *State* -- no secure session is open.
+| Errors      | None.
 | See also    | <<type_SearchCommandData,`SearchCommandData`>>
 |===
 
@@ -3475,6 +3565,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `lid` -- the LID of the EF to select.
 | Returns     | The current instance (`T`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -3492,6 +3583,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
 | Parameters  | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns     | The current instance (`T`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors      | None.
 |===
 
@@ -3524,9 +3616,10 @@ state. The returned object is immutable and captures the state at the moment of 
 `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
 | Returns     | The current instance (`T`).
-| Errors
-| `IllegalStateError` -- if the current counter value is unknown. +
-  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *State* -- the current counter value is known. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareSvReadAllLogs]]
@@ -3549,7 +3642,8 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>> and
   <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>.
 | Returns     | The current instance (`T`).
-| Errors      | `UnsupportedOperationError` -- if the SV feature is not available for this card.
+| Pre-conditions | *Capability* -- the SV feature is available for this card.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareUpdateBinary]]
@@ -3575,9 +3669,10 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the new data.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if this command is not supported by this card. +
-  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- this command is supported by this card. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareUpdateRecord]]
@@ -3602,7 +3697,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareVerifyPin]]
@@ -3622,9 +3719,10 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters  | `pin` -- the PIN code value (4-byte long `ByteArray`).
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if the PIN feature is not available for this card. +
-`IllegalArgumentError` -- if the provided argument is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- the PIN feature is available for this card. +
+  *Argument* -- the provided argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareWriteBinary]]
@@ -3650,9 +3748,10 @@ state. The returned object is immutable and captures the state at the moment of 
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the data to write over the existing data.
 | Returns     | The current instance (`T`).
-| Errors
-| `UnsupportedOperationError` -- if this command is not supported by this card. +
-  `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Capability* -- this command is supported by this card. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 [[op_TransactionManager_prepareWriteRecord]]
@@ -3677,7 +3776,9 @@ state. The returned object is immutable and captures the state at the moment of 
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
 | Returns     | The current instance (`T`).
-| Errors      | `IllegalArgumentError` -- if one of the supplied arguments is out of range.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- every supplied argument is within range.
+| Errors      | None.
 |===
 
 === SPI Interfaces

@@ -18,6 +18,8 @@ include::assets/legal/_license-cc-by-nd-4.0.adoc[]
 // Revision (bumped every edition)
 :revnumber: 3.0.0-SNAPSHOT
 :revdate: 2026-07-20
+// API version exposed by the VERSION constant: MAJOR.MINOR of revnumber
+:api-version: 3.0
 //
 // ============================================================================
 // Document-specific constants (local — differ per spec)
@@ -427,7 +429,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 [[sec_specification]]
 == API Specification
 
-=== Classes
+=== Constants
 
 [[type_CalypsoCardApiProperties]]
 ==== Calypso Card API Properties
@@ -435,18 +437,18 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Name       | `CalypsoCardApiProperties`
-| Kind       | Final class
+| Kind       | Constants
 | Namespace  | `calypso.card`
 | Since      | 1.0
 | Purpose    | Exposes the immutable properties of the {doc-name}.
 |===
 
-===== Constants
-
 [cols="^.^1,^.^1,^.^1,.^4", options="header"]
 |===
 | Name      | Type     | Since | Description
-| `VERSION` | `String` | 1.0 | String representation of the API version (e.g. `"3.0"`).
+
+| `VERSION` | `String` | 1.0 | String representation of the version of the API implemented by the conforming binding.
+  The value is a dotted decimal of the form `MAJOR.MINOR`; it is `"{api-version}"` for this revision of the specification.
 |===
 
 === API Interfaces

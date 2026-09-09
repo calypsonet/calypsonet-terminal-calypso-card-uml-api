@@ -434,11 +434,11 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CalypsoCardApiProperties`
-| Kind     | Final class
+| Name       | `CalypsoCardApiProperties`
+| Kind       | Final class
 | Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Exposes the immutable properties of the {doc-name}.
+| Since      | 1.0
+| Purpose    | Exposes the immutable properties of the {doc-name}.
 |===
 
 ===== Constants
@@ -456,11 +456,11 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `AsymmetricCryptoSecuritySetting`
-| Kind     | Interface
+| Name       | `AsymmetricCryptoSecuritySetting`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.1
-| Purpose  | Security setting carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySetting`>>.
+| Since      | 2.1
+| Purpose    | Security setting carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySetting`>>.
 |===
 
 [[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
@@ -605,12 +605,12 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CalypsoCard`
-| Kind     | Interface
+| Name       | `CalypsoCard`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Extends  | `IsoSmartCard` (<<ref_cna_tr,CNA-TR-API>>)
-| Since    | 1.0
-| Purpose  | Dynamic view of the card's content, updated from selection to the end of the transaction.
+| Extends    | `IsoSmartCard` (<<ref_cna_tr,CNA-TR-API>>)
+| Since      | 1.0
+| Purpose    | Dynamic view of the card's content, updated from selection to the end of the transaction.
 |===
 
 An instance of `CalypsoCard` is obtained by casting the `IsoSmartCard` object produced by the selection process
@@ -1157,11 +1157,11 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CalypsoCardApiFactory`
-| Kind     | Interface
+| Name       | `CalypsoCardApiFactory`
+| Kind       | Interface
 | Namespace  | `calypso.card`
-| Since    | 2.0
-| Purpose  | Factory used to obtain instances of every public type provided by the API.
+| Since      | 2.0
+| Purpose    | Factory used to obtain instances of every public type provided by the API.
 |===
 
 [[op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting]]
@@ -1350,12 +1350,12 @@ transaction managers. The supplied factory provides the cryptographic module tha
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CalypsoCardSelectionExtension`
-| Kind     | Interface
+| Name       | `CalypsoCardSelectionExtension`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Extends  | `CardSelectionExtension` (<<ref_cna_tr,CNA-TR-API>>)
-| Since    | 2.0
-| Purpose  | Enriches the <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and pre-opening of a secure session. An instance is obtained via <<op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension,`CalypsoCardApiFactory.createCalypsoCardSelectionExtension`>>.
+| Extends    | `CardSelectionExtension` (<<ref_cna_tr,CNA-TR-API>>)
+| Since      | 2.0
+| Purpose    | Enriches the <<ref_cna_tr,CNA-TR-API>> selection scenario with Calypso-specific commands and pre-opening of a secure session. An instance is obtained via <<op_CalypsoCardApiFactory_createCalypsoCardSelectionExtension,`CalypsoCardApiFactory.createCalypsoCardSelectionExtension`>>.
 |===
 
 By default the selection rejects PRIME revision 3 cards that have been *invalidated*.
@@ -1570,11 +1570,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `DirectoryHeader`
-| Kind     | Interface
+| Name       | `DirectoryHeader`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | Carries the metadata of a Calypso DF.
+| Since      | 1.0
+| Purpose    | Carries the metadata of a Calypso DF.
 |===
 
 [[op_DirectoryHeader_getAccessConditions]]
@@ -1662,11 +1662,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `ElementaryFile`
-| Kind     | Interface
+| Name       | `ElementaryFile`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | Calypso Elementary File. Carries an `SFI`, a `FileHeader` and a `FileData`.
+| Since      | 1.0
+| Purpose    | Calypso Elementary File. Carries an `SFI`, a `FileHeader` and a `FileData`.
 |===
 
 [[op_ElementaryFile_getData]]
@@ -1713,11 +1713,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `FileData`
-| Kind     | Interface
+| Name       | `FileData`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | Carries the content of a Calypso EF and exposes counter-oriented accessors.
+| Since      | 1.0
+| Purpose    | Carries the content of a Calypso EF and exposes counter-oriented accessors.
 |===
 
 [[op_FileData_getAllCountersValue]]
@@ -1818,11 +1818,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `FileHeader`
-| Kind     | Interface
+| Name       | `FileHeader`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | Carries the metadata of a Calypso EF.
+| Since      | 1.0
+| Purpose    | Carries the metadata of a Calypso EF.
 |===
 
 [[op_FileHeader_getAccessConditions]]
@@ -1940,12 +1940,12 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `FreeTransactionManager`
-| Kind     | Interface
+| Name       | `FreeTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends  | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
-| Since    | 2.0
-| Purpose  | Transaction manager that does *not* require any cryptographic computation. An instance is obtained via <<op_CalypsoCardApiFactory_createFreeTransactionManager,`CalypsoCardApiFactory.createFreeTransactionManager`>>.
+| Extends    | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
+| Since      | 2.0
+| Purpose    | Transaction manager that does *not* require any cryptographic computation. An instance is obtained via <<op_CalypsoCardApiFactory_createFreeTransactionManager,`CalypsoCardApiFactory.createFreeTransactionManager`>>.
 |===
 
 `FreeTransactionManager` does not add any operation.
@@ -1955,11 +1955,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SearchCommandData`
-| Kind     | Interface
+| Name       | `SearchCommandData`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.1
-| Purpose  | Carries the input/output data of `TransactionManager.prepareSearchRecords`. An instance is obtained via <<op_CalypsoCardApiFactory_createSearchCommandData,`CalypsoCardApiFactory.createSearchCommandData`>>.
+| Since      | 1.1
+| Purpose    | Carries the input/output data of `TransactionManager.prepareSearchRecords`. An instance is obtained via <<op_CalypsoCardApiFactory_createSearchCommandData,`CalypsoCardApiFactory.createSearchCommandData`>>.
 |===
 
 [[op_SearchCommandData_enableRepeatedOffset]]
@@ -2076,12 +2076,12 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureExtendedModeTransactionManager`
-| Kind     | Interface
+| Name       | `SecureExtendedModeTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
-| Since    | 2.0
-| Purpose  | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`CalypsoCardApiFactory.createSecureExtendedModeTransactionManager`>>.
+| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
+| Since      | 2.0
+| Purpose    | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`CalypsoCardApiFactory.createSecureExtendedModeTransactionManager`>>.
 |===
 
 [[op_SecureExtendedModeTransactionManager_prepareActivateEncryption]]
@@ -2151,12 +2151,12 @@ sending sensitive commands).
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecurePkiModeTransactionManager`
-| Kind     | Interface
+| Name       | `SecurePkiModeTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
-| Since    | 2.1
-| Purpose  | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*. An instance is obtained via <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`CalypsoCardApiFactory.createSecurePkiModeTransactionManager`>>.
+| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
+| Since      | 2.1
+| Purpose    | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*. An instance is obtained via <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`CalypsoCardApiFactory.createSecurePkiModeTransactionManager`>>.
 |===
 
 [[op_SecurePkiModeTransactionManager_prepareOpenSecureSession]]
@@ -2179,12 +2179,12 @@ sending sensitive commands).
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureRegularModeTransactionManager`
-| Kind     | Interface
+| Name       | `SecureRegularModeTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends  | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
-| Since    | 2.0
-| Purpose  | Symmetric-key transaction manager compatible with every Calypso product. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`CalypsoCardApiFactory.createSecureRegularModeTransactionManager`>>.
+| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
+| Since      | 2.0
+| Purpose    | Symmetric-key transaction manager compatible with every Calypso product. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`CalypsoCardApiFactory.createSecureRegularModeTransactionManager`>>.
 |===
 
 No additional operation declared.
@@ -2194,11 +2194,11 @@ No additional operation declared.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureSessionStatus`
-| Kind     | Interface
+| Name       | `SecureSessionStatus`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Since    | 3.0
-| Purpose  | Immutable snapshot of the current secure session state, returned by <<op_TransactionManager_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
+| Since      | 3.0
+| Purpose    | Immutable snapshot of the current secure session state, returned by <<op_TransactionManager_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
 |===
 
 A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to the session state.
@@ -2248,13 +2248,13 @@ To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` ag
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureSymmetricCryptoTransactionManager`
-| Kind     | Interface
+| Name       | `SecureSymmetricCryptoTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T : SecureSymmetricCryptoTransactionManager<T>>`
-| Extends  | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
-| Since    | 2.0
-| Purpose  | Common operations for every transaction manager backed by *symmetric* cryptography.
+| Generics   | `<T : SecureSymmetricCryptoTransactionManager<T>>`
+| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
+| Since      | 2.0
+| Purpose    | Common operations for every transaction manager backed by *symmetric* cryptography.
 |===
 
 [[op_SecureSymmetricCryptoTransactionManager_prepareChangeKey]]
@@ -2474,13 +2474,13 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureTransactionManager`
-| Kind     | Interface
+| Name       | `SecureTransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T : SecureTransactionManager<T>>`
-| Extends  | <<type_TransactionManager,`TransactionManager<T>`>>
-| Since    | 2.0
-| Purpose  | Common operations for every secure (cryptographically-backed) transaction manager.
+| Generics   | `<T : SecureTransactionManager<T>>`
+| Extends    | <<type_TransactionManager,`TransactionManager<T>`>>
+| Since      | 2.0
+| Purpose    | Common operations for every secure (cryptographically-backed) transaction manager.
 |===
 
 [[op_SecureTransactionManager_getCryptoExtension]]
@@ -2535,11 +2535,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SvDebitLogRecord`
-| Kind     | Interface
+| Name       | `SvDebitLogRecord`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | One record of a Stored Value debit log.
+| Since      | 1.0
+| Purpose    | One record of a Stored Value debit log.
 |===
 
 [[op_SvDebitLogRecord_getAmount]]
@@ -2664,11 +2664,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SvLoadLogRecord`
-| Kind     | Interface
+| Name       | `SvLoadLogRecord`
+| Kind       | Interface
 | Namespace  | `calypso.card.card`
-| Since    | 1.0
-| Purpose  | One record of a Stored Value load log.
+| Since      | 1.0
+| Purpose    | One record of a Stored Value load log.
 |===
 
 [[op_SvLoadLogRecord_getAmount]]
@@ -2806,11 +2806,11 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SymmetricCryptoSecuritySetting`
-| Kind     | Interface
+| Name       | `SymmetricCryptoSecuritySetting`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySetting`>>.
+| Since      | 2.0
+| Purpose    | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySetting`>>.
 |===
 
 [[op_SymmetricCryptoSecuritySetting_addAuthorizedSessionKey]]
@@ -3158,13 +3158,13 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `TransactionManager`
-| Kind     | Interface
+| Name       | `TransactionManager`
+| Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics | `<T : TransactionManager<T>>`
-| Extends  | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
-| Since    | 2.0
-| Purpose  | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
+| Generics   | `<T : TransactionManager<T>>`
+| Extends    | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
+| Since      | 2.0
+| Purpose    | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
@@ -3873,11 +3873,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `AsymmetricCryptoCardTransactionManagerFactory`
-| Kind     | Marker interface (SPI)
+| Name       | `AsymmetricCryptoCardTransactionManagerFactory`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
+| Since      | 2.0
+| Purpose    | Marker provided by crypto extensions to secure Calypso card transactions with *asymmetric* keys (PKI). Declares no operation.
 |===
 
 [[type_CaCertificate]]
@@ -3885,11 +3885,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CaCertificate`
-| Kind     | Marker interface (SPI)
+| Name       | `CaCertificate`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Marker for a CA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificate,`AsymmetricCryptoSecuritySetting.addCaCertificate`>>.
+| Since      | 2.1
+| Purpose    | Marker for a CA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificate,`AsymmetricCryptoSecuritySetting.addCaCertificate`>>.
 |===
 
 [[type_CaCertificateParser]]
@@ -3897,11 +3897,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CaCertificateParser`
-| Kind     | Marker interface (SPI)
+| Name       | `CaCertificateParser`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Marker for a CA certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificateParser,`AsymmetricCryptoSecuritySetting.addCaCertificateParser`>>.
+| Since      | 2.1
+| Purpose    | Marker for a CA certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificateParser,`AsymmetricCryptoSecuritySetting.addCaCertificateParser`>>.
 |===
 
 [[type_CardCertificate]]
@@ -3909,11 +3909,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CardCertificate`
-| Kind     | Marker interface (SPI)
+| Name       | `CardCertificate`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Marker for a card certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Consumed by the asymmetric crypto extension when authenticating a card; it is not registered directly through <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Since      | 2.1
+| Purpose    | Marker for a card certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Consumed by the asymmetric crypto extension when authenticating a card; it is not registered directly through <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
 |===
 
 [[type_CardCertificateParser]]
@@ -3921,22 +3921,22 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CardCertificateParser`
-| Kind     | Marker interface (SPI)
+| Name       | `CardCertificateParser`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCardCertificateParser,`AsymmetricCryptoSecuritySetting.addCardCertificateParser`>>.
+| Since      | 2.1
+| Purpose    | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCardCertificateParser,`AsymmetricCryptoSecuritySetting.addCardCertificateParser`>>.
 |===
 [[type_CardTransactionCryptoExtension]]
 ==== Card Transaction Crypto Extension
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CardTransactionCryptoExtension`
-| Kind     | Marker interface (SPI)
+| Name       | `CardTransactionCryptoExtension`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker enriching the card transaction command set with specific crypto commands (e.g. signature computation/verification). Declares no operation at the API level.
+| Since      | 2.0
+| Purpose    | Marker enriching the card transaction command set with specific crypto commands (e.g. signature computation/verification). Declares no operation at the API level.
 |===
 
 [[type_PcaCertificate]]
@@ -3944,11 +3944,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `PcaCertificate`
-| Kind     | Marker interface (SPI)
+| Name       | `PcaCertificate`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.1
-| Purpose  | Marker for a self-signed PCA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`AsymmetricCryptoSecuritySetting.addPcaCertificate`>>.
+| Since      | 2.1
+| Purpose    | Marker for a self-signed PCA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`AsymmetricCryptoSecuritySetting.addPcaCertificate`>>.
 |===
 
 `PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.
@@ -3959,11 +3959,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SymmetricCryptoCardTransactionManagerFactory`
-| Kind     | Marker interface (SPI)
+| Name       | `SymmetricCryptoCardTransactionManagerFactory`
+| Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
-| Since    | 2.0
-| Purpose  | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
+| Since      | 2.0
+| Purpose    | Marker provided by crypto extensions to secure Calypso card transactions with *symmetric* keys (e.g. SAM). Declares no operation.
 |===
 
 === Enumerations
@@ -3973,11 +3973,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `ProductType`
-| Kind     | Enumeration
+| Name       | `ProductType`
+| Kind       | Enumeration
 | Namespace  | `calypso.card.card`.<<type_CalypsoCard,`CalypsoCard`>>
-| Since    | 1.0
-| Purpose  | Product type of a Calypso card.
+| Since      | 1.0
+| Purpose    | Product type of a Calypso card.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -3996,11 +3996,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `Type`
-| Kind     | Enumeration
+| Name       | `Type`
+| Kind       | Enumeration
 | Namespace  | `calypso.card.card`.<<type_ElementaryFile,`ElementaryFile`>>
-| Since    | 1.0
-| Purpose  | Type of a Calypso Elementary File.
+| Since      | 1.0
+| Purpose    | Type of a Calypso Elementary File.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4018,11 +4018,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `GetDataTag`
-| Kind     | Enumeration
+| Name       | `GetDataTag`
+| Kind       | Enumeration
 | Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
+| Since      | 1.0
+| Purpose    | Output data tags retrievable through the *Get Data* command. MAY NOT be applicable to all products.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4042,11 +4042,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `PutDataTag`
-| Kind     | Enumeration
+| Name       | `PutDataTag`
+| Kind       | Enumeration
 | Namespace  | `calypso.card`
-| Since    | 2.1
-| Purpose  | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
+| Since      | 2.1
+| Purpose    | Input data tags injectable through the *Put Data* command. MAY NOT be applicable to all products.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4062,11 +4062,11 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SecureSessionType`
-| Kind     | Enumeration
+| Name       | `SecureSessionType`
+| Kind       | Enumeration
 | Namespace  | `calypso.card.transaction`
-| Since    | 3.0
-| Purpose  | Cryptographic nature of a Calypso secure session.
+| Since      | 3.0
+| Purpose    | Cryptographic nature of a Calypso secure session.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4085,11 +4085,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SelectFileControl`
-| Kind     | Enumeration
+| Name       | `SelectFileControl`
+| Kind       | Enumeration
 | Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
+| Since      | 1.0
+| Purpose    | Expected behaviour of the *Select File* command (cf. ISO/IEC 7816-4 and Calypso specifications).
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4105,11 +4105,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SvAction`
-| Kind     | Enumeration
+| Name       | `SvAction`
+| Kind       | Enumeration
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Direction of an SV action.
+| Since      | 1.0
+| Purpose    | Direction of an SV action.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4124,11 +4124,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SvOperation`
-| Kind     | Enumeration
+| Name       | `SvOperation`
+| Kind       | Enumeration
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Type of Stored Value operation.
+| Since      | 1.0
+| Purpose    | Type of Stored Value operation.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4143,11 +4143,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `WriteAccessLevel`
-| Kind     | Enumeration
+| Name       | `WriteAccessLevel`
+| Kind       | Enumeration
 | Namespace  | `calypso.card`
-| Since    | 1.0
-| Purpose  | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
+| Since      | 1.0
+| Purpose    | Write access level for a Calypso secure session. Each level induces the use of a different session-key role.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
@@ -4161,16 +4161,20 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 [[sec_errors]]
 === Errors
 
+Every error defined below carries two properties: `message` (`String`), which describes the condition, and
+`cause` (`Any?`), the underlying error that triggered it, `null` when there is none. They are not
+restated for each error.
+
 [[type_CardSignatureNotVerifiable]]
 ==== Card Signature Not Verifiable
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CardSignatureNotVerifiable`
-| Kind     | Error
+| Name       | `CardSignatureNotVerifiable`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates that the card has correctly closed the secure session but that the authenticity of the session cannot be verified because the crypto module is no longer available (timeout, network problem, etc.).
+| Since      | 1.2
+| Purpose    | Indicates that the card has correctly closed the secure session but that the authenticity of the session cannot be verified because the crypto module is no longer available (timeout, network problem, etc.).
 |===
 
 [[type_Crypto]]
@@ -4178,11 +4182,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `Crypto`
-| Kind     | Error
+| Name       | `Crypto`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates that an error occurred when computing a crypto operation.
+| Since      | 2.0
+| Purpose    | Indicates that an error occurred when computing a crypto operation.
 |===
 
 [[type_CryptoIO]]
@@ -4190,11 +4194,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `CryptoIO`
-| Kind     | Error
+| Name       | `CryptoIO`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates a communication error with the crypto module.
+| Since      | 2.0
+| Purpose    | Indicates a communication error with the crypto module.
 |===
 
 [[type_InconsistentData]]
@@ -4202,11 +4206,11 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InconsistentData`
-| Kind     | Error
+| Name       | `InconsistentData`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates the detection of inconsistent data.
+| Since      | 1.2
+| Purpose    | Indicates the detection of inconsistent data.
 |===
 
 The inconsistency falls into one of the following cases:
@@ -4221,10 +4225,10 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidCardSignature`
-| Kind     | Error
+| Name       | `InvalidCardSignature`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.2
+| Since      | 1.2
 | Purpose
 | Indicates that the card signature is incorrect.
 
@@ -4241,11 +4245,11 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidCertificate`
-| Kind     | Error
+| Name       | `InvalidCertificate`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.1
-| Purpose  | Indicates that a certificate failed validation (signature, validity period, issuer or subject details, constraints, extensions, expiration, revocation).
+| Since      | 2.1
+| Purpose    | Indicates that a certificate failed validation (signature, validity period, issuer or subject details, constraints, extensions, expiration, revocation).
 |===
 
 [[type_InvalidPin]]
@@ -4253,11 +4257,11 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `InvalidPin`
-| Kind     | Error
+| Name       | `InvalidPin`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 2.0
-| Purpose  | Indicates that the provided PIN is invalid.
+| Since      | 2.0
+| Purpose    | Indicates that the provided PIN is invalid.
 |===
 
 [[type_SelectFile]]
@@ -4265,11 +4269,11 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SelectFile`
-| Kind     | Error
+| Name       | `SelectFile`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.4
-| Purpose  | Indicates that file selection failed because the file was not found (status word `6A82h`).
+| Since      | 1.4
+| Purpose    | Indicates that file selection failed because the file was not found (status word `6A82h`).
 |===
 
 [[type_SessionBufferOverflow]]
@@ -4277,11 +4281,11 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `SessionBufferOverflow`
-| Kind     | Error
+| Name       | `SessionBufferOverflow`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.2
-| Purpose  | Indicates that the secure session cannot be performed atomically because the modification buffer capacity is insufficient.
+| Since      | 1.2
+| Purpose    | Indicates that the secure session cannot be performed atomically because the modification buffer capacity is insufficient.
 |===
 
 [[type_UnauthorizedKey]]
@@ -4289,9 +4293,9 @@ The inconsistency falls into one of the following cases:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name     | `UnauthorizedKey`
-| Kind     | Error
+| Name       | `UnauthorizedKey`
+| Kind       | Error
 | Namespace  | `calypso.card.transaction`
-| Since    | 1.0
-| Purpose  | Indicates that the card requires an unauthorised session key.
+| Since      | 1.0
+| Purpose    | Indicates that the card requires an unauthorised session key.
 |===

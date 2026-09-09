@@ -319,12 +319,18 @@ package "transaction" as transaction {
 
         +prepareSvGet(svOperation: SvOperation, svAction: SvAction) → T
         +prepareSvReload(amount: Int, date: ByteArray, time: ByteArray, free: ByteArray) → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareSvReload(amount: Int) → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareSvDebit(amount: Int, date: ByteArray, time: ByteArray) → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareSvDebit(amount: Int) → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareInvalidate() → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareRehabilitate() → T
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareChangeKey(keyIndex: Int, newKif: Byte, newKvc: Byte, issuerKif: Byte, issuerKvc: Byte) → T
     }
@@ -349,7 +355,9 @@ package "transaction" as transaction {
     }
     +interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
         +addPcaCertificate(pcaCertificate: PcaCertificate) → AsymmetricCryptoSecuritySetting
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
         +addCaCertificate(caCertificate: CaCertificate) → AsymmetricCryptoSecuritySetting
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
 
         +addCaCertificateParser(caCertificateParser: CaCertificateParser) → AsymmetricCryptoSecuritySetting
         +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → AsymmetricCryptoSecuritySetting
@@ -381,6 +389,7 @@ package "transaction" as transaction {
 		+<color:blue>assignSvOperationMaxDuration(csnMin: Long, maxDuration: Long) → SymmetricCryptoSecuritySetting
 
         +initCryptoContextForNextTransaction() → Unit
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: Crypto, CryptoIO</color></size>
     }
     +interface SearchCommandData <<blue>> {
         +setSfi(sfi: Byte) → SearchCommandData

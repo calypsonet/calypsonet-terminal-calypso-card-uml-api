@@ -71,10 +71,10 @@ end legend
 
 package "calypso.card" as calypsoCard {
 
-+class "**final** CalypsoCardApiProperties" as ApiProperties <<green>> {
+class "**final** CalypsoCardApiProperties" as ApiProperties <<green>> {
     +{static} **final** VERSION: String
 }
-+interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
+interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
     +createCalypsoCardSelectionExtension() → CalypsoCardSelectionExtension
 
     +createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) → SymmetricCryptoSecuritySetting
@@ -87,17 +87,17 @@ package "calypso.card" as calypsoCard {
 
     +createSearchCommandData() → SearchCommandData
 }
-+enum WriteAccessLevel <<green>> {
+enum WriteAccessLevel <<green>> {
     PERSONALIZATION
     LOAD
     DEBIT
 }
-+enum SelectFileControl <<green>> {
+enum SelectFileControl <<green>> {
     FIRST_EF
     NEXT_EF
     CURRENT_DF
 }
-+enum GetDataTag <<green>> {
+enum GetDataTag <<green>> {
     FCP_FOR_CURRENT_FILE
     FCI_FOR_CURRENT_DF
     EF_LIST
@@ -106,13 +106,13 @@ package "calypso.card" as calypsoCard {
     CARD_CERTIFICATE
     CA_CERTIFICATE
 }
-+enum "PutDataTag" as PutDataTag <<green>> {
+enum "PutDataTag" as PutDataTag <<green>> {
     CARD_KEY_PAIR
     CARD_CERTIFICATE
     CA_CERTIFICATE
 }
 package "card" as card {
-    +interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
+    interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
         +acceptInvalidatedCard() → CalypsoCardSelectionExtension
 
         +prepareSelectFile(lid: Short) → CalypsoCardSelectionExtension
@@ -126,7 +126,7 @@ package "card" as card {
 
         +preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) → CalypsoCardSelectionExtension
     }
-    +interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
+    interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
         +getProductType() → ProductType
         +isHce() → Boolean
 
@@ -173,7 +173,7 @@ package "card" as card {
         +getSvDebitLogLastRecord() → SvDebitLogRecord?
         +getSvDebitLogAllRecords() → List<SvDebitLogRecord>
     }
-    +interface DirectoryHeader {
+    interface DirectoryHeader {
         +getLid() → Short
         +getDfStatus() → Byte
 
@@ -183,12 +183,12 @@ package "card" as card {
         +getKif(writeAccessLevel: WriteAccessLevel) → Byte
         +getKvc(writeAccessLevel: WriteAccessLevel) → Byte
     }
-    +interface ElementaryFile {
+    interface ElementaryFile {
         +getSfi() → Byte
         +getHeader() → FileHeader?
         +getData() → FileData
     }
-    +interface FileHeader {
+    interface FileHeader {
         +getLid() → Short
         +getDfStatus() → Byte?
         +getEfType() → ElementaryFile.Type
@@ -201,14 +201,14 @@ package "card" as card {
 
         +getSharedReference() → Short?
     }
-    +enum "Type" as FileType <<green>> {
+    enum "Type" as FileType <<green>> {
         LINEAR
         BINARY
         CYCLIC
         COUNTERS
         SIMULATED_COUNTERS
     }
-    +interface FileData {
+    interface FileData {
         +getContent() → ByteArray
         +getContent(numRecord: Int) → ByteArray
         +getContent(numRecord: Int, dataOffset: Int, dataLength: Int) → ByteArray
@@ -217,7 +217,7 @@ package "card" as card {
         +getContentAsCounterValue(numCounter: Int) → Int?
         +getAllCountersValue() → SortedMap<Int, Int>
     }
-    +enum "ProductType" as CardProductType <<green>> {
+    enum "ProductType" as CardProductType <<green>> {
         PRIME_REVISION_1
         PRIME_REVISION_2
         PRIME_REVISION_3
@@ -225,7 +225,7 @@ package "card" as card {
         BASIC
         UNKNOWN
     }
-    +interface SvLoadLogRecord {
+    interface SvLoadLogRecord {
         +getRawData() → ByteArray
 
         +getLoadDate() → ByteArray
@@ -240,7 +240,7 @@ package "card" as card {
         +getSamTNum() → Int
         +getSvTNum() → Int
     }
-    +interface SvDebitLogRecord {
+    interface SvDebitLogRecord {
         +getRawData() → ByteArray
 
         +getDebitDate() → ByteArray
@@ -257,7 +257,7 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    +interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T : TransactionManager<T>> {
+    interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager<T : TransactionManager<T>> {
         +prepareSelectFile(lid: Short) → T
         +prepareSelectFile(selectFileControl: SelectFileControl) → T
 
@@ -297,24 +297,24 @@ package "transaction" as transaction {
         +<color:blue>getSecureSessionStatus() → SecureSessionStatus
         +getTransactionAuditData() → List<ByteArray>
     }
-    +interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
+    interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
         +<color:blue>isOpen() → Boolean
         +<color:blue>getType() → SecureSessionType
         +<color:blue>getWriteAccessLevel() → WriteAccessLevel?
     }
-    +enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
+    enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
         <color:blue>SYMMETRIC
         <color:blue>ASYMMETRIC
     }
-    +interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
+    interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
-    +interface "SecureTransactionManager" as SecureTransactionManager<T : SecureTransactionManager<T>> extends TransactionManager {
+    interface "SecureTransactionManager" as SecureTransactionManager<T : SecureTransactionManager<T>> extends TransactionManager {
         +<E : CardTransactionCryptoExtension> getCryptoExtension(cryptoExtensionClass: Class<E>) → E
 
         +prepareCloseSecureSession() → T
         +prepareCancelSecureSession() → T
     }
-    +interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T : SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
+    interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager<T : SecureSymmetricCryptoTransactionManager<T>> extends SecureTransactionManager {
         +prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) → T
 
         +prepareSvGet(svOperation: SvOperation, svAction: SvAction) → T
@@ -334,26 +334,26 @@ package "transaction" as transaction {
 
         +prepareChangeKey(keyIndex: Int, newKif: Byte, newKvc: Byte, issuerKif: Byte, issuerKvc: Byte) → T
     }
-    +interface "SecureRegularModeTransactionManager" as SecureRegularModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
+    interface "SecureRegularModeTransactionManager" as SecureRegularModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
     }
-    +interface "SecureExtendedModeTransactionManager" as SecureExtendedModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
+    interface "SecureExtendedModeTransactionManager" as SecureExtendedModeTransactionManager <<blue>> extends SecureSymmetricCryptoTransactionManager {
         +prepareEarlyMutualAuthentication() → SecureExtendedModeTransactionManager
         +prepareActivateEncryption() → SecureExtendedModeTransactionManager
         +prepareDeactivateEncryption() → SecureExtendedModeTransactionManager
     }
-    +interface "SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
+    interface "SecurePkiModeTransactionManager" as SecurePkiModeTransactionManager <<blue>> extends SecureTransactionManager {
         +prepareOpenSecureSession() → SecurePkiModeTransactionManager
     }
 
-    +enum SvOperation <<green>> {
+    enum SvOperation <<green>> {
         RELOAD
         DEBIT
     }
-    +enum SvAction <<green>> {
+    enum SvAction <<green>> {
         DO
         UNDO
     }
-    +interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
+    interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
         +addPcaCertificate(pcaCertificate: PcaCertificate) → AsymmetricCryptoSecuritySetting
         {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
         +addCaCertificate(caCertificate: CaCertificate) → AsymmetricCryptoSecuritySetting
@@ -365,7 +365,7 @@ package "transaction" as transaction {
 		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, dfName: ByteArray, maxDuration: Long) → AsymmetricCryptoSecuritySetting
 		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, maxDuration: Long) → AsymmetricCryptoSecuritySetting
     }
-    +interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
+    interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +enableMultipleSession() → SymmetricCryptoSecuritySetting
         +enableRatificationMechanism() → SymmetricCryptoSecuritySetting
         +enablePinPlainTransmission() → SymmetricCryptoSecuritySetting
@@ -391,7 +391,7 @@ package "transaction" as transaction {
         +initCryptoContextForNextTransaction() → Unit
         {method} <size:10><color:#7F8C8D>    ⚠ errors: Crypto, CryptoIO</color></size>
     }
-    +interface SearchCommandData <<blue>> {
+    interface SearchCommandData <<blue>> {
         +setSfi(sfi: Byte) → SearchCommandData
         +startAtRecord(recordNumber: Int) → SearchCommandData
         +setOffset(offset: Int) → SearchCommandData
@@ -403,26 +403,26 @@ package "transaction" as transaction {
         +getMatchingRecordNumbers() → List<Int>
     }
     ' Errors
-    +exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<purple>> <<error>> {
+    exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<green>> <<error>> {
         +val message: String
         +val cause: Any?
     }
     package "spi" as spi {
-        +interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
+        interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "CaCertificateParser" as CaCertificateParser <<red>> {
+        interface "CaCertificateParser" as CaCertificateParser <<red>> {
         }
-        +interface "CardCertificateParser" as CardCertificateParser <<red>> {
+        interface "CardCertificateParser" as CardCertificateParser <<red>> {
         }
-        +interface "PcaCertificate" as PcaCertificate <<red>> {
+        interface "PcaCertificate" as PcaCertificate <<red>> {
         }
-        +interface "CaCertificate" as CaCertificate <<red>> {
+        interface "CaCertificate" as CaCertificate <<red>> {
         }
-        +interface "CardCertificate" as CardCertificate <<red>> {
+        interface "CardCertificate" as CardCertificate <<red>> {
         }
-        +interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
+        interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
         }
-        +interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
+        interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
         }
     }
 }

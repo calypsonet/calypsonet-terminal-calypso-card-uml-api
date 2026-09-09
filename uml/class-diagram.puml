@@ -403,7 +403,7 @@ package "transaction" as transaction {
         +getMatchingRecordNumbers() → List<Int>
     }
     ' Errors
-    +exception "<i>«error»\nSessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<purple>>  {
+    +exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<purple>> <<error>> {
         +val message: String
         +val cause: Any?
     }

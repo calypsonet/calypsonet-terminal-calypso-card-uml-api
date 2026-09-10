@@ -211,19 +211,20 @@ semantic intent rather than the syntactic form.
 
 [cols="^.^1,.^3,.^3", options="header"]
 |===
-| Type             | Description                                                     | Typical bindings
-| `String`         | Sequence of characters, UTF-8 encoded by default.                | `String`, `string`, `str`.
-| `Boolean`        | Two-state truth value.                                           | `boolean`, `bool`.
-| `Byte`           | Signed 8-bit value.                                              | `byte`, `i8`.
-| `Short`          | Signed 16-bit integer.                                           | `short`, `Int16`, `i16`.
-| `Int`            | Signed 32-bit integer.                                           | `int`, `Int32`, `i32`.
-| `ByteArray`      | Ordered sequence of octets.                                      | `byte[]`, `[u8]`, `bytes`.
-| `List<T>`        | Ordered collection of `T` values, may contain duplicates.        | `List<T>`, `Vec<T>`.
-| `Set<T>`         | Unordered collection of unique `T` values.                       | `Set<T>`, `HashSet<T>`.
-| `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.| `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
-| `SortedMap<K,V>` | Associative array sorted by key.                                 | `SortedMap<K,V>`, `BTreeMap<K,V>`.
-| `T?`             | Nullable value: either a `T` value or the absence of value (`null`). | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
-| `Unit`           | Indicates that an operation returns no value.                    | `void`, `Unit`, `None`, `()`.
+| Type             | Description                                                       | Typical bindings
+| `String`         | Sequence of characters, UTF-8 encoded by default.                 | `String`, `string`, `str`.
+| `Boolean`        | Two-state truth value.                                            | `boolean`, `bool`.
+| `Byte`           | Signed 8-bit value.                                               | `byte`, `i8`.
+| `Short`          | Signed 16-bit integer.                                            | `short`, `Int16`, `i16`.
+| `Int`            | Signed 32-bit integer.                                            | `int`, `Int32`, `i32`.
+| `ByteArray`      | Ordered sequence of octets.                                       | `byte[]`, `[u8]`, `bytes`.
+| `List<T>`        | Ordered collection of `T` values, may contain duplicates.         | `List<T>`, `Vec<T>`.
+| `Set<T>`         | Unordered collection of unique `T` values.                        | `Set<T>`, `HashSet<T>`.
+| `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`. | `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
+| `SortedMap<K,V>` | Associative array sorted by key.                                  | `SortedMap<K,V>`, `BTreeMap<K,V>`.
+| `T?`             | Nullable value: either a `T` value or `null`.                     | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
+| `null`           | Absence of value, the alternative held by a nullable type.        | `null`, `nil`, `None`.
+| `Unit`           | Indicates that an operation returns no value.                     | `void`, `Unit`, `()`.
 |===
 
 ==== Type tables

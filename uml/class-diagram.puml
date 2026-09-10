@@ -71,7 +71,7 @@ end legend
 
 package "calypso.card" as calypsoCard {
 
-class "CalypsoCardApiProperties" as ApiProperties <<green>> <<constants>> {
+class "CalypsoCardApiProperties" as ApiProperties <<constants>> <<green>> {
     +const VERSION: String = "3.0"
 }
 interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
@@ -403,7 +403,7 @@ package "transaction" as transaction {
         +getMatchingRecordNumbers() → List<Int>
     }
     ' Errors
-    exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<green>> <<error>> {
+    exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<error>> <<green>> {
         +val message: String
         +val cause: Any?
     }

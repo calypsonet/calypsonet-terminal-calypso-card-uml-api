@@ -111,7 +111,7 @@ enum "PutDataTag" as PutDataTag <<green>> {
     CA_CERTIFICATE
 }
 package "card" as card {
-    interface "<<<back:yellow>CardSelectionExtension</back>>>\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
+    interface "«<back:yellow>CardSelectionExtension</back>»\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
         +acceptInvalidatedCard() → Self
 
         +prepareSelectFile(lid: Short) → Self
@@ -125,7 +125,7 @@ package "card" as card {
 
         +preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) → Self
     }
-    interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
+    interface "«<back:yellow>IsoSmartCard</back>»\nCalypsoCard" as CalypsoCard {
         +getProductType() → CalypsoCardProductType
         +isHce() → Boolean
 
@@ -250,7 +250,7 @@ package "card" as card {
 }
 package "transaction" as transaction {
     ' Card
-    interface "<<<back:yellow><color:blue>IsoCardTransactionManager</color></back>>>\nTransactionManager" as TransactionManager {
+    interface "«<back:yellow><color:blue>IsoCardTransactionManager</color></back>»\nTransactionManager" as TransactionManager {
         +prepareSelectFile(lid: Short) → Self
         +prepareSelectFile(selectFileControl: SelectFileControl) → Self
 

@@ -2026,7 +2026,7 @@ The mechanism is *ineffective* if:
 | Name       | `FreeTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_TransactionManager,`TransactionManager<FreeTransactionManager>`>>
+| Extends    | <<type_TransactionManager,`TransactionManager`>>
 | Since      | 2.0
 | Purpose    | Transaction manager that does *not* require any cryptographic computation. An instance is obtained via <<op_CalypsoCardApiFactory_createFreeTransactionManager,`CalypsoCardApiFactory.createFreeTransactionManager`>>.
 |===
@@ -2041,7 +2041,7 @@ The mechanism is *ineffective* if:
 | Name       | `SecureExtendedModeTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureExtendedModeTransactionManager>`>>
+| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager`>>
 | Since      | 2.0
 | Purpose    | Symmetric-key transaction manager exposing additional operations only available on *Calypso Prime Extended* products. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`CalypsoCardApiFactory.createSecureExtendedModeTransactionManager`>>.
 |===
@@ -2116,7 +2116,7 @@ sending sensitive commands).
 | Name       | `SecurePkiModeTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager<SecurePkiModeTransactionManager>`>>
+| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager`>>
 | Since      | 2.1
 | Purpose    | Asymmetric-key transaction manager, compatible with Calypso cards in *PKI mode*. An instance is obtained via <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`CalypsoCardApiFactory.createSecurePkiModeTransactionManager`>>.
 |===
@@ -2144,7 +2144,7 @@ sending sensitive commands).
 | Name       | `SecureRegularModeTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager<SecureRegularModeTransactionManager>`>>
+| Extends    | <<type_SecureSymmetricCryptoTransactionManager,`SecureSymmetricCryptoTransactionManager`>>
 | Since      | 2.0
 | Purpose    | Symmetric-key transaction manager compatible with every Calypso product. An instance is obtained via <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`CalypsoCardApiFactory.createSecureRegularModeTransactionManager`>>.
 |===
@@ -2159,7 +2159,7 @@ No additional operation declared.
 | Name       | `SecureSymmetricCryptoTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
+| Extends    | <<type_SecureTransactionManager,`SecureTransactionManager`>>
 | Since      | 2.0
 | Purpose    | Common operations for every transaction manager backed by *symmetric* cryptography.
 |===
@@ -2384,7 +2384,7 @@ in the crypto module.
 | Name       | `SecureTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Extends    | <<type_TransactionManager,`TransactionManager<T>`>>
+| Extends    | <<type_TransactionManager,`TransactionManager`>>
 | Since      | 2.0
 | Purpose    | Common operations for every secure (cryptographically-backed) transaction manager.
 |===

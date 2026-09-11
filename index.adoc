@@ -165,7 +165,7 @@ The {doc-name} defines the public surface used by terminal applications to:
 This specification covers:
 
 * the factory used to instantiate the public types of the API (`CalypsoCardApiFactory`);
-* the data model of a Calypso card (`CalypsoCard`, `ElementaryFile`, `FileData`, `FileHeader`, `DirectoryHeader`, Stored Value log records);
+* the data model of a Calypso card (`CalypsoCard`, `ElementaryFile`, `FileHeader`, `DirectoryHeader`, Stored Value log records);
 * the selection extension (`CalypsoCardSelectionExtension`);
 * the family of transaction managers (Free, Secure Regular, Secure Extended, Secure PKI);
 * the *symmetric* and *asymmetric* security setting carriers;
@@ -452,6 +452,417 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   The value is a dotted decimal of the form `MAJOR.MINOR`; it is `"{api-version}"` for this revision of the specification.
 |===
 
+=== Data
+
+[[type_DirectoryHeader]]
+==== Directory Header
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `DirectoryHeader`
+| Kind       | Data
+| Namespace  | `calypso.card.card`
+| Since      | 1.0
+| Purpose    | Carries the metadata of a Calypso DF.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `lid`
+| `Short`
+| --
+| 1.0
+| LID, the 2-byte identifier of the associated file structure (DF or EF).
+
+| `dfStatus`
+| `Byte`
+| --
+| 1.0
+| Status byte of the DF (Dedicated File) described by this header.
+
+| `accessConditions`
+| `ByteArray`
+| --
+| 1.0
+| Access conditions of the DF. Non-empty.
+
+| `keyIndexes`
+| `ByteArray`
+| --
+| 1.0
+| Key indexes of the DF. Non-empty.
+
+| `kif`
+| `Map<WriteAccessLevel, Byte>`
+| --
+| 1.0
+| KIF of each write access level, indexed by <<type_WriteAccessLevel,`WriteAccessLevel`>>. Contains one entry
+  per write access level.
+
+| `kvc`
+| `Map<WriteAccessLevel, Byte>`
+| --
+| 1.0
+| KVC of each write access level, indexed by <<type_WriteAccessLevel,`WriteAccessLevel`>>. Contains one entry
+  per write access level.
+|===
+
+[[type_ElementaryFile]]
+==== Elementary File
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `ElementaryFile`
+| Kind       | Data
+| Namespace  | `calypso.card.card`
+| Since      | 1.0
+| Purpose    | Calypso Elementary File. Carries an `SFI`, a `FileHeader` and the content of its records.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `sfi`
+| `Byte`
+| --
+| 1.0
+| Short File Identifier (SFI) of this Elementary File.
+
+| `header`
+| <<type_FileHeader,`FileHeader`>>?
+| --
+| 1.0
+| Metadata of the file. `null` when not yet set.
+
+| `records`
+| `SortedMap<Int, ByteArray>`
+| --
+| 3.0
+| Known content of every record, indexed by record number. For a *binary* file, the whole content is carried
+  by record #1. Empty when no record content is known; a record absent from the map has not been read.
+|===
+
+[[type_FileHeader]]
+==== File Header
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `FileHeader`
+| Kind       | Data
+| Namespace  | `calypso.card.card`
+| Since      | 1.0
+| Purpose    | Carries the metadata of a Calypso EF.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `lid`
+| `Short`
+| --
+| 1.0
+| LID, the 2-byte identifier of the associated file structure (DF or EF).
+
+| `dfStatus`
+| `Byte?`
+| --
+| 1.0
+| DF status. `null` when not available -- for example when the header is built from the response to a
+  *Get Data* with the `EF_LIST` tag.
+
+| `efType`
+| <<type_ElementaryFileType,`ElementaryFileType`>>
+| --
+| 1.0
+| Type of this Elementary File (EF).
+
+| `recordsNumber`
+| `Int`
+| --
+| 1.0
+| Number of records. Always `1` for a *counter* file and for a *binary* file. For a counter file, the extra
+  bytes -- the remainder of the division of the file size by 3 -- are not accessible.
+
+| `recordSize`
+| `Int`
+| --
+| 1.0
+| Size of a record. For a *counter* file, the original size of record #1; the extra bytes -- the remainder of
+  the division of the file size by 3 -- are not accessible. For a *binary* file, the size of the file.
+
+| `accessConditions`
+| `ByteArray`
+| --
+| 1.0
+| Access conditions. Empty when not available.
+
+| `keyIndexes`
+| `ByteArray`
+| --
+| 1.0
+| Key indexes. Empty when not available.
+
+| `sharedReference`
+| `Short?`
+| --
+| 1.0
+| Non-zero unique identifier of the shared data when the file data is shared, `0` when it is not shared.
+  `null` when the information is not available.
+|===
+
+[[type_SearchCommandData]]
+==== Search Command Data
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `SearchCommandData`
+| Kind       | Data
+| Namespace  | `calypso.card.transaction`
+| Since      | 1.1
+| Purpose    | Carries the search criteria of <<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>, built directly by the application.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `sfi`
+| `Byte`
+| --
+| 1.1
+| SFI of the EF in which the search is performed.
+
+| `searchData`
+| `ByteArray`
+| --
+| 1.1
+| Byte sequence to search for within the targeted record.
+
+| `startAtRecord`
+| `Int`
+| `1`
+| 1.1
+| Record number at which the search begins.
+
+| `offset`
+| `Int`
+| `0`
+| 1.1
+| Offset, in bytes, at which the analysis starts within each record.
+
+| `repeatedOffset`
+| `Boolean`
+| `false`
+| 1.1
+| When true, the data is analysed at `offset`, then repeatedly at each following offset until the end of the
+  record.
+
+| `mask`
+| `ByteArray?`
+| `null`
+| 1.1
+| Comparison mask specifying precisely the bits to take into account in the comparison. Its length MUST be
+  `<=` the length of `searchData`; missing bytes are right-padded with `FFh`. `null` applies no mask.
+
+| `fetchFirstMatchingResult`
+| `Boolean`
+| `false`
+| 1.1
+| When true, the content of the first matching record is fetched into the <<type_CalypsoCard,`CalypsoCard`>>.
+|===
+
+[[type_SecureSessionStatus]]
+==== Secure Session Status
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `SecureSessionStatus`
+| Kind       | Data
+| Namespace  | `calypso.card.transaction`
+| Since      | 3.0
+| Purpose    | Immutable snapshot of the current secure session state, returned by <<op_TransactionManager_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
+|===
+
+A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to
+the session state. To obtain a refreshed status, the caller MUST call
+<<op_TransactionManager_getSecureSessionStatus,`getSecureSessionStatus`>> again.
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `isOpen`
+| `Boolean`
+| --
+| 3.0
+| Indicates whether a secure session is open at the snapshot moment.
+
+| `type`
+| <<type_SecureSessionType,`SecureSessionType`>>
+| --
+| 3.0
+| Cryptographic nature of the session, symmetric or asymmetric.
+
+| `writeAccessLevel`
+| <<type_WriteAccessLevel,`WriteAccessLevel`>>?
+| --
+| 3.0
+| Write access level requested at session opening. `null` in PKI mode (`SecureSessionType.ASYMMETRIC`), where
+  session opening does not take a write access level.
+|===
+
+[[type_SvDebitLogRecord]]
+==== SV Debit Log Record
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `SvDebitLogRecord`
+| Kind       | Data
+| Namespace  | `calypso.card.card`
+| Since      | 1.0
+| Purpose    | One record of a Stored Value debit log.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `rawData`
+| `ByteArray`
+| --
+| 1.0
+| Raw bytes of the debit log record. Non-empty.
+
+| `debitDate`
+| `ByteArray`
+| --
+| 1.0
+| 2-byte debit date. Non-empty.
+
+| `debitTime`
+| `ByteArray`
+| --
+| 1.0
+| 2-byte debit time. Non-empty.
+
+| `amount`
+| `Int`
+| --
+| 1.0
+| Debit amount.
+
+| `balance`
+| `Int`
+| --
+| 1.0
+| SV balance after the debit.
+
+| `kvc`
+| `Byte`
+| --
+| 1.0
+| KVC of the debit key.
+
+| `samId`
+| `ByteArray`
+| --
+| 1.0
+| 4-byte SAM ID. Non-empty.
+
+| `samTNum`
+| `Int`
+| --
+| 1.0
+| SAM transaction number.
+
+| `svTNum`
+| `Int`
+| --
+| 1.0
+| SV transaction number.
+|===
+
+[[type_SvLoadLogRecord]]
+==== SV Load Log Record
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `SvLoadLogRecord`
+| Kind       | Data
+| Namespace  | `calypso.card.card`
+| Since      | 1.0
+| Purpose    | One record of a Stored Value load log.
+|===
+
+[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
+|===
+| Name | Type | Default | Since | Description
+
+| `rawData`
+| `ByteArray`
+| --
+| 1.0
+| Raw bytes of the load log record. Non-empty.
+
+| `loadDate`
+| `ByteArray`
+| --
+| 1.0
+| 2-byte load date. Non-empty.
+
+| `loadTime`
+| `ByteArray`
+| --
+| 1.0
+| 2-byte load time. Non-empty.
+
+| `amount`
+| `Int`
+| --
+| 1.0
+| Load amount.
+
+| `balance`
+| `Int`
+| --
+| 1.0
+| SV balance after the load.
+
+| `freeData`
+| `ByteArray`
+| --
+| 1.0
+| 2-byte free data. Non-empty.
+
+| `kvc`
+| `Byte`
+| --
+| 1.0
+| KVC of the load key.
+
+| `samId`
+| `ByteArray`
+| --
+| 1.0
+| 4-byte SAM ID. Non-empty.
+
+| `samTNum`
+| `Int`
+| --
+| 1.0
+| SAM transaction number.
+
+| `svTNum`
+| `Int`
+| --
+| 1.0
+| SV transaction number.
+|===
+
 === API Interfaces
 
 [[type_AsymmetricCryptoSecuritySetting]]
@@ -711,6 +1122,42 @@ Failed write commands do not update the in-memory image.
                    <<op_SecurePkiModeTransactionManager_prepareOpenSecureSession,`SecurePkiModeTransactionManager.prepareOpenSecureSession`>>
 |===
 
+[[op_CalypsoCard_getCounterValuesByLid]]
+===== Get Counter Values By LID
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getCounterValuesByLid(lid: Short) -> SortedMap<Int, Int>?`
+| Since          | 3.0
+| Description
+| Values of the counters carried by the EF whose LID matches, indexed by counter number. Each value is decoded
+  from the 3-byte slice at offset `(n - 1) * 3` of record #1, for both `COUNTERS` and `SIMULATED_COUNTERS`
+  files; a trailing slice shorter than 3 bytes yields no entry.
+| Parameters     | `lid` -- the LID of the EF whose counter values are requested.
+| Returns        | A `SortedMap<Int, Int>`, empty if record #1 of that EF has not been read yet.
+  `null` if no EF with this LID is known, or if its type carries no counters.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Errors         | None.
+|===
+
+[[op_CalypsoCard_getCounterValuesBySfi]]
+===== Get Counter Values By SFI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getCounterValuesBySfi(sfi: Byte) -> SortedMap<Int, Int>?`
+| Since          | 3.0
+| Description
+| Values of the counters carried by the EF whose SFI matches, indexed by counter number. Each value is decoded
+  from the 3-byte slice at offset `(n - 1) * 3` of record #1, for both `COUNTERS` and `SIMULATED_COUNTERS`
+  files; a trailing slice shorter than 3 bytes yields no entry.
+| Parameters     | `sfi` -- the SFI of the EF whose counter values are requested.
+| Returns        | A `SortedMap<Int, Int>`, empty if record #1 of that EF has not been read yet.
+  `null` if no EF with this SFI is known, or if its type carries no counters.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Errors         | None.
+|===
+
 [[op_CalypsoCard_getDfName]]
 ===== Get DF Name
 
@@ -793,6 +1240,24 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 |===
 
+[[op_CalypsoCard_getMatchingRecordNumbers]]
+===== Get Matching Record Numbers
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getMatchingRecordNumbers(idCommand: Int) -> List<Int>?`
+| Since          | 3.0
+| Description
+| Numbers of the records that matched the search command prepared with this identifier. When several search
+  commands share the same identifier, the numbers returned are those of the most recently processed one.
+| Parameters     | `idCommand` -- the identifier attached to the search command when it was prepared.
+| Returns        | A `List<Int>`, empty if the search matched no record. `null` if no search command carrying
+  this identifier has been processed.
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Errors         | None.
+| See also       | <<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>
+|===
+
 [[op_CalypsoCard_getPinAttemptRemaining]]
 ===== Get PIN Attempt Remaining
 
@@ -826,10 +1291,10 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `getProductType() -> ProductType`
+| Signature      | `getProductType() -> CalypsoCardProductType`
 | Since          | 1.0
 | Description    | Returns the card product type (`PRIME_REVISION_1` / `PRIME_REVISION_2` / `PRIME_REVISION_3` / `LIGHT` / `BASIC` / `UNKNOWN`).
-| Returns        | A <<type_ProductType,`ProductType`>>.
+| Returns        | A <<type_CalypsoCardProductType,`CalypsoCardProductType`>>.
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -1228,21 +1693,6 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | Errors         | None.
 |===
 
-[[op_CalypsoCardApiFactory_createSearchCommandData]]
-===== Create Search Command Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `createSearchCommandData() -> SearchCommandData`
-| Since          | 2.0
-| Description
-| Creates an empty <<type_SearchCommandData,`SearchCommandData`>> used to configure and collect the results of
-<<op_TransactionManager_prepareSearchRecords,`TransactionManager.prepareSearchRecords`>>.
-| Returns        | A <<type_SearchCommandData,`SearchCommandData`>>.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
 [[op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager]]
 ===== Create Secure Extended Mode Transaction Manager
 
@@ -1568,376 +2018,6 @@ The mechanism is *ineffective* if:
 | Errors         | None.
 |===
 
-[[type_DirectoryHeader]]
-==== Directory Header
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `DirectoryHeader`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | Carries the metadata of a Calypso DF.
-|===
-
-[[op_DirectoryHeader_getAccessConditions]]
-===== Get Access Conditions
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAccessConditions() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns a reference to the access conditions.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_DirectoryHeader_getDfStatus]]
-===== Get DF Status
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getDfStatus() -> Byte`
-| Since          | 1.0
-| Description    | Returns the status byte of the DF (Dedicated File) described by this header.
-| Returns        | A `Byte` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_DirectoryHeader_getKeyIndexes]]
-===== Get Key Indexes
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKeyIndexes() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns a reference to the keys indexes.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_DirectoryHeader_getKif]]
-===== Get KIF
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKif(writeAccessLevel: WriteAccessLevel) -> Byte`
-| Since          | 1.0
-| Description    | Returns the KIF associated with the supplied write access level.
-| Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KIF is requested.
-| Returns        | A `Byte` value.
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_DirectoryHeader_getKvc]]
-===== Get KVC
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKvc(writeAccessLevel: WriteAccessLevel) -> Byte`
-| Since          | 1.0
-| Description    | Returns the KVC associated with the supplied write access level.
-| Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level whose KVC is requested.
-| Returns        | A `Byte` value.
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_DirectoryHeader_getLid]]
-===== Get LID
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getLid() -> Short`
-| Since          | 1.0
-| Description    | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
-| Returns        | A `Short` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[type_ElementaryFile]]
-==== Elementary File
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `ElementaryFile`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | Calypso Elementary File. Carries an `SFI`, a `FileHeader` and a `FileData`.
-|===
-
-[[op_ElementaryFile_getData]]
-===== Get Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getData() -> FileData`
-| Since          | 1.0
-| Description    | Returns the `FileData` object carrying this Elementary File's content.
-| Returns        | A <<type_FileData,`FileData`>>.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_ElementaryFile_getHeader]]
-===== Get Header
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getHeader() -> FileHeader?`
-| Since          | 1.0
-| Description    | Returns the file header, or `null` if not yet set.
-| Returns        | A <<type_FileHeader,`FileHeader`>>, or `null` if not yet set.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_ElementaryFile_getSfi]]
-===== Get SFI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSfi() -> Byte`
-| Since          | 1.0
-| Description    | Returns the Short File Identifier (SFI) of this Elementary File.
-| Returns        | A `Byte` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[type_FileData]]
-==== File Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `FileData`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | Carries the content of a Calypso EF and exposes counter-oriented accessors.
-|===
-
-[[op_FileData_getAllCountersValue]]
-===== Get All Counters Value
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAllCountersValue() -> SortedMap<Int, Int>`
-| Since          | 1.0
-| Description    | Returns the values of all counters extracted from record #1.
-| Returns        | A `SortedMap<Int, Int>`; empty if no counter is known.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileData_getAllRecordsContent]]
-===== Get All Records Content
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAllRecordsContent() -> SortedMap<Int, ByteArray>`
-| Since          | 1.0
-| Description    | Returns the known content of every record, keyed by record number.
-| Returns        | A `SortedMap<Int, ByteArray>`; empty if no record content is known.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileData_getContent]]
-===== Get Content (No Args)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getContent() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the known content of record #1 (or the entire content for a binary file).
-| Returns        | A `ByteArray`; empty if the content is not known.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileData_getContent_byRecord]]
-===== Get Content (Num Record)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getContent(numRecord: Int) -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the known content of the supplied record number.
-| Parameters     | `numRecord` -- the record number.
-| Returns        | A `ByteArray`; empty if the record content is not known.
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_FileData_getContent_byRange]]
-===== Get Content (Num Record, Data Offset, Data Length)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `getContent(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}numRecord: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dataOffset: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dataLength: Int` +
-`) -> ByteArray`
-| Since          | 1.0
-| Description    | Returns a copy of the known content subset of a record from `dataOffset` to `dataOffset + dataLength`.
-| Parameters
-| `numRecord` -- the record number. +
-  `dataOffset` -- the offset index (should be >= 0). +
-  `dataLength` -- the data length (should be >= 1).
-| Returns        | A `ByteArray`; empty if the content is not known.
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `dataOffset` is not negative and `dataLength` is at least 1. +
-  *Range* -- the range stays within the record content.
-| Errors         | None.
-|===
-
-[[op_FileData_getContentAsCounterValue]]
-===== Get Content As Counter Value
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getContentAsCounterValue(numCounter: Int) -> Int?`
-| Since          | 1.0
-| Description    | Returns the value of counter `numCounter`. The counter value is extracted from the 3-byte slice at offset `(numCounter - 1) * 3` of record #1. Returns `null` if record #1 or the requested counter is not set.
-| Parameters     | `numCounter` -- the counter number (should be >= 1).
-| Returns        | An `Int` value, or `null` if record #1 or the requested counter is not set.
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `numCounter` is at least 1. +
-  *Range* -- the counter is not truncated.
-| Errors         | None.
-|===
-
-[[type_FileHeader]]
-==== File Header
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `FileHeader`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | Carries the metadata of a Calypso EF.
-|===
-
-[[op_FileHeader_getAccessConditions]]
-===== Get Access Conditions
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAccessConditions() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the access conditions; empty array if not available.
-| Returns        | A `ByteArray`; empty if not available.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getDfStatus]]
-===== Get DF Status
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getDfStatus() -> Byte?`
-| Since          | 1.0
-| Description    | Returns the DF status, or `null` if not available (e.g. when the header is built from the response to a *Get Data* with `EF_LIST` tag).
-| Returns        | A `Byte` value, or `null` if not available.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getEfType]]
-===== Get EF Type
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getEfType() -> ElementaryFile.Type`
-| Since          | 1.0
-| Description    | Returns the type of this Elementary File (EF), one of the `ElementaryFile.Type` values.
-| Returns        | An <<type_Type,`ElementaryFile.Type`>>.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getKeyIndexes]]
-===== Get Key Indexes
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKeyIndexes() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the key indexes; empty array if not available.
-| Returns        | A `ByteArray`; empty if not available.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getLid]]
-===== Get LID
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getLid() -> Short`
-| Since          | 1.0
-| Description    | Returns the LID, the 2-byte identifier of the associated file structure (DF or EF).
-| Returns        | A `Short` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getRecordSize]]
-===== Get Record Size
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getRecordSize() -> Int`
-| Since          | 1.0
-| Description
-| Returns the size of a record. For a *counter* file, this is the original size of record #1; the extra bytes --
-  the remainder of the division of the file size by 3 -- are not accessible. For a *binary* file, this is the size
-  of the file.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getRecordsNumber]]
-===== Get Records Number
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getRecordsNumber() -> Int`
-| Since          | 1.0
-| Description
-| Returns the number of records. For a *counter* file the number of records is always `1`, and for a *binary*
-  file it is always `1` as well. For a counter file, the extra bytes -- the remainder of the division of the file
-  size by 3 -- are not accessible.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_FileHeader_getSharedReference]]
-===== Get Shared Reference
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSharedReference() -> Short?`
-| Since          | 1.0
-| Description    | Returns the non-zero unique identifier of the shared data when the file data is shared. Returns `0` if not shared, `null` if the information is not available.
-| Returns        | A `Short` value (`0` if not shared), or `null` if the information is not available.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
 [[type_FreeTransactionManager]]
 ==== Free Transaction Manager
 
@@ -1952,127 +2032,6 @@ The mechanism is *ineffective* if:
 |===
 
 `FreeTransactionManager` does not add any operation.
-
-[[type_SearchCommandData]]
-==== Search Command Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SearchCommandData`
-| Kind       | Interface
-| Namespace  | `calypso.card.transaction`
-| Since      | 1.1
-| Purpose    | Carries the input/output data of `TransactionManager.prepareSearchRecords`. An instance is obtained via <<op_CalypsoCardApiFactory_createSearchCommandData,`CalypsoCardApiFactory.createSearchCommandData`>>.
-|===
-
-[[op_SearchCommandData_enableRepeatedOffset]]
-===== Enable Repeated Offset
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `enableRepeatedOffset() -> SearchCommandData`
-| Since          | 1.1
-| Description    | Analyse the data at the supplied offset, then repeatedly at each following offset until the end of the record.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_fetchFirstMatchingResult]]
-===== Fetch First Matching Result
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `fetchFirstMatchingResult() -> SearchCommandData`
-| Since          | 1.1
-| Description    | Requests to fetch the content of the first matching record into the `CalypsoCard`.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_getMatchingRecordNumbers]]
-===== Get Matching Record Numbers
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getMatchingRecordNumbers() -> List<Int>`
-| Since          | 1.1
-| Description    | Returns the record numbers that matched.
-| Returns        | A `List<Int>`; empty if no record matched or if the command has not yet been processed.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_setMask]]
-===== Set Mask
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `setMask(mask: ByteArray) -> SearchCommandData`
-| Since          | 1.1
-| Description    | Sets the comparison mask. The mask length MUST be `<=` the search data length; missing bytes are right-padded with `FFh`.
-| Parameters     | `mask` -- the mask.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_setOffset]]
-===== Set Offset
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `setOffset(offset: Int) -> SearchCommandData`
-| Since          | 1.1
-| Description    | Sets the offset (in bytes) at which the analysis starts within each record (default: 0).
-| Parameters     | `offset` -- the offset.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_setSearchData]]
-===== Set Search Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `setSearchData(data: ByteArray) -> SearchCommandData`
-| Since          | 1.1
-| Description    | Sets the byte sequence to search for within the targeted record.
-| Parameters     | `data` -- the data to search.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_setSfi]]
-===== Set SFI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `setSfi(sfi: Byte) -> SearchCommandData`
-| Since          | 1.1
-| Description    | Sets the SFI of the EF in which the search is performed.
-| Parameters     | `sfi` -- the SFI of the EF.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SearchCommandData_startAtRecord]]
-===== Start At Record
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `startAtRecord(recordNumber: Int) -> SearchCommandData`
-| Since          | 1.1
-| Description    | Sets the record number at which the search begins (default: 1).
-| Parameters     | `recordNumber` -- the number of the record where the search should begin.
-| Returns        | The current instance (<<type_SearchCommandData,`SearchCommandData`>>).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
 
 [[type_SecureExtendedModeTransactionManager]]
 ==== Secure Extended Mode Transaction Manager
@@ -2191,60 +2150,6 @@ sending sensitive commands).
 |===
 
 No additional operation declared.
-
-[[type_SecureSessionStatus]]
-==== Secure Session Status
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SecureSessionStatus`
-| Kind       | Interface
-| Namespace  | `calypso.card.transaction`
-| Since      | 3.0
-| Purpose    | Immutable snapshot of the current secure session state, returned by <<op_TransactionManager_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
-|===
-
-A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to the session state.
-To obtain a refreshed status, the caller MUST call `getSecureSessionStatus()` again.
-
-[[op_SecureSessionStatus_getType]]
-===== Get Type
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getType() -> SecureSessionType`
-| Since          | 3.0
-| Description    | Returns the cryptographic nature of the session (symmetric vs asymmetric).
-| Returns        | A <<type_SecureSessionType,`SecureSessionType`>>.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SecureSessionStatus_getWriteAccessLevel]]
-===== Get Write Access Level
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getWriteAccessLevel() -> WriteAccessLevel?`
-| Since          | 3.0
-| Description    | Returns the write access level requested at session opening. Returns `null` in PKI mode (`SecureSessionType.ASYMMETRIC`) where session opening does not take a `WriteAccessLevel`.
-| Returns        | A <<type_WriteAccessLevel,`WriteAccessLevel`>>, or `null` in PKI mode.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SecureSessionStatus_isOpen]]
-===== Is Open
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `isOpen() -> Boolean`
-| Since          | 3.0
-| Description    | Indicates whether a secure session is open at the snapshot moment.
-| Returns        | A `Boolean` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
 
 [[type_SecureSymmetricCryptoTransactionManager]]
 ==== Secure Symmetric Crypto Transaction Manager
@@ -2530,277 +2435,6 @@ this case, a ratification command MUST be added after the *Close Secure Session*
 mode.
 | Returns        | The current instance (`T`).
 | Pre-conditions | *State* -- a secure session is open or its opening is prepared, and neither a closing nor a cancelling is already prepared.
-| Errors         | None.
-|===
-
-[[type_SvDebitLogRecord]]
-==== SV Debit Log Record
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SvDebitLogRecord`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | One record of a Stored Value debit log.
-|===
-
-[[op_SvDebitLogRecord_getAmount]]
-===== Get Amount
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAmount() -> Int`
-| Since          | 1.0
-| Description    | Returns the debit amount.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getBalance]]
-===== Get Balance
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getBalance() -> Int`
-| Since          | 1.0
-| Description    | Returns the SV balance after the debit.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getDebitDate]]
-===== Get Debit Date
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getDebitDate() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 2-byte debit date.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getDebitTime]]
-===== Get Debit Time
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getDebitTime() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 2-byte debit time.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getKvc]]
-===== Get KVC
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKvc() -> Byte`
-| Since          | 1.0
-| Description    | Returns the KVC of the debit key.
-| Returns        | A `Byte` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getRawData]]
-===== Get Raw Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getRawData() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the raw bytes of the debit log record.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getSamId]]
-===== Get SAM ID
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSamId() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 4-byte SAM ID.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getSamTNum]]
-===== Get SAM T Num
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSamTNum() -> Int`
-| Since          | 1.0
-| Description    | Returns the SAM transaction number.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvDebitLogRecord_getSvTNum]]
-===== Get SV T Num
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSvTNum() -> Int`
-| Since          | 1.0
-| Description    | Returns the SV transaction number.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[type_SvLoadLogRecord]]
-==== SV Load Log Record
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SvLoadLogRecord`
-| Kind       | Interface
-| Namespace  | `calypso.card.card`
-| Since      | 1.0
-| Purpose    | One record of a Stored Value load log.
-|===
-
-[[op_SvLoadLogRecord_getAmount]]
-===== Get Amount
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getAmount() -> Int`
-| Since          | 1.0
-| Description    | Returns the load amount.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getBalance]]
-===== Get Balance
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getBalance() -> Int`
-| Since          | 1.0
-| Description    | Returns the SV balance after the load.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getFreeData]]
-===== Get Free Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getFreeData() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 2-byte free data.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getKvc]]
-===== Get KVC
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getKvc() -> Byte`
-| Since          | 1.0
-| Description    | Returns the KVC of the load key.
-| Returns        | A `Byte` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getLoadDate]]
-===== Get Load Date
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getLoadDate() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 2-byte load date.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getLoadTime]]
-===== Get Load Time
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getLoadTime() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 2-byte load time.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getRawData]]
-===== Get Raw Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getRawData() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the raw bytes of the load log record.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getSamId]]
-===== Get SAM ID
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSamId() -> ByteArray`
-| Since          | 1.0
-| Description    | Returns the 4-byte SAM ID.
-| Returns        | A non-empty `ByteArray`.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getSamTNum]]
-===== Get SAM T Num
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSamTNum() -> Int`
-| Since          | 1.0
-| Description    | Returns the SAM transaction number.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SvLoadLogRecord_getSvTNum]]
-===== Get SV T Num
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getSvTNum() -> Int`
-| Since          | 1.0
-| Description    | Returns the SV transaction number.
-| Returns        | An `Int` value.
-| Pre-conditions | None.
 | Errors         | None.
 |===
 
@@ -3354,7 +2988,7 @@ state. The returned object is immutable and captures the state at the moment of 
   modes.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
-  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>> or
+  <<type_ElementaryFile,`ElementaryFile.header`>> or
   <<op_CalypsoCard_getDirectoryHeader,`getDirectoryHeader`>>, depending on the supplied tag.
 | Parameters     | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
 | Returns        | The current instance (`T`).
@@ -3612,7 +3246,11 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSearchRecords(data: SearchCommandData) -> T`
+| Signature
+| `prepareSearchRecords(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: SearchCommandData,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}idCommand: Int` +
+`) -> T`
 | Since          | 1.1
 | Description
 | Adds a *Search Record Multiple* command. The command searches whether the supplied data are present in the
@@ -3620,21 +3258,22 @@ state. The returned object is immutable and captures the state at the moment of 
   comparison. It is only possible with a *linear*, *cyclic*, *Counters* or *Simulated Counter* EF. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
   modes.
 
-  Once processed, the result is available in the supplied input/output
-  <<type_SearchCommandData,`SearchCommandData`>>, and the content of the first matching record in the
-  <<type_CalypsoCard,`CalypsoCard`>> when requested.
+  Once processed, the numbers of the matching records are available in the <<type_CalypsoCard,`CalypsoCard`>>
+  through <<op_CalypsoCard_getMatchingRecordNumbers,`getMatchingRecordNumbers`>> called with `idCommand`, and
+  the content of the first matching record in the same `CalypsoCard` when requested.
 
   The following `processCommands()` does not fail whatever the existence of the targeted file or the validity of
-  the record number and offset: the `SearchCommandData` and `CalypsoCard` may then simply not be updated
-  (*best-effort* mode).
-| Parameters     | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the input/output data containing the parameters of the command.
+  the record number and offset: the `CalypsoCard` may then simply not be updated (*best-effort* mode).
+| Parameters
+| `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the search criteria. +
+  `idCommand` -- the application-supplied identifier of this command.
 | Returns        | The current instance (`T`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Search Record Multiple* command is available for this card. +
   *Argument* -- the input data is consistent. +
   *State* -- no secure session is open.
 | Errors         | None.
-| See also       | <<type_SearchCommandData,`SearchCommandData`>>
+| See also       | <<type_SearchCommandData,`SearchCommandData`>>, <<op_CalypsoCard_getMatchingRecordNumbers,`CalypsoCard.getMatchingRecordNumbers`>>
 |===
 
 [[op_TransactionManager_prepareSelectFile_byLid]]
@@ -3650,7 +3289,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and
-  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
+  <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `lid` -- the LID of the EF to select.
 | Returns        | The current instance (`T`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
@@ -3668,7 +3307,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Adds a *Select File* command using a navigation control.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
-  <<op_ElementaryFile_getHeader,`ElementaryFile.getHeader`>>.
+  <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns        | The current instance (`T`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
@@ -3971,14 +3610,14 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 === Enumerations
 
-[[type_ProductType]]
+[[type_CalypsoCardProductType]]
 ==== Calypso Card Product Type
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name       | `ProductType`
+| Name       | `CalypsoCardProductType`
 | Kind       | Enumeration
-| Namespace  | `calypso.card.card`.<<type_CalypsoCard,`CalypsoCard`>>
+| Namespace  | `calypso.card.card`
 | Since      | 1.0
 | Purpose    | Product type of a Calypso card.
 |===
@@ -3994,14 +3633,14 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | `UNKNOWN`           | 1.0 | Application Type is `0` or `FFh`, or selection data could not be properly parsed.
 |===
 
-[[type_Type]]
+[[type_ElementaryFileType]]
 ==== Elementary File Type
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name       | `Type`
+| Name       | `ElementaryFileType`
 | Kind       | Enumeration
-| Namespace  | `calypso.card.card`.<<type_ElementaryFile,`ElementaryFile`>>
+| Namespace  | `calypso.card.card`
 | Since      | 1.0
 | Purpose    | Type of a Calypso Elementary File.
 |===

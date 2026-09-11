@@ -85,7 +85,6 @@ interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
     +createSecureExtendedModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) → SecureExtendedModeTransactionManager
     +createSecurePkiModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) → SecurePkiModeTransactionManager
 
-    +createSearchCommandData() → SearchCommandData
 }
 enum WriteAccessLevel <<green>> {
     PERSONALIZATION
@@ -127,7 +126,7 @@ package "card" as card {
         +preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) → CalypsoCardSelectionExtension
     }
     interface "<<<back:yellow>IsoSmartCard</back>>>\nCalypsoCard" as CalypsoCard {
-        +getProductType() → ProductType
+        +getProductType() → CalypsoCardProductType
         +isHce() → Boolean
 
         +isDfInvalidated() → Boolean
@@ -154,6 +153,9 @@ package "card" as card {
         +getFileBySfi(sfi: Byte) → ElementaryFile?
         +getFileByLid(lid: Short) → ElementaryFile?
         +getFiles() → Set<ElementaryFile>
+        +<color:blue>getCounterValuesBySfi(sfi: Byte) → SortedMap<Int, Int>?
+        +<color:blue>getCounterValuesByLid(lid: Short) → SortedMap<Int, Int>?
+        +<color:blue>getMatchingRecordNumbers(idCommand: Int) → List<Int>?
 
         +isDfRatified() → Boolean
         +getTransactionCounter() → Int
@@ -173,51 +175,42 @@ package "card" as card {
         +getSvDebitLogLastRecord() → SvDebitLogRecord?
         +getSvDebitLogAllRecords() → List<SvDebitLogRecord>
     }
-    interface DirectoryHeader {
-        +getLid() → Short
-        +getDfStatus() → Byte
+    class "DirectoryHeader" as DirectoryHeader <<data>> <<green>> {
+        +val lid: Short
+        +val dfStatus: Byte
 
-        +getAccessConditions() → ByteArray
-        +getKeyIndexes() → ByteArray
+        +val accessConditions: ByteArray
+        +val keyIndexes: ByteArray
 
-        +getKif(writeAccessLevel: WriteAccessLevel) → Byte
-        +getKvc(writeAccessLevel: WriteAccessLevel) → Byte
+        +val kif: Map<WriteAccessLevel, Byte>
+        +val kvc: Map<WriteAccessLevel, Byte>
     }
-    interface ElementaryFile {
-        +getSfi() → Byte
-        +getHeader() → FileHeader?
-        +getData() → FileData
+    class "ElementaryFile" as ElementaryFile <<data>> <<green>> {
+        +val sfi: Byte
+        +val header: FileHeader?
+        +<color:blue>val records: SortedMap<Int, ByteArray>
     }
-    interface FileHeader {
-        +getLid() → Short
-        +getDfStatus() → Byte?
-        +getEfType() → ElementaryFile.Type
+    class "FileHeader" as FileHeader <<data>> <<green>> {
+        +val lid: Short
+        +val dfStatus: Byte?
+        +val efType: ElementaryFileType
 
-        +getRecordsNumber() → Int
-        +getRecordSize() → Int
+        +val recordsNumber: Int
+        +val recordSize: Int
 
-        +getAccessConditions() → ByteArray
-        +getKeyIndexes() → ByteArray
+        +val accessConditions: ByteArray
+        +val keyIndexes: ByteArray
 
-        +getSharedReference() → Short?
+        +val sharedReference: Short?
     }
-    enum "Type" as FileType <<green>> {
+    enum "ElementaryFileType" as ElementaryFileType <<green>> {
         LINEAR
         BINARY
         CYCLIC
         COUNTERS
         SIMULATED_COUNTERS
     }
-    interface FileData {
-        +getContent() → ByteArray
-        +getContent(numRecord: Int) → ByteArray
-        +getContent(numRecord: Int, dataOffset: Int, dataLength: Int) → ByteArray
-        +getAllRecordsContent() → SortedMap<Int, ByteArray>
-
-        +getContentAsCounterValue(numCounter: Int) → Int?
-        +getAllCountersValue() → SortedMap<Int, Int>
-    }
-    enum "ProductType" as CardProductType <<green>> {
+    enum "CalypsoCardProductType" as CalypsoCardProductType <<green>> {
         PRIME_REVISION_1
         PRIME_REVISION_2
         PRIME_REVISION_3
@@ -225,34 +218,34 @@ package "card" as card {
         BASIC
         UNKNOWN
     }
-    interface SvLoadLogRecord {
-        +getRawData() → ByteArray
+    class "SvLoadLogRecord" as SvLoadLogRecord <<data>> <<green>> {
+        +val rawData: ByteArray
 
-        +getLoadDate() → ByteArray
-        +getLoadTime() → ByteArray
+        +val loadDate: ByteArray
+        +val loadTime: ByteArray
 
-        +getAmount() → Int
-        +getBalance() → Int
-        +getFreeData() → ByteArray
+        +val amount: Int
+        +val balance: Int
+        +val freeData: ByteArray
 
-        +getKvc() → Byte
-        +getSamId() → ByteArray
-        +getSamTNum() → Int
-        +getSvTNum() → Int
+        +val kvc: Byte
+        +val samId: ByteArray
+        +val samTNum: Int
+        +val svTNum: Int
     }
-    interface SvDebitLogRecord {
-        +getRawData() → ByteArray
+    class "SvDebitLogRecord" as SvDebitLogRecord <<data>> <<green>> {
+        +val rawData: ByteArray
 
-        +getDebitDate() → ByteArray
-        +getDebitTime() → ByteArray
+        +val debitDate: ByteArray
+        +val debitTime: ByteArray
 
-        +getAmount() → Int
-        +getBalance() → Int
+        +val amount: Int
+        +val balance: Int
 
-        +getKvc() → Byte
-        +getSamId() → ByteArray
-        +getSamTNum() → Int
-        +getSvTNum() → Int
+        +val kvc: Byte
+        +val samId: ByteArray
+        +val samTNum: Int
+        +val svTNum: Int
     }
 }
 package "transaction" as transaction {
@@ -270,7 +263,7 @@ package "transaction" as transaction {
         +prepareReadBinary(sfi: Byte, offset: Int, nbBytesToRead: Int) → T
         +prepareReadCounter(sfi: Byte, nbCountersToRead: Int) → T
 
-        +prepareSearchRecords(data: SearchCommandData) → T
+        +<color:blue>prepareSearchRecords(data: SearchCommandData, idCommand: Int) → T
 
         +prepareCheckPinStatus() → T
 
@@ -297,10 +290,10 @@ package "transaction" as transaction {
         +<color:blue>getSecureSessionStatus() → SecureSessionStatus
         +getTransactionAuditData() → List<ByteArray>
     }
-    interface "<color:blue>SecureSessionStatus" as SecureSessionStatus {
-        +<color:blue>isOpen() → Boolean
-        +<color:blue>getType() → SecureSessionType
-        +<color:blue>getWriteAccessLevel() → WriteAccessLevel?
+    class "<color:blue>SecureSessionStatus" as SecureSessionStatus <<data>> <<green>> {
+        +<color:blue>val isOpen: Boolean
+        +<color:blue>val type: SecureSessionType
+        +<color:blue>val writeAccessLevel: WriteAccessLevel?
     }
     enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
         <color:blue>SYMMETRIC
@@ -391,16 +384,14 @@ package "transaction" as transaction {
         +initCryptoContextForNextTransaction() → Unit
         {method} <size:10><color:#7F8C8D>    ⚠ errors: Crypto, CryptoIO</color></size>
     }
-    interface SearchCommandData <<blue>> {
-        +setSfi(sfi: Byte) → SearchCommandData
-        +startAtRecord(recordNumber: Int) → SearchCommandData
-        +setOffset(offset: Int) → SearchCommandData
-        +enableRepeatedOffset() → SearchCommandData
-        +setSearchData(data: ByteArray) → SearchCommandData
-        +setMask(mask: ByteArray) → SearchCommandData
-        +fetchFirstMatchingResult() → SearchCommandData
-
-        +getMatchingRecordNumbers() → List<Int>
+    class "SearchCommandData" as SearchCommandData <<data>> <<green>> {
+        +val sfi: Byte
+        +val searchData: ByteArray
+        +val startAtRecord: Int = 1
+        +val offset: Int = 0
+        +val repeatedOffset: Boolean = false
+        +val mask: ByteArray? = null
+        +val fetchFirstMatchingResult: Boolean = false
     }
     ' Errors
     exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<error>> <<green>> {
@@ -450,27 +441,24 @@ AsymmetricCryptoSecuritySetting .up.> CaCertificate #C_USE : use >
 AsymmetricCryptoSecuritySetting .up.> CaCertificateParser #C_USE : use >
 AsymmetricCryptoSecuritySetting .up.> CardCertificateParser #C_USE : use >
 
-SecureSessionStatus ..> WriteAccessLevel #C_LINK : provide >
-SecureSessionStatus ..> SecureSessionType #C_LINK : provide >
+SecureSessionStatus ..> WriteAccessLevel #C_USE : use >
+SecureSessionStatus ..> SecureSessionType #C_USE : use >
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
-CalypsoCardSelectionExtension .up.> WriteAccessLevel #C_USE : use >
+CalypsoCardSelectionExtension ...> WriteAccessLevel #C_USE : use >
 
-CalypsoCard ..> DirectoryHeader #C_LINK : provide >
+CalypsoCard ...> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
-CalypsoCard +-right- CardProductType
-CalypsoCard .right.> CardProductType #C_LINK : provide >
+CalypsoCard .right.> CalypsoCardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader ..> WriteAccessLevel #C_USE : use >
+DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
 
-ElementaryFile +-- FileType
-ElementaryFile ...> FileHeader #C_LINK : provide >
-ElementaryFile ...> FileData #C_LINK : provide >
+ElementaryFile ..> FileHeader #C_USE : use >
 
-FileHeader .up.> FileType #C_LINK : provide >
+FileHeader ..> ElementaryFileType #C_USE : use >
 
 ' == LAYOUT ==
 

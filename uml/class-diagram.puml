@@ -87,28 +87,28 @@ interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
 
 }
 enum WriteAccessLevel <<green>> {
-    PERSONALIZATION
-    LOAD
-    DEBIT
+    +PERSONALIZATION
+    +LOAD
+    +DEBIT
 }
 enum SelectFileControl <<green>> {
-    FIRST_EF
-    NEXT_EF
-    CURRENT_DF
+    +FIRST_EF
+    +NEXT_EF
+    +CURRENT_DF
 }
 enum GetDataTag <<green>> {
-    FCP_FOR_CURRENT_FILE
-    FCI_FOR_CURRENT_DF
-    EF_LIST
-    TRACEABILITY_INFORMATION
-    CARD_PUBLIC_KEY
-    CARD_CERTIFICATE
-    CA_CERTIFICATE
+    +FCP_FOR_CURRENT_FILE
+    +FCI_FOR_CURRENT_DF
+    +EF_LIST
+    +TRACEABILITY_INFORMATION
+    +CARD_PUBLIC_KEY
+    +CARD_CERTIFICATE
+    +CA_CERTIFICATE
 }
 enum "PutDataTag" as PutDataTag <<green>> {
-    CARD_KEY_PAIR
-    CARD_CERTIFICATE
-    CA_CERTIFICATE
+    +CARD_KEY_PAIR
+    +CARD_CERTIFICATE
+    +CA_CERTIFICATE
 }
 package "card" as card {
     interface "«<back:yellow>CardSelectionExtension</back>»\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
@@ -204,19 +204,19 @@ package "card" as card {
         +val sharedReference: Short?
     }
     enum "ElementaryFileType" as ElementaryFileType <<green>> {
-        LINEAR
-        BINARY
-        CYCLIC
-        COUNTERS
-        SIMULATED_COUNTERS
+        +LINEAR
+        +BINARY
+        +CYCLIC
+        +COUNTERS
+        +SIMULATED_COUNTERS
     }
     enum "CalypsoCardProductType" as CalypsoCardProductType <<green>> {
-        PRIME_REVISION_1
-        PRIME_REVISION_2
-        PRIME_REVISION_3
-        LIGHT
-        BASIC
-        UNKNOWN
+        +PRIME_REVISION_1
+        +PRIME_REVISION_2
+        +PRIME_REVISION_3
+        +LIGHT
+        +BASIC
+        +UNKNOWN
     }
     class "SvLoadLogRecord" as SvLoadLogRecord <<data>> <<green>> {
         +val rawData: ByteArray
@@ -296,8 +296,8 @@ package "transaction" as transaction {
         +<color:blue>val writeAccessLevel: WriteAccessLevel?
     }
     enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
-        <color:blue>SYMMETRIC
-        <color:blue>ASYMMETRIC
+        +<color:blue>SYMMETRIC
+        +<color:blue>ASYMMETRIC
     }
     interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
@@ -339,12 +339,12 @@ package "transaction" as transaction {
     }
 
     enum SvOperation <<green>> {
-        RELOAD
-        DEBIT
+        +RELOAD
+        +DEBIT
     }
     enum SvAction <<green>> {
-        DO
-        UNDO
+        +DO
+        +UNDO
     }
     interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
         +addPcaCertificate(pcaCertificate: PcaCertificate) → Self

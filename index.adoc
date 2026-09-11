@@ -211,20 +211,21 @@ semantic intent rather than the syntactic form.
 
 [cols="^.^1,.^3,.^3", options="header"]
 |===
-| Type             | Description                                                       | Typical bindings
-| `String`         | Sequence of characters, UTF-8 encoded by default.                 | `String`, `string`, `str`.
-| `Boolean`        | Two-state truth value.                                            | `boolean`, `bool`.
-| `Byte`           | Signed 8-bit value.                                               | `byte`, `i8`.
-| `Short`          | Signed 16-bit integer.                                            | `short`, `Int16`, `i16`.
-| `Int`            | Signed 32-bit integer.                                            | `int`, `Int32`, `i32`.
-| `ByteArray`      | Ordered sequence of octets.                                       | `byte[]`, `[u8]`, `bytes`.
-| `List<T>`        | Ordered collection of `T` values, may contain duplicates.         | `List<T>`, `Vec<T>`.
-| `Set<T>`         | Unordered collection of unique `T` values.                        | `Set<T>`, `HashSet<T>`.
-| `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`. | `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
-| `SortedMap<K,V>` | Associative array sorted by key.                                  | `SortedMap<K,V>`, `BTreeMap<K,V>`.
-| `T?`             | Nullable value: either a `T` value or `null`.                     | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
-| `null`           | Absence of value, the alternative held by a nullable type.        | `null`, `nil`, `None`.
-| `Unit`           | Indicates that an operation returns no value.                     | `void`, `Unit`, `()`.
+| Type             | Description                                                                         | Typical bindings
+| `String`         | Sequence of characters, UTF-8 encoded by default.                                   | `String`, `string`, `str`.
+| `Boolean`        | Two-state truth value.                                                              | `boolean`, `bool`.
+| `Byte`           | Signed 8-bit value.                                                                 | `byte`, `i8`.
+| `Short`          | Signed 16-bit integer.                                                              | `short`, `Int16`, `i16`.
+| `Int`            | Signed 32-bit integer.                                                              | `int`, `Int32`, `i32`.
+| `ByteArray`      | Ordered sequence of octets.                                                         | `byte[]`, `[u8]`, `bytes`.
+| `List<T>`        | Ordered collection of `T` values, may contain duplicates.                           | `List<T>`, `Vec<T>`.
+| `Set<T>`         | Unordered collection of unique `T` values.                                          | `Set<T>`, `HashSet<T>`.
+| `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.                   | `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
+| `SortedMap<K,V>` | Associative array sorted by key.                                                    | `SortedMap<K,V>`, `BTreeMap<K,V>`.
+| `T?`             | Nullable value: either a `T` value or `null`.                                       | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
+| `null`           | Absence of value, the alternative held by a nullable type.                          | `null`, `nil`, `None`.
+| `Self`           | Own type of the receiver: a fluent operation returns the instance it was called on. | `Self`, `T` (recursive generic).
+| `Unit`           | Indicates that an operation returns no value.                                       | `void`, `Unit`, `()`.
 |===
 
 ==== Type tables
@@ -236,7 +237,6 @@ Each interface, class, enumeration and error defined in this document is describ
 | Name       | The type's normalized name.
 | Kind       | The category of the type (interface, class, enumeration, error, etc.).
 | Namespace  | The namespace in which the type is defined.
-| Generics   | The generic type parameter of this type, when applicable. A constraint on that parameter is written `<T : Bound>`.
 | Extends    | The type extended by this type, when applicable.
 | Implements | The interface implemented by this type, when applicable.
 | Since      | The version of the API in which the type was introduced.
@@ -254,7 +254,7 @@ Each operation defined in this document is described by a table of the form:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | The operation's signature.
+| Signature      | The operation's signature. A type parameter local to the operation precedes its name, with its constraint: `<E : Bound> name(...)`.
 | Since          | The version of the API in which the operation was introduced.
 | Description    | A normative description of the operation's behaviour.
 | Parameters     | A description of each input parameter.
@@ -885,7 +885,7 @@ the session state. To obtain a refreshed status, the caller MUST call
 | Signature
 | `addCaCertificate(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}caCertificate: CaCertificate` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.1
 | Description
 | Registers a CA certificate. The issuer's certificate MUST be loaded first. Preloading a CA certificate avoids
@@ -896,7 +896,7 @@ the session state. To obtain a refreshed status, the caller MUST call
   certificate is neither expired nor prematurely valid, confirmation of the authenticity of the issuer and subject
   details, and compliance with any constraints or extensions required for CA certificates.
 | Parameters     | `caCertificate` (<<type_CaCertificate,`CaCertificate`>>) -- the CA certificate to register.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- the contained public key is not already registered.
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
@@ -911,13 +911,13 @@ the session state. To obtain a refreshed status, the caller MUST call
 | Signature
 | `addCaCertificateParser(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}caCertificateParser: CaCertificateParser` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.1
 | Description
 | Registers a CA certificate parser, used when the CA certificate is not already available. The parser provides
   the means to build a CA certificate from the raw data read from the card.
 | Parameters     | `caCertificateParser` (<<type_CaCertificateParser,`CaCertificateParser`>>) -- the CA certificate parser to register.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- no parser is registered for the same certificate type.
 | Errors         | None.
@@ -931,13 +931,13 @@ the session state. To obtain a refreshed status, the caller MUST call
 | Signature
 | `addCardCertificateParser(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cardCertificateParser: CardCertificateParser` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.1
 | Description
 | Registers a card certificate parser. The parser provides the means to build a card certificate from the raw data
   read from the card. Only one parser MAY be registered per certificate type.
 | Parameters     | `cardCertificateParser` (<<type_CardCertificateParser,`CardCertificateParser`>>) -- the card certificate parser to register.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- no parser is registered for the same certificate type.
 | Errors         | None.
@@ -951,7 +951,7 @@ the session state. To obtain a refreshed status, the caller MUST call
 | Signature
 | `addPcaCertificate(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}pcaCertificate: PcaCertificate` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.1
 | Description
 | Registers a self-signed PCA certificate.
@@ -961,7 +961,7 @@ the session state. To obtain a refreshed status, the caller MUST call
   certificate is neither expired nor prematurely valid, confirmation of the authenticity of the issuer and subject
   details, and compliance with any constraints or extensions required for PCA certificates.
 | Parameters     | `pcaCertificate` (<<type_PcaCertificate,`PcaCertificate`>>) -- the self-signed PCA certificate to register.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- the certificate is valid. +
   *State* -- the contained public key is not already registered.
@@ -977,7 +977,7 @@ the session state. To obtain a refreshed status, the caller MUST call
 | `assignOpenSecureSessionMaxDuration(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
@@ -985,7 +985,7 @@ the session state. To obtain a refreshed status, the caller MUST call
 | Parameters
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -1000,7 +1000,7 @@ the session state. To obtain a refreshed status, the caller MUST call
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
@@ -1009,7 +1009,7 @@ whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -1834,10 +1834,10 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `acceptInvalidatedCard() -> CalypsoCardSelectionExtension`
+| Signature      | `acceptInvalidatedCard() -> Self`
 | Since          | 1.0
 | Description    | Requests to accept invalidated cards during the selection stage. *Works only with cards that indicate their invalidation status at the time of selection* (e.g., all PRIME Revision 3+ cards and certain PRIME Revision 2 cards).
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -1847,7 +1847,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareGetData(tag: GetDataTag) -> CalypsoCardSelectionExtension`
+| Signature      | `prepareGetData(tag: GetDataTag) -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Get Data* command for the supplied tag. This is the way to obtain FCI information when it is not
@@ -1856,7 +1856,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
 | Parameters     | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data object tag to read.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -1869,7 +1869,7 @@ For all `prepare*` operations, unless otherwise specified, the following paramet
 | Signature
 | `preparePreOpenSecureSession(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel` +
-`) -> CalypsoCardSelectionExtension`
+`) -> Self`
 | Since          | 1.7
 | Description
 a| Adds a specific *Open Secure Session* command attempting a *pre-opening*. Enables a future single-exchange
@@ -1893,7 +1893,7 @@ The mechanism is *ineffective* if:
 * an intermediate `processCommands()` is called;
 * asymmetric cryptography is used.
 | Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level of the session to pre-open.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- no pre-open is already prepared.
 | Errors         | None.
@@ -1909,7 +1909,7 @@ The mechanism is *ineffective* if:
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
-`) -> CalypsoCardSelectionExtension`
+`) -> Self`
 | Since          | 1.7
 | Description
 | Adds one or more *Read Binary* commands to read all or part of the supplied binary EF. Once processed, the
@@ -1922,7 +1922,7 @@ The mechanism is *ineffective* if:
 | `sfi` -- the SFI of the EF. +
   `offset` -- the offset (0 indicates the first byte). +
   `nbBytesToRead` -- the number of bytes to read.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -1937,7 +1937,7 @@ The mechanism is *ineffective* if:
 | `prepareReadCounter(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: Int` +
-`) -> CalypsoCardSelectionExtension`
+`) -> Self`
 | Since          | 1.7
 | Description
 | Adds a *Read Records* command to read a part of a record of the supplied EF, which SHOULD be a counter file. The
@@ -1950,7 +1950,7 @@ The mechanism is *ineffective* if:
 | Parameters
 | `sfi` -- the SFI of the EF. +
   `nbCountersToRead` -- the number of counters to read.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -1965,7 +1965,7 @@ The mechanism is *ineffective* if:
 | `prepareReadRecord(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int` +
-`) -> CalypsoCardSelectionExtension`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Read Records* command for a single record of a linear or cyclic EF. Once processed, the result is
@@ -1977,7 +1977,7 @@ The mechanism is *ineffective* if:
 | Parameters
 | `sfi` -- the SFI of the EF to read. +
   `recordNumber` -- the record number to read.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -1988,11 +1988,11 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSelectFile(lid: Short) -> CalypsoCardSelectionExtension`
+| Signature      | `prepareSelectFile(lid: Short) -> Self`
 | Since          | 1.0
 | Description    | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
 | Parameters     | `lid` -- the LID of the EF to select.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2005,7 +2005,7 @@ The mechanism is *ineffective* if:
 | Signature
 | `prepareSelectFile(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}selectControl: SelectFileControl` +
-`) -> CalypsoCardSelectionExtension`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Select File* command using a navigation control (`FIRST`, `NEXT` or `CURRENT`).
@@ -2013,7 +2013,7 @@ The mechanism is *ineffective* if:
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
 | Parameters     | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
-| Returns        | The current instance (<<type_CalypsoCardSelectionExtension,`CalypsoCardSelectionExtension`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2051,7 +2051,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareActivateEncryption() -> SecureExtendedModeTransactionManager`
+| Signature      | `prepareActivateEncryption() -> Self`
 | Since          | 2.0
 | Description
 | Requests encryption for all following session commands. This ensures data confidentiality and prevents
@@ -2062,7 +2062,7 @@ The mechanism is *ineffective* if:
   for performance reasons to place the
   <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
   and `prepareActivateEncryption` calls consecutively (in any order).
-| Returns        | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
@@ -2074,7 +2074,7 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareDeactivateEncryption() -> SecureExtendedModeTransactionManager`
+| Signature      | `prepareDeactivateEncryption() -> Self`
 | Since          | 2.0
 | Description
 | Requests to stop the encryption, which restores the exchanges with the card to their normal mode. This command
@@ -2082,7 +2082,7 @@ The mechanism is *ineffective* if:
   requested.
 
   NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
-| Returns        | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
@@ -2095,13 +2095,13 @@ The mechanism is *ineffective* if:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareEarlyMutualAuthentication() -> SecureExtendedModeTransactionManager`
+| Signature      | `prepareEarlyMutualAuthentication() -> Self`
 | Since          | 2.0
 | Description
 | Requests to mutually authenticate the card and the terminal *before* the secure session is closed. The use of
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
-| Returns        | The current instance (<<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
@@ -2126,12 +2126,12 @@ sending sensitive commands).
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareOpenSecureSession() -> SecurePkiModeTransactionManager`
+| Signature      | `prepareOpenSecureSession() -> Self`
 | Since          | 2.1
 | Description
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
 *Read One Or More Counters*, it will be merged with the session opening for optimisation.
-| Returns        | The current instance (<<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2159,7 +2159,6 @@ No additional operation declared.
 | Name       | `SecureSymmetricCryptoTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics   | `<T : SecureSymmetricCryptoTransactionManager<T>>`
 | Extends    | <<type_SecureTransactionManager,`SecureTransactionManager<T>`>>
 | Since      | 2.0
 | Purpose    | Common operations for every transaction manager backed by *symmetric* cryptography.
@@ -2177,7 +2176,7 @@ No additional operation declared.
 `{nbsp}{nbsp}{nbsp}{nbsp}newKvc: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}issuerKif: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}issuerKvc: Byte` +
-`) -> T`
+`) -> Self`
 | Since          | 2.0
 | Description
 | Schedules a *Change Key* command. *MUST be performed outside a secure session.* All KIFs/KVCs MUST be available
@@ -2188,7 +2187,7 @@ in the crypto module.
 `newKvc`    -- the KVC of the new key. +
 `issuerKif` -- the KIF of the current card's issuer key. +
 `issuerKvc` -- the KVC of the current card's issuer key.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Change Key* command is available for this card. +
   *Argument* -- the provided key index is within range. +
@@ -2201,14 +2200,14 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareInvalidate() -> T`
+| Signature      | `prepareInvalidate() -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *Invalidate* command, which marks the card application as invalidated, blocking further use until
   it is rehabilitated. This command is usually executed within a secure session with the `DEBIT` key, depending on
   the access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *State* -- the card is not already invalidated.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2218,7 +2217,7 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> T`
+| Signature      | `prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *Open Secure Session* command. The secure session is opened with the supplied
@@ -2231,7 +2230,7 @@ in the crypto module.
   disabled via
   <<op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening,`SymmetricCryptoSecuritySetting.disableReadOnSessionOpening`>>.
 | Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- a <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, no secure session opening is already prepared, and no secure session is already open.
 | Errors         | None.
@@ -2243,14 +2242,14 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareRehabilitate() -> T`
+| Signature      | `prepareRehabilitate() -> Self`
 | Since          | 2.0
 | Description
 | Schedules a *Rehabilitate* command, which clears the card application's invalidation status, making it usable
   again. This command is usually executed within a secure session with the `PERSONALIZATION` key, depending on the
   access rights granted to it in the file structure of the card. The resulting DF status is available in the
   <<type_CalypsoCard,`CalypsoCard`>> via <<op_CalypsoCard_isDfInvalidated,`isDfInvalidated`>>.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *State* -- the card is invalidated.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2265,7 +2264,7 @@ in the crypto module.
 `{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. It decreases the current SV
@@ -2278,7 +2277,7 @@ in the crypto module.
 | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
 `date`   -- a 2-byte free value. +
 `time`   -- a 2-byte free value.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every provided argument is within range. +
   *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
@@ -2290,7 +2289,7 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSvDebit(amount: Int) -> T`
+| Signature      | `prepareSvDebit(amount: Int) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero. It decreases the
@@ -2298,7 +2297,7 @@ in the crypto module.
   processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
   management operations.
 | Parameters     | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- the provided argument is within range. +
   *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
@@ -2314,7 +2313,7 @@ in the crypto module.
 | `prepareSvGet(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}svOperation: SvOperation,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}svAction: SvAction` +
-`) -> T`
+`) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV
@@ -2323,7 +2322,7 @@ in the crypto module.
 | Parameters
 | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
 `svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the SV feature is available for this card.
 | Errors         | None.
@@ -2340,7 +2339,7 @@ in the crypto module.
 `{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`. The key
@@ -2351,7 +2350,7 @@ in the crypto module.
 `date`   -- a 2-byte free value. +
 `time`   -- a 2-byte free value. +
 `free`   -- a 2-byte free value.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every provided argument is within range. +
   *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
@@ -2363,14 +2362,14 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSvReload(amount: Int) -> T`
+| Signature      | `prepareSvReload(amount: Int) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Reload* command with the optional data fields set to zero. The key used is the *reload* key.
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
   management operations.
 | Parameters     | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- the provided argument is within range. +
   *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
@@ -2385,7 +2384,6 @@ in the crypto module.
 | Name       | `SecureTransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics   | `<T : SecureTransactionManager<T>>`
 | Extends    | <<type_TransactionManager,`TransactionManager<T>`>>
 | Since      | 2.0
 | Purpose    | Common operations for every secure (cryptographically-backed) transaction manager.
@@ -2413,10 +2411,10 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareCancelSecureSession() -> T`
+| Signature      | `prepareCancelSecureSession() -> Self`
 | Since          | 2.0
 | Description    | Schedules a special *Close Secure Session* command aborting the current secure session. Executed in safe mode -- never raises errors.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2426,14 +2424,14 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareCloseSecureSession() -> T`
+| Signature      | `prepareCloseSecureSession() -> Self`
 | Since          | 2.0
 | Description
 | Schedules a *Close Secure Session* command. The ratification mechanism is disabled by default but MAY be enabled
 via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
 this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
 mode.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *State* -- a secure session is open or its opening is prepared, and neither a closing nor a cancelling is already prepared.
 | Errors         | None.
 |===
@@ -2459,13 +2457,13 @@ mode.
 | `addAuthorizedSessionKey(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Adds an authorised session key. Default: every key accepted; once at least one key is added, only listed keys are accepted.
 | Parameters
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2479,13 +2477,13 @@ mode.
 | `addAuthorizedSvKey(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Adds an authorised Stored Value (SV) key, identified by its KIF/KVC. Default: every SV key accepted; once at least one key is added, only listed keys are accepted.
 | Parameters
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2499,13 +2497,13 @@ mode.
 | `assignDefaultKif(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Defines the default KIF for a write access level.
 | Parameters
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kif` -- the default KIF to use.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2519,13 +2517,13 @@ mode.
 | `assignDefaultKvc(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Defines the default KVC for a write access level.
 | Parameters
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kvc` -- the default KVC to use.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2540,14 +2538,14 @@ mode.
 `{nbsp}{nbsp}{nbsp}{nbsp}writeAccessLevel: WriteAccessLevel,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Defines, for a write access level, the KIF to use when the card only provides a KVC.
 | Parameters
 | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level concerned. +
   `kvc` -- the KVC provided by the card. +
   `kif` -- the KIF to associate with that KVC.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2561,7 +2559,7 @@ mode.
 | `assignOpenSecureSessionMaxDuration(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
@@ -2569,7 +2567,7 @@ mode.
 | Parameters
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2584,14 +2582,14 @@ mode.
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description    | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Parameters
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2605,7 +2603,7 @@ mode.
 | `assignSvOperationMaxDuration(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description
 | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin`,
@@ -2613,7 +2611,7 @@ mode.
 | Parameters
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2628,14 +2626,14 @@ mode.
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 3.0
 | Description    | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
 | Parameters
 | `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
   `dfName` -- the application DF name the setting applies to. +
   `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2645,10 +2643,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `authorizeSvNegativeBalance() -> SymmetricCryptoSecuritySetting`
+| Signature      | `authorizeSvNegativeBalance() -> Self`
 | Since          | 2.0
 | Description    | Allows the SV balance to become negative. Default: disabled.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2658,12 +2656,12 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `disableReadOnSessionOpening() -> SymmetricCryptoSecuritySetting`
+| Signature      | `disableReadOnSessionOpening() -> Self`
 | Since          | 2.0
 | Description
 | Disables the automatic merging of *Open Secure Session* with a possible *Read Record* command. By default, the
   optimisation is performed; it may however be incompatible with the security requirements in some cases.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2673,10 +2671,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `enableMultipleSession() -> SymmetricCryptoSecuritySetting`
+| Signature      | `enableMultipleSession() -> Self`
 | Since          | 2.0
 | Description    | Enables multiple-session mode to handle more changes than the session buffer allows.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2686,10 +2684,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `enablePinPlainTransmission() -> SymmetricCryptoSecuritySetting`
+| Signature      | `enablePinPlainTransmission() -> Self`
 | Since          | 2.0
 | Description    | Enables the PIN transmission in plain text.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2699,10 +2697,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `enableRatificationMechanism() -> SymmetricCryptoSecuritySetting`
+| Signature      | `enableRatificationMechanism() -> Self`
 | Since          | 2.0
 | Description    | Enables the ratification mechanism to handle early card removal preventing reception of the closing ACK.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2712,10 +2710,10 @@ mode.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `enableSvLoadAndDebitLog() -> SymmetricCryptoSecuritySetting`
+| Signature      | `enableSvLoadAndDebitLog() -> Self`
 | Since          | 2.0
 | Description    | Enables retrieval of both load *and* debit log records. Default: disabled.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2749,13 +2747,13 @@ mode.
 | `setPinModificationCipheringKey(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Sets the KIF/KVC of the PIN modification ciphering key. Default: 0/0.
 | Parameters
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2769,13 +2767,13 @@ mode.
 | `setPinVerificationCipheringKey(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kif: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}kvc: Byte` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> Self`
 | Since          | 2.0
 | Description    | Sets the KIF/KVC of the PIN verification ciphering key. Default: 0/0.
 | Parameters
 | `kif` -- the KIF value. +
   `kvc` -- the KVC value.
-| Returns        | The current instance (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2798,7 +2796,6 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 | Name       | `TransactionManager`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
-| Generics   | `<T : TransactionManager<T>>`
 | Extends    | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
 | Since      | 2.0
 | Purpose    | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
@@ -2853,7 +2850,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareAppendRecord(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds an *Append Record* command: a new record is added, and the oldest record is deleted in a cyclic file.
@@ -2863,7 +2860,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `sfi`        -- the SFI of the EF. +
 `recordData` -- the new record data to write.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -2874,7 +2871,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareChangePin(newPin: ByteArray) -> T`
+| Signature      | `prepareChangePin(newPin: ByteArray) -> Self`
 | Since          | 1.6
 | Description
 | Adds a *Change PIN* command. It MUST be performed outside a secure session. If transmitted plain, the command
@@ -2883,7 +2880,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters     | `newPin` -- the new PIN code value (4-byte long `ByteArray`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the PIN feature is available for this card. +
   *Argument* -- the provided argument is within range. +
@@ -2896,14 +2893,14 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareCheckPinStatus() -> T`
+| Signature      | `prepareCheckPinStatus() -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Verify PIN* command without PIN presentation, in order to read the attempt counter. Once processed, the
   PIN status is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Capability* -- the PIN feature is available for this card.
 | Errors         | None.
 |===
@@ -2918,7 +2915,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}decValue: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Decrease* command, which subtracts the supplied value from the designated counter of the selected EF.
@@ -2932,7 +2929,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `decValue`      -- the value to subtract from the counter (positive integer `<= 16777215`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -2947,7 +2944,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareDecreaseCounters(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToDecValueMap: Map<Int, Int>` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Decrease Multiple* command, or multiple *Decrease* commands. The decision to execute one or the other
@@ -2958,7 +2955,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -2968,10 +2965,10 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareGenerateAsymmetricKeyPair() -> T`
+| Signature      | `prepareGenerateAsymmetricKeyPair() -> Self`
 | Since          | 2.1
 | Description    | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -2981,7 +2978,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareGetData(tag: GetDataTag) -> T`
+| Signature      | `prepareGetData(tag: GetDataTag) -> Self`
 | Since          | 1.0
 | Description
 | Adds one or more *Get Data* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
@@ -2991,7 +2988,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<type_ElementaryFile,`ElementaryFile.header`>> or
   <<op_CalypsoCard_getDirectoryHeader,`getDirectoryHeader`>>, depending on the supplied tag.
 | Parameters     | `tag` (<<type_GetDataTag,`GetDataTag`>>) -- the data type to retrieve.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Get Data* command is supported for the provided tag. +
   *State* -- no secure session is open.
@@ -3008,7 +3005,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}incValue: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds an *Increase* command. If several counters of the same file have to be incremented at the same time of the
@@ -3021,7 +3018,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the number of the counter (MUST be zero in case of a simulated counter). +
 `incValue`      -- the value to add to the counter (positive integer `<= 16777215`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -3036,7 +3033,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareIncreaseCounters(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToIncValueMap: Map<Int, Int>` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds an *Increase Multiple* command, or multiple *Increase* commands. The decision to execute one or the other
@@ -3047,7 +3044,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
 `counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -3061,13 +3058,13 @@ state. The returned object is immutable and captures the state at the moment of 
 | `preparePutData(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}tag: PutDataTag,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 2.1
 | Description    | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
 | Parameters
 | `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Put Data* command is supported for the provided tag. +
   *Argument* -- `data` is not empty. +
@@ -3085,7 +3082,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds *Read Binary* commands.
@@ -3101,7 +3098,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `offset`        -- the offset (`0` indicates the first byte). +
 `nbBytesToRead` -- the number of bytes to read.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every supplied argument is within range.
@@ -3117,7 +3114,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareReadCounter(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}nbCountersToRead: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Read Records* command targeting the supplied counter. The record is read up to the counter location
@@ -3133,7 +3130,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `sfi`              -- the SFI of the EF. +
 `nbCountersToRead` -- the number of counters to read.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -3148,7 +3145,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareReadRecord(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Read Records* command for a single record. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
@@ -3163,7 +3160,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `sfi`           -- the SFI of the EF. +
 `recordNumber`  -- the record to read.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -3180,7 +3177,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}fromRecordNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordSize: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Read Records* command for one or more records.
@@ -3197,7 +3194,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `fromRecordNumber` -- the number of the first record to read. +
 `toRecordNumber`   -- the number of the last record to read. +
 `recordSize`       -- the record length.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -3215,7 +3212,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}toRecordNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}nbBytesToRead: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds *Read Record Multiple* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
@@ -3233,7 +3230,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `toRecordNumber`   -- the number of the last record to read. +
 `offset`           -- the offset in the records where to start reading (`0` indicates the first byte). +
 `nbBytesToRead`    -- the number of bytes to read from each record.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every provided argument is within range. +
@@ -3250,7 +3247,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `prepareSearchRecords(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}data: SearchCommandData,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}idCommand: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Search Record Multiple* command. The command searches whether the supplied data are present in the
@@ -3267,7 +3264,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Parameters
 | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the search criteria. +
   `idCommand` -- the application-supplied identifier of this command.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Search Record Multiple* command is available for this card. +
   *Argument* -- the input data is consistent. +
@@ -3281,7 +3278,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSelectFile(lid: Short) -> T`
+| Signature      | `prepareSelectFile(lid: Short) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
@@ -3291,7 +3288,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and
   <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `lid` -- the LID of the EF to select.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -3301,7 +3298,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSelectFile(selectFileControl: SelectFileControl) -> T`
+| Signature      | `prepareSelectFile(selectFileControl: SelectFileControl) -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Select File* command using a navigation control.
@@ -3309,7 +3306,7 @@ state. The returned object is immutable and captures the state at the moment of 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
@@ -3324,7 +3321,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}counterNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}newValue: Int` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds either an *Increase* or a *Decrease* command to set the counter to the supplied value. The operation is
@@ -3342,7 +3339,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`           -- the SFI of the EF. +
 `counterNumber` -- the counter number (`>= 1` for a counters file, `0` for a simulated "counter" file). +
 `newValue`      -- the desired value for the counter (positive integer `<= 16777215`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- the current counter value is known. +
   *Argument* -- every supplied argument is within range.
@@ -3354,7 +3351,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSvReadAllLogs() -> T`
+| Signature      | `prepareSvReadAllLogs() -> Self`
 | Since          | 1.0
 | Description
 | Schedules the reading of every Stored Value log, that is, both the load and the debit log records. This
@@ -3368,7 +3365,7 @@ state. The returned object is immutable and captures the state at the moment of 
   dedicated file and data management operations, or as dedicated objects through
   <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>> and
   <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Capability* -- the SV feature is available for this card.
 | Errors         | None.
 |===
@@ -3383,7 +3380,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds one or more *Update Binary* commands. The data of the file before the offset and after the supplied data
@@ -3395,7 +3392,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the new data.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every supplied argument is within range.
@@ -3412,7 +3409,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds an *Update Record* command. Bytes beyond `recordData.length` are left unchanged.
@@ -3423,7 +3420,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to update. +
 `recordData`   -- the new record data. If length is less than the record size, bytes beyond length are left unchanged.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.
@@ -3434,7 +3431,7 @@ state. The returned object is immutable and captures the state at the moment of 
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareVerifyPin(pin: ByteArray) -> T`
+| Signature      | `prepareVerifyPin(pin: ByteArray) -> Self`
 | Since          | 1.6
 | Description
 | Adds a *Verify PIN* command. This command MAY be performed both inside and outside a secure session. The PIN
@@ -3445,7 +3442,7 @@ state. The returned object is immutable and captures the state at the moment of 
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
   <<op_CalypsoCard_isPinBlocked,`isPinBlocked`>>.
 | Parameters     | `pin` -- the PIN code value (4-byte long `ByteArray`).
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the PIN feature is available for this card. +
   *Argument* -- the provided argument is within range.
@@ -3462,7 +3459,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}offset: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 1.1
 | Description
 | Adds one or more *Write Binary* commands, performing a binary OR with the existing data. The data of the file
@@ -3474,7 +3471,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`    -- the SFI of the EF. +
 `offset` -- the offset (`0` indicates the first byte). +
 `data`   -- the data to write over the existing data.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every supplied argument is within range.
@@ -3491,7 +3488,7 @@ state. The returned object is immutable and captures the state at the moment of 
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordNumber: Int,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}recordData: ByteArray` +
-`) -> T`
+`) -> Self`
 | Since          | 1.0
 | Description
 | Adds a *Write Record* command, performing a binary OR with the existing data.
@@ -3502,7 +3499,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | `sfi`          -- the SFI of the EF. +
 `recordNumber` -- the record to write. +
 `recordData`   -- the data to overwrite in the record. If length is less than the record size, bytes beyond length are left unchanged.
-| Returns        | The current instance (`T`).
+| Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
 | Errors         | None.

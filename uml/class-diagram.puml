@@ -126,7 +126,7 @@ package "card" as card {
         +preparePreOpenSecureSession(writeAccessLevel: WriteAccessLevel) → Self
     }
     interface "«<back:yellow>IsoSmartCard</back>»\nCalypsoCard" as CalypsoCard {
-        +getProductType() → CalypsoCardProductType
+        +getProductType() → <color:blue>CalypsoCardProductType
         +isHce() → Boolean
 
         +isDfInvalidated() → Boolean
@@ -193,7 +193,7 @@ package "card" as card {
     class "FileHeader" as FileHeader <<data>> <<green>> {
         +val lid: Short
         +val dfStatus: Byte?
-        +val efType: ElementaryFileType
+        +val efType: <color:blue>ElementaryFileType
 
         +val recordsNumber: Int
         +val recordSize: Int
@@ -203,14 +203,14 @@ package "card" as card {
 
         +val sharedReference: Short?
     }
-    enum "ElementaryFileType" as ElementaryFileType <<green>> {
+    enum "<color:blue>ElementaryFileType" as ElementaryFileType <<green>> {
         +LINEAR
         +BINARY
         +CYCLIC
         +COUNTERS
         +SIMULATED_COUNTERS
     }
-    enum "CalypsoCardProductType" as CalypsoCardProductType <<green>> {
+    enum "<color:blue>CalypsoCardProductType" as CalypsoCardProductType <<green>> {
         +PRIME_REVISION_1
         +PRIME_REVISION_2
         +PRIME_REVISION_3
@@ -263,7 +263,7 @@ package "transaction" as transaction {
         +prepareReadBinary(sfi: Byte, offset: Int, nbBytesToRead: Int) → Self
         +prepareReadCounter(sfi: Byte, nbCountersToRead: Int) → Self
 
-        +<color:blue>prepareSearchRecords(data: SearchCommandData, idCommand: Int) → Self
+        +prepareSearchRecords(data: SearchCommandData<color:blue>, idCommand: Int</color>) → Self
 
         +prepareCheckPinStatus() → Self
 

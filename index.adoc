@@ -222,6 +222,7 @@ semantic intent rather than the syntactic form.
 | `Set<T>`         | Unordered collection of unique `T` values.                                          | `Set<T>`, `HashSet<T>`.
 | `Map<K,V>`       | Associative array binding keys of type `K` to values of type `V`.                   | `Map<K,V>`, `Dictionary<K,V>`, `HashMap<K,V>`.
 | `SortedMap<K,V>` | Associative array sorted by key.                                                    | `SortedMap<K,V>`, `BTreeMap<K,V>`.
+| `Any`            | Value of any type, root of the type hierarchy.                                      | `Object`, `Any`, `object`, `Box<dyn Any>`.
 | `T?`             | Nullable value: either a `T` value or `null`.                                       | `Integer`/`Short`/`Byte` (boxed), `Optional<T>`, `T?`, `Option<T>`.
 | `null`           | Absence of value, the alternative held by a nullable type.                          | `null`, `nil`, `None`.
 | `Self`           | Own type of the receiver: a fluent operation returns the instance it was called on. | `Self`, `T` (recursive generic).
@@ -2798,7 +2799,7 @@ This mechanism allows the integrator to introduce or tighten duration bounds pro
 | Namespace  | `calypso.card.transaction`
 | Extends    | `IsoCardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>)
 | Since      | 2.0
-| Purpose    | Common operations for every Calypso card transaction. Prepare/process model. The stereotype on `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
+| Purpose    | Common operations for every Calypso card transaction. Prepare/process model. Extending `IsoCardTransactionManager` grants access to the multi-channel cast `asMultichannelCardTransactionManager()` defined by <<ref_cna_tr,CNA-TR-API>> when the underlying ISO/IEC 7816-4 card supports multi-channel.
 |===
 
 `TransactionManager` defines the full *prepare* command surface (file selection, reads, writes, counters, PIN, asymmetric key-pair generation).
@@ -2807,7 +2808,7 @@ which is especially useful in a distributed architecture.
 The bound `CalypsoCard` is updated after each successful APDU exchange, and parameter ranges are validated as documented in <<type_CalypsoCardSelectionExtension>>.
 
 Processing of prepared commands is inherited from `CardTransactionManager` (<<ref_cna_tr,CNA-TR-API>>) via the
-`IsoCardTransactionManager` stereotype.
+`IsoCardTransactionManager` supertype.
 The Calypso `TransactionManager` does *not* redefine `processCommands()`; it relies on the inherited contract.
 Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are reached on demand through `asMultichannelCardTransactionManager()` of <<ref_cna_tr,CNA-TR-API>> when the underlying card supports multi-channel.
 

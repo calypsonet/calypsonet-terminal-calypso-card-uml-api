@@ -3567,6 +3567,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Since      | 2.1
 | Purpose    | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCardCertificateParser,`AsymmetricCryptoSecuritySetting.addCardCertificateParser`>>.
 |===
+
 [[type_CardTransactionCryptoExtension]]
 ==== Card Transaction Crypto Extension
 

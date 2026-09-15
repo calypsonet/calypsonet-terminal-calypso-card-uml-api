@@ -1246,12 +1246,12 @@ Failed write commands do not update the in-memory image.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `getMatchingRecordNumbers(idCommand: Int) -> List<Int>?`
+| Signature      | `getMatchingRecordNumbers(commandId: Int) -> List<Int>?`
 | Since          | 3.0
 | Description
 | Numbers of the records that matched the search command prepared with this identifier. When several search
   commands share the same identifier, the numbers returned are those of the most recently processed one.
-| Parameters     | `idCommand` -- the identifier attached to the search command when it was prepared.
+| Parameters     | `commandId` -- the identifier attached to the search command when it was prepared.
 | Returns        | A `List<Int>`, empty if the search matched no record. `null` if no search command carrying
   this identifier has been processed.
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
@@ -3247,7 +3247,7 @@ state. The returned object is immutable and captures the state at the moment of 
 | Signature
 | `prepareSearchRecords(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}data: SearchCommandData,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}idCommand: Int` +
+`{nbsp}{nbsp}{nbsp}{nbsp}commandId: Int` +
 `) -> Self`
 | Since          | 1.1
 | Description
@@ -3257,14 +3257,14 @@ state. The returned object is immutable and captures the state at the moment of 
   modes.
 
   Once processed, the numbers of the matching records are available in the <<type_CalypsoCard,`CalypsoCard`>>
-  through <<op_CalypsoCard_getMatchingRecordNumbers,`getMatchingRecordNumbers`>> called with `idCommand`, and
+  through <<op_CalypsoCard_getMatchingRecordNumbers,`getMatchingRecordNumbers`>> called with `commandId`, and
   the content of the first matching record in the same `CalypsoCard` when requested.
 
   The following `processCommands()` does not fail whatever the existence of the targeted file or the validity of
   the record number and offset: the `CalypsoCard` may then simply not be updated (*best-effort* mode).
 | Parameters
 | `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the search criteria. +
-  `idCommand` -- the application-supplied identifier of this command.
+  `commandId` -- the application-supplied identifier of this command.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Search Record Multiple* command is available for this card. +

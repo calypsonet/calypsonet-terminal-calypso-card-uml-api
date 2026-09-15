@@ -155,7 +155,7 @@ package "card" as card {
         +getFiles() → Set<ElementaryFile>
         +<color:blue>getCounterValuesBySfi(sfi: Byte) → SortedMap<Int, Int>?
         +<color:blue>getCounterValuesByLid(lid: Short) → SortedMap<Int, Int>?
-        +<color:blue>getMatchingRecordNumbers(idCommand: Int) → List<Int>?
+        +<color:blue>getMatchingRecordNumbers(commandId: Int) → List<Int>?
 
         +isDfRatified() → Boolean
         +getTransactionCounter() → Int
@@ -263,7 +263,7 @@ package "transaction" as transaction {
         +prepareReadBinary(sfi: Byte, offset: Int, nbBytesToRead: Int) → Self
         +prepareReadCounter(sfi: Byte, nbCountersToRead: Int) → Self
 
-        +prepareSearchRecords(data: SearchCommandData<color:blue>, idCommand: Int</color>) → Self
+        +prepareSearchRecords(data: SearchCommandData<color:blue>, commandId: Int</color>) → Self
 
         +prepareCheckPinStatus() → Self
 

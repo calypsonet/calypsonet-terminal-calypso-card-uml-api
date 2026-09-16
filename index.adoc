@@ -676,46 +676,6 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | When true, the content of the first matching record is fetched into the <<type_CalypsoCard,`CalypsoCard`>>.
 |===
 
-[[type_SecureSessionStatus]]
-==== Secure Session Status
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SecureSessionStatus`
-| Kind       | Data
-| Namespace  | `calypso.card.transaction`
-| Since      | 3.0
-| Purpose    | Immutable snapshot of the current secure session state, returned by <<op_TransactionManager_getSecureSessionStatus,`TransactionManager.getSecureSessionStatus`>>.
-|===
-
-A `SecureSessionStatus` is *captured* at the moment of the call and does *not* reflect subsequent changes to
-the session state. To obtain a refreshed status, the caller MUST call
-<<op_TransactionManager_getSecureSessionStatus,`getSecureSessionStatus`>> again.
-
-[cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
-|===
-| Name | Type | Default | Since | Description
-
-| `isOpen`
-| `Boolean`
-| --
-| 3.0
-| Indicates whether a secure session is open at the snapshot moment.
-
-| `type`
-| <<type_SecureSessionType,`SecureSessionType`>>
-| --
-| 3.0
-| Cryptographic nature of the session, symmetric or asymmetric.
-
-| `writeAccessLevel`
-| <<type_WriteAccessLevel,`WriteAccessLevel`>>?
-| --
-| 3.0
-| Write access level requested at session opening. `null` in PKI mode (`SecureSessionType.ASYMMETRIC`), where
-  session opening does not take a write access level.
-|===
-
 [[type_SvDebitLogRecord]]
 ==== SV Debit Log Record
 
@@ -2847,17 +2807,15 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 
 NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBufferOverflow`>> if the command would overflow the modification buffer and the multiple-session mode is not allowed.
 
-[[op_TransactionManager_getSecureSessionStatus]]
-===== Get Secure Session Status
+[[op_TransactionManager_getSecureSessionState]]
+===== Get Secure Session State
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `getSecureSessionStatus() -> SecureSessionStatus`
+| Signature      | `getSecureSessionState() -> SecureSessionState`
 | Since          | 3.0
-| Description
-| Returns a <<type_SecureSessionStatus,`SecureSessionStatus`>> snapshot of the current secure session
-state. The returned object is immutable and captures the state at the moment of the call.
-| Returns        | A <<type_SecureSessionStatus,`SecureSessionStatus`>>.
+| Description    | Returns the state of the secure session at the moment of the call.
+| Returns        | A <<type_SecureSessionState,`SecureSessionState`>> value; `NO_SESSION` if no secure session is open.
 | Pre-conditions | None.
 | Errors         | None.
 |===
@@ -3731,28 +3689,35 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 | `CA_CERTIFICATE`  | 2.1 | CA certificate.
 |===
 
-[[type_SecureSessionType]]
-==== Secure Session Type
+[[type_SecureSessionState]]
+==== Secure Session State
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name       | `SecureSessionType`
+| Name       | `SecureSessionState`
 | Kind       | Enumeration
 | Namespace  | `calypso.card.transaction`
 | Since      | 3.0
-| Purpose    | Cryptographic nature of a Calypso secure session.
+| Purpose    | State of the secure session, returned by <<op_TransactionManager_getSecureSessionState,`TransactionManager.getSecureSessionState`>>.
 |===
+
+The value reflects the state of the secure session at the moment of the call; a new call to
+<<op_TransactionManager_getSecureSessionState,`getSecureSessionState`>> is required to observe later changes. A
+secure session is open if and only if the value differs from `NO_SESSION`.
+
+NOTE: The values reflect the *cryptographic nature* of the session and not the *application mode*
+(Regular / Extended).
+Both symmetric modes share the same underlying cryptography and only differ in their configuration at the `TransactionManager` level; the integrator who needs to know the application mode obtains it directly via the sub-type of `TransactionManager` that has been instantiated.
 
 [cols="^.^3,^.^1,.^5", options="header"]
 |===
-| Value        | Since | Description
-| `SYMMETRIC`  | 3.0 | PSO/SAM sessions, Regular and Extended modes.
-| `ASYMMETRIC` | 3.0 | PKI mode.
+| Value                       | Since | Description
+| `NO_SESSION`                | 3.0   | No secure session is open: none has been opened yet, or the last one has been closed or cancelled.
+| `ASYMMETRIC`                | 3.0   | PKI secure session.
+| `SYMMETRIC_PERSONALIZATION` | 3.0   | Symmetric secure session opened with the personalisation write access level.
+| `SYMMETRIC_LOAD`            | 3.0   | Symmetric secure session opened with the load write access level.
+| `SYMMETRIC_DEBIT`           | 3.0   | Symmetric secure session opened with the debit write access level.
 |===
-
-NOTE: This enumeration reflects the *cryptographic nature* of the session and not the *application mode*
-(Regular / Extended).
-Both symmetric modes share the same underlying cryptography and only differ in their configuration at the `TransactionManager` level; the integrator who needs to know the application mode obtains it directly via the sub-type of `TransactionManager` that has been instantiated.
 
 [[type_SelectFileControl]]
 ==== Select File Control

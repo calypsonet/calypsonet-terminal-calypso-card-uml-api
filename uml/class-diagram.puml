@@ -286,17 +286,15 @@ package "transaction" as transaction {
 
         +prepareGenerateAsymmetricKeyPair() → Self
 
-        +<color:blue>getSecureSessionStatus() → SecureSessionStatus
+        +<color:blue>getSecureSessionState() → SecureSessionState
         +getTransactionAuditData() → List<ByteArray>
     }
-    class "<color:blue>SecureSessionStatus" as SecureSessionStatus <<data>> <<green>> {
-        +<color:blue>val isOpen: Boolean
-        +<color:blue>val type: SecureSessionType
-        +<color:blue>val writeAccessLevel: WriteAccessLevel?
-    }
-    enum "<color:blue>SecureSessionType" as SecureSessionType <<green>> {
-        +<color:blue>SYMMETRIC
+    enum "<color:blue>SecureSessionState" as SecureSessionState <<green>> {
+        +<color:blue>NO_SESSION
         +<color:blue>ASYMMETRIC
+        +<color:blue>SYMMETRIC_PERSONALIZATION
+        +<color:blue>SYMMETRIC_LOAD
+        +<color:blue>SYMMETRIC_DEBIT
     }
     interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
@@ -425,7 +423,7 @@ TransactionManager .up.> SelectFileControl #C_USE : use >
 TransactionManager .up.> GetDataTag #C_USE : use >
 TransactionManager .up.> PutDataTag #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
-TransactionManager .right.> SecureSessionStatus #C_LINK : provide >
+TransactionManager .right.> SecureSessionState #C_LINK : provide >
 
 SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
 
@@ -440,8 +438,6 @@ AsymmetricCryptoSecuritySetting .up.> CaCertificate #C_USE : use >
 AsymmetricCryptoSecuritySetting .up.> CaCertificateParser #C_USE : use >
 AsymmetricCryptoSecuritySetting .up.> CardCertificateParser #C_USE : use >
 
-SecureSessionStatus ..> WriteAccessLevel #C_USE : use >
-SecureSessionStatus ..> SecureSessionType #C_USE : use >
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >

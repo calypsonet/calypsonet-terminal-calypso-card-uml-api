@@ -274,8 +274,8 @@ not restated for each operation:
   operation. Violating one is a contract error, never listed in the *Errors* row, which describes only the
   outcomes a correct caller must handle. Each entry is prefixed by its nature, which determines the error
   raised when the condition is not met:
-** *Argument* -- an illegal argument error.
-** *Range* -- an index out of bounds error.
+** *Argument* -- an illegal argument error. Applies to any invalid argument, including values bounded by a card or SAM protocol.
+** *Range* -- an index out of bounds error. Applies when the argument designates a position within a collection or memory image exposed by the API.
 ** *State* -- an illegal state error.
 ** *Capability* -- an unsupported operation error.
 * *Non-`null` results.* Unless the return type is marked nullable (`T?`) or the *Returns* row states otherwise, an
@@ -732,12 +732,6 @@ the session state. To obtain a refreshed status, the caller MUST call
 |===
 | Name | Type | Default | Since | Description
 
-| `rawData`
-| `ByteArray`
-| --
-| 1.0
-| Raw bytes of the debit log record. Non-empty.
-
 | `debitDate`
 | `ByteArray`
 | --
@@ -802,12 +796,6 @@ the session state. To obtain a refreshed status, the caller MUST call
 [cols="^.^1,^.^1,^.^1,^.^1,.^5", options="header"]
 |===
 | Name | Type | Default | Since | Description
-
-| `rawData`
-| `ByteArray`
-| --
-| 1.0
-| Raw bytes of the load log record. Non-empty.
 
 | `loadDate`
 | `ByteArray`
@@ -1186,9 +1174,9 @@ Failed write commands do not update the in-memory image.
 | Returns        | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
 | Pre-conditions | None.
 | Errors         | None.
-| See also       | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(short)`>> +
+| See also       | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(lid)`>> +
                    <<op_CalypsoCardSelectionExtension_prepareSelectFile_byControl,`CalypsoCardSelectionExtension.prepareSelectFile(SelectFileControl)`>> +
-                   <<op_TransactionManager_prepareSelectFile_byLid,`TransactionManager.prepareSelectFile(short)`>> +
+                   <<op_TransactionManager_prepareSelectFile_byLid,`TransactionManager.prepareSelectFile(lid)`>> +
                    <<op_TransactionManager_prepareSelectFile_byControl,`TransactionManager.prepareSelectFile(SelectFileControl)`>>
 |===
 
@@ -1377,10 +1365,10 @@ Failed write commands do not update the in-memory image.
 | Pre-conditions | *State* -- an *SV Get* command has been executed.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecords]]
@@ -1390,15 +1378,30 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature      | `getSvDebitLogAllRecords() -> List<SvDebitLogRecord>`
 | Since          | 1.0
-| Description    | All SV debit log records read from the card.
+| Description    | All SV debit log records read from the card. Each call returns snapshots decoded from the values returned by `getSvDebitLogAllRecordsRawData` at the time of the call, in the same order.
 | Returns        | A `List<SvDebitLogRecord>`; empty if no debit log record has been read.
 | Pre-conditions | None.
 | Errors         | None.
-| See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
+| See also       | <<op_CalypsoCard_getSvDebitLogAllRecordsRawData,`getSvDebitLogAllRecordsRawData`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+|===
+
+[[op_CalypsoCard_getSvDebitLogAllRecordsRawData]]
+===== Get SV Debit Log All Records Raw Data
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getSvDebitLogAllRecordsRawData() -> List<ByteArray>`
+| Since          | 3.0
+| Description    | Returns the raw bytes of all SV debit log records read from the card. The list returned by `getSvDebitLogAllRecords` at the same time has the same size and order, each <<type_SvDebitLogRecord,`SvDebitLogRecord`>> being the decoding of the raw record at the same position.
+| Returns        | A `List<ByteArray>` of non-empty raw records; empty if no debit log record has been read.
+| Pre-conditions | None.
+| Errors         | None.
+| See also       | <<op_CalypsoCard_getSvDebitLogAllRecords,`getSvDebitLogAllRecords`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogLastRecord]]
@@ -1408,15 +1411,30 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature      | `getSvDebitLogLastRecord() -> SvDebitLogRecord?`
 | Since          | 1.0
-| Description    | Last SV debit log record; `null` if not available.
+| Description    | Last SV debit log record; `null` if not available. Each call returns a snapshot decoded from the value returned by `getSvDebitLogLastRecordRawData` at the time of the call.
 | Returns        | A <<type_SvDebitLogRecord,`SvDebitLogRecord`>>, or `null` if not available.
 | Pre-conditions | None.
 | Errors         | None.
-| See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
+| See also       | <<op_CalypsoCard_getSvDebitLogLastRecordRawData,`getSvDebitLogLastRecordRawData`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+|===
+
+[[op_CalypsoCard_getSvDebitLogLastRecordRawData]]
+===== Get SV Debit Log Last Record Raw Data
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getSvDebitLogLastRecordRawData() -> ByteArray?`
+| Since          | 3.0
+| Description    | Returns the raw bytes of the last SV debit log record; `null` if not available. The <<type_SvDebitLogRecord,`SvDebitLogRecord`>> returned by `getSvDebitLogLastRecord` at the same time is the decoding of this value; both are `null` together.
+| Returns        | The non-empty raw bytes of the record, or `null` if not available.
+| Pre-conditions | None.
+| Errors         | None.
+| See also       | <<op_CalypsoCard_getSvDebitLogLastRecord,`getSvDebitLogLastRecord`>>
 |===
 
 [[op_CalypsoCard_getSvLastTNum]]
@@ -1431,10 +1449,10 @@ Failed write commands do not update the in-memory image.
 | Pre-conditions | *State* -- an *SV Get* command has been executed.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecord]]
@@ -1444,15 +1462,30 @@ Failed write commands do not update the in-memory image.
 |===
 | Signature      | `getSvLoadLogRecord() -> SvLoadLogRecord?`
 | Since          | 1.0
-| Description    | Last SV load log record; `null` if not available.
+| Description    | Last SV load log record; `null` if not available. Each call returns a snapshot decoded from the value returned by `getSvLoadLogRecordRawData` at the time of the call.
 | Returns        | A <<type_SvLoadLogRecord,`SvLoadLogRecord`>>, or `null` if not available.
 | Pre-conditions | None.
 | Errors         | None.
-| See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(int, byte[], byte[])`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(int, byte[], byte[], byte[])`>>
+| See also       | <<op_CalypsoCard_getSvLoadLogRecordRawData,`getSvLoadLogRecordRawData`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+|===
+
+[[op_CalypsoCard_getSvLoadLogRecordRawData]]
+===== Get SV Load Log Record Raw Data
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getSvLoadLogRecordRawData() -> ByteArray?`
+| Since          | 3.0
+| Description    | Returns the raw bytes of the last SV load log record; `null` if not available. The <<type_SvLoadLogRecord,`SvLoadLogRecord`>> returned by `getSvLoadLogRecord` at the same time is the decoding of this value; both are `null` together.
+| Returns        | The non-empty raw bytes of the record, or `null` if not available.
+| Pre-conditions | None.
+| Errors         | None.
+| See also       | <<op_CalypsoCard_getSvLoadLogRecord,`getSvLoadLogRecord`>>
 |===
 
 [[op_CalypsoCard_getTraceabilityInformation]]

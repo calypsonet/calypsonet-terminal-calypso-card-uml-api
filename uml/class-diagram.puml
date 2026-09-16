@@ -172,8 +172,11 @@ package "card" as card {
         +getSvBalance() → Int
         +getSvLastTNum() → Int
         +getSvLoadLogRecord() → SvLoadLogRecord?
+        +<color:blue>getSvLoadLogRecordRawData() → ByteArray?
         +getSvDebitLogLastRecord() → SvDebitLogRecord?
+        +<color:blue>getSvDebitLogLastRecordRawData() → ByteArray?
         +getSvDebitLogAllRecords() → List<SvDebitLogRecord>
+        +<color:blue>getSvDebitLogAllRecordsRawData() → List<ByteArray>
     }
     class "DirectoryHeader" as DirectoryHeader <<data>> <<green>> {
         +val lid: Short
@@ -219,8 +222,6 @@ package "card" as card {
         +UNKNOWN
     }
     class "SvLoadLogRecord" as SvLoadLogRecord <<data>> <<green>> {
-        +val rawData: ByteArray
-
         +val loadDate: ByteArray
         +val loadTime: ByteArray
 
@@ -234,8 +235,6 @@ package "card" as card {
         +val svTNum: Int
     }
     class "SvDebitLogRecord" as SvDebitLogRecord <<data>> <<green>> {
-        +val rawData: ByteArray
-
         +val debitDate: ByteArray
         +val debitTime: ByteArray
 

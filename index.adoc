@@ -1134,10 +1134,10 @@ Failed write commands do not update the in-memory image.
 | Returns        | A <<type_DirectoryHeader,`DirectoryHeader`>>, or `null` if not set.
 | Pre-conditions | None.
 | Errors         | None.
-| See also       | <<op_CalypsoCardSelectionExtension_prepareSelectFile_byLid,`CalypsoCardSelectionExtension.prepareSelectFile(lid)`>> +
-                   <<op_CalypsoCardSelectionExtension_prepareSelectFile_byControl,`CalypsoCardSelectionExtension.prepareSelectFile(SelectFileControl)`>> +
-                   <<op_TransactionManager_prepareSelectFile_byLid,`TransactionManager.prepareSelectFile(lid)`>> +
-                   <<op_TransactionManager_prepareSelectFile_byControl,`TransactionManager.prepareSelectFile(SelectFileControl)`>>
+| See also       | <<op_CalypsoCardSelectionExtension_prepareSelectFileByLid,`CalypsoCardSelectionExtension.prepareSelectFileByLid`>> +
+                   <<op_CalypsoCardSelectionExtension_prepareSelectFileByControl,`CalypsoCardSelectionExtension.prepareSelectFileByControl`>> +
+                   <<op_TransactionManager_prepareSelectFileByLid,`TransactionManager.prepareSelectFileByLid`>> +
+                   <<op_TransactionManager_prepareSelectFileByControl,`TransactionManager.prepareSelectFileByControl`>>
 |===
 
 [[op_CalypsoCard_getFileByLid]]
@@ -1977,28 +1977,14 @@ The mechanism is *ineffective* if:
 | Errors         | None.
 |===
 
-[[op_CalypsoCardSelectionExtension_prepareSelectFile_byLid]]
-===== Prepare Select File (LID)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `prepareSelectFile(lid: Short) -> Self`
-| Since          | 1.0
-| Description    | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
-| Parameters     | `lid` -- the LID of the EF to select.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_CalypsoCardSelectionExtension_prepareSelectFile_byControl]]
-===== Prepare Select File (Select Control)
+[[op_CalypsoCardSelectionExtension_prepareSelectFileByControl]]
+===== Prepare Select File By Control
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `prepareSelectFile(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}selectControl: SelectFileControl` +
+| `prepareSelectFileByControl(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}selectFileControl: SelectFileControl` +
 `) -> Self`
 | Since          | 1.0
 | Description
@@ -2006,7 +1992,21 @@ The mechanism is *ineffective* if:
 
   *Caution:* the resulting APDU command is compliant with PRIME revision 3 cards. It may therefore be rejected by
   some earlier revision cards.
-| Parameters     | `selectControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
+| Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- the navigation control to apply.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Errors         | None.
+|===
+
+[[op_CalypsoCardSelectionExtension_prepareSelectFileByLid]]
+===== Prepare Select File By LID
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `prepareSelectFileByLid(lid: Short) -> Self`
+| Since          | 1.0
+| Description    | Adds a *Select File* command targeting an EF by its LID. Caution: PRIME 3 compatible only. The command fails if the selected file is not an EF.
+| Parameters     | `lid` -- the LID of the EF to select.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
@@ -3265,12 +3265,30 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | See also       | <<type_SearchCommandData,`SearchCommandData`>>, <<op_CalypsoCard_getMatchingRecordNumbers,`CalypsoCard.getMatchingRecordNumbers`>>
 |===
 
-[[op_TransactionManager_prepareSelectFile_byLid]]
-===== Prepare Select File (LID)
+[[op_TransactionManager_prepareSelectFileByControl]]
+===== Prepare Select File By Control
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | `prepareSelectFile(lid: Short) -> Self`
+| Signature      | `prepareSelectFileByControl(selectFileControl: SelectFileControl) -> Self`
+| Since          | 1.0
+| Description
+| Adds a *Select File* command using a navigation control.
+
+  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
+  <<type_ElementaryFile,`ElementaryFile.header`>>.
+| Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Errors         | None.
+|===
+
+[[op_TransactionManager_prepareSelectFileByLid]]
+===== Prepare Select File By LID
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `prepareSelectFileByLid(lid: Short) -> Self`
 | Since          | 1.1
 | Description
 | Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
@@ -3280,24 +3298,6 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
   <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and
   <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `lid` -- the LID of the EF to select.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_TransactionManager_prepareSelectFile_byControl]]
-===== Prepare Select File (Select Control)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `prepareSelectFile(selectFileControl: SelectFileControl) -> Self`
-| Since          | 1.0
-| Description
-| Adds a *Select File* command using a navigation control.
-
-  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
-  <<type_ElementaryFile,`ElementaryFile.header`>>.
-| Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.

@@ -114,8 +114,8 @@ package "card" as card {
     interface "«<back:yellow>CardSelectionExtension</back>»\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
         +acceptInvalidatedCard() → Self
 
-        +prepareSelectFile(lid: Short) → Self
-        +prepareSelectFile(selectControl: SelectFileControl) → Self
+        +<color:blue>prepareSelectFileByLid(lid: Short) → Self
+        +<color:blue>prepareSelectFileByControl(selectFileControl: SelectFileControl) → Self
 
         +prepareGetData(tag: GetDataTag) → Self
 
@@ -250,8 +250,8 @@ package "card" as card {
 package "transaction" as transaction {
     ' Card
     interface "«<back:yellow><color:blue>IsoCardTransactionManager</color></back>»\nTransactionManager" as TransactionManager {
-        +prepareSelectFile(lid: Short) → Self
-        +prepareSelectFile(selectFileControl: SelectFileControl) → Self
+        +<color:blue>prepareSelectFileByLid(lid: Short) → Self
+        +<color:blue>prepareSelectFileByControl(selectFileControl: SelectFileControl) → Self
 
         +prepareGetData(tag: GetDataTag) → Self
         +preparePutData(tag: PutDataTag, data: ByteArray) → Self
@@ -443,13 +443,13 @@ CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
 CalypsoCardSelectionExtension ...> WriteAccessLevel #C_USE : use >
 
-CalypsoCard ...> DirectoryHeader #C_LINK : provide >
+CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
 CalypsoCard .right.> CalypsoCardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader .up.> WriteAccessLevel #C_USE : use >
+DirectoryHeader .left.> WriteAccessLevel #C_USE : use >
 
 ElementaryFile ..> FileHeader #C_USE : use >
 

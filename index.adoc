@@ -283,6 +283,8 @@ not restated for each operation:
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
   (e.g. `List`, `Set`, `Map`) returns an empty collection rather than `null`.
 * *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
+* *Default values.* A parameter declared with a default value (for example `commandId: Int? = null`) MAY be
+  omitted by the caller, in which case the default value applies; the *Parameters* row states its meaning.
 
 ==== Concurrency
 
@@ -917,49 +919,28 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
-===== Assign Open Secure Session Max Duration (All DF)
+[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
+===== Assign Open Secure Session Max Duration
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin`,
-  applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
+  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
+  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
+| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
+  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
-===== Assign Open Secure Session Max Duration (Per DF)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and
-whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
-| Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to. +
-  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
 | Errors         | None.
 |===
 
@@ -1325,10 +1306,8 @@ Failed write commands do not update the in-memory image.
 | Pre-conditions | *State* -- an *SV Get* command has been executed.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecords]]
@@ -1344,10 +1323,8 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 | See also       | <<op_CalypsoCard_getSvDebitLogAllRecordsRawData,`getSvDebitLogAllRecordsRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecordsRawData]]
@@ -1377,10 +1354,8 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 | See also       | <<op_CalypsoCard_getSvDebitLogLastRecordRawData,`getSvDebitLogLastRecordRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogLastRecordRawData]]
@@ -1409,10 +1384,8 @@ Failed write commands do not update the in-memory image.
 | Pre-conditions | *State* -- an *SV Get* command has been executed.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecord]]
@@ -1428,10 +1401,8 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 | See also       | <<op_CalypsoCard_getSvLoadLogRecordRawData,`getSvLoadLogRecordRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData,`SecureSymmetricCryptoTransactionManager.prepareSvDebit(amount, date, time)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount)`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData,`SecureSymmetricCryptoTransactionManager.prepareSvReload(amount, date, time, free)`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecordRawData]]
@@ -2248,52 +2219,33 @@ in the crypto module.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
-[[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_withData]]
-===== Prepare SV Debit (Date)
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit]]
+===== Prepare SV Debit
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
 | `prepareSvDebit(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray? = null,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray? = null` +
 `) -> Self`
 | Since          | 2.0
 | Description
-| Schedules an *SV Debit* or *SV Undebit* command using the supplied additional data. It decreases the current SV
-  balance by the supplied amount, or cancels a previous debit, according to the operation type chosen when the
-  preceding *SV Get* command was called. Amount: `0..32767` for debit, `0..32768` for undebit.
+| Schedules an *SV Debit* or *SV Undebit* command. It decreases the current SV balance by the supplied amount, or
+  cancels a previous debit, according to the operation type chosen when the preceding *SV Get* command was called.
+  Amount: `0..32767` for debit, `0..32768` for undebit. The optional `date` and `time` data fields are set to zero when
+  they are not supplied.
 
   The key used is the *debit* key. Once processed, the data is available in the
   <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
 | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
-`date`   -- a 2-byte free value. +
-`time`   -- a 2-byte free value.
+  `date`   -- a 2-byte free value, or `null` to set it to zero. +
+  `time`   -- a 2-byte free value, or `null` to set it to zero.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`. +
   *Argument* -- every provided argument is within range. +
-  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
-| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
-|===
-
-[[op_SecureSymmetricCryptoTransactionManager_prepareSvDebit_amountOnly]]
-===== Prepare SV Debit (No Date)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `prepareSvDebit(amount: Int) -> Self`
-| Since          | 2.0
-| Description
-| Schedules an *SV Debit* or *SV Undebit* command with the optional data fields set to zero. It decreases the
-  current SV balance by the supplied amount, or cancels a previous debit. The key used is the *debit* key. Once
-  processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
-  management operations.
-| Parameters     | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`).
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- the provided argument is within range. +
   *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2322,50 +2274,31 @@ in the crypto module.
 | Errors         | None.
 |===
 
-[[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_withData]]
-===== Prepare SV Reload (Date)
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvReload]]
+===== Prepare SV Reload
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
 | `prepareSvReload(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray? = null,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray? = null,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray? = null` +
 `) -> Self`
 | Since          | 2.0
 | Description
-| Schedules an *SV Reload* command using the supplied additional data. Amount range: `-8388608..8388607`. The key
-  used is the *reload* key. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
-  its dedicated SV data management operations.
+| Schedules an *SV Reload* command. Amount range: `-8388608..8388607`. The optional `date`, `time` and `free` data
+  fields are set to zero when they are not supplied. The key used is the *reload* key. Once processed, the data is
+  available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
 | `amount` -- the value to be reloaded, positive or negative integer in the range `-8388608..8388607`. +
-`date`   -- a 2-byte free value. +
-`time`   -- a 2-byte free value. +
-`free`   -- a 2-byte free value.
+  `date`   -- a 2-byte free value, or `null` to set it to zero. +
+  `time`   -- a 2-byte free value, or `null` to set it to zero. +
+  `free`   -- a 2-byte free value, or `null` to set it to zero.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`. +
   *Argument* -- every provided argument is within range. +
-  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
-| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
-|===
-
-[[op_SecureSymmetricCryptoTransactionManager_prepareSvReload_amountOnly]]
-===== Prepare SV Reload (No Date)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `prepareSvReload(amount: Int) -> Self`
-| Since          | 2.0
-| Description
-| Schedules an *SV Reload* command with the optional data fields set to zero. The key used is the *reload* key.
-  Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data
-  management operations.
-| Parameters     | `amount` -- the value to be reloaded, positive integer in the range `0..8388607` for a `DO` action, in the range `0..8388608` for an `UNDO` action.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- the provided argument is within range. +
   *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2544,91 +2477,53 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_allDf]]
-===== Assign Open Secure Session Max Duration (All DF)
+[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
+===== Assign Open Secure Session Max Duration
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
 | `assignOpenSecureSessionMaxDuration(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin`,
-  applied to every application DF (no `dfName` filter). See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
+  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
+  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
 | Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
+| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
+  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration_byDf]]
-===== Assign Open Secure Session Max Duration (Per DF)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description    | Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`. See <<sec_csnmin,the `csnMin` combination rule>>.
-| Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to. +
-  `maxDuration` -- the maximum duration of an open secure session, in milliseconds.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_allDf]]
-===== Assign SV Operation Max Duration (All DF)
+[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration]]
+===== Assign SV Operation Max Duration
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
 | `assignSvOperationMaxDuration(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
+`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin`,
-  applied to every application DF (no `dfName` filter).
+| Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and, when `dfName` is
+  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
+  DF.
 | Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
+| `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds. +
+  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
+  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration_byDf]]
-===== Assign SV Operation Max Duration (Per DF)
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignSvOperationMaxDuration(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description    | Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and whose application DF matches `dfName`.
-| Parameters
-| `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to. +
-  `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
 | Errors         | None.
 |===
 

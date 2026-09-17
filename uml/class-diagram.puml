@@ -308,13 +308,9 @@ package "transaction" as transaction {
         +prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) → Self
 
         +prepareSvGet(svOperation: SvOperation, svAction: SvAction) → Self
-        +prepareSvReload(amount: Int, date: ByteArray, time: ByteArray, free: ByteArray) → Self
+        +<color:blue>prepareSvReload(amount: Int, date: ByteArray? = null, time: ByteArray? = null, free: ByteArray? = null) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
-        +prepareSvReload(amount: Int) → Self
-        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
-        +prepareSvDebit(amount: Int, date: ByteArray, time: ByteArray) → Self
-        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
-        +prepareSvDebit(amount: Int) → Self
+        +<color:blue>prepareSvDebit(amount: Int, date: ByteArray? = null, time: ByteArray? = null) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareInvalidate() → Self
@@ -352,8 +348,7 @@ package "transaction" as transaction {
         +addCaCertificateParser(caCertificateParser: CaCertificateParser) → Self
         +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → Self
 
-		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, dfName: ByteArray, maxDuration: Long) → Self
-		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, maxDuration: Long) → Self
+		+<color:blue>assignOpenSecureSessionMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
     }
     interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +enableMultipleSession() → Self
@@ -373,10 +368,8 @@ package "transaction" as transaction {
         +setPinVerificationCipheringKey(kif: Byte, kvc: Byte) → Self
         +setPinModificationCipheringKey(kif: Byte, kvc: Byte) → Self
 
-		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, dfName: ByteArray, maxDuration: Long) → Self
-		+<color:blue>assignOpenSecureSessionMaxDuration(csnMin: Long, maxDuration: Long) → Self
-		+<color:blue>assignSvOperationMaxDuration(csnMin: Long, dfName: ByteArray, maxDuration: Long) → Self
-		+<color:blue>assignSvOperationMaxDuration(csnMin: Long, maxDuration: Long) → Self
+		+<color:blue>assignOpenSecureSessionMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
+		+<color:blue>assignSvOperationMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
 
         +initCryptoContextForNextTransaction() → Unit
         {method} <size:10><color:#7F8C8D>    ⚠ errors: Crypto, CryptoIO</color></size>

@@ -308,9 +308,9 @@ package "transaction" as transaction {
         +prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) → Self
 
         +prepareSvGet(svOperation: SvOperation, svAction: SvAction) → Self
-        +<color:blue>prepareSvReload(amount: Int, date: ByteArray? = null, time: ByteArray? = null, free: ByteArray? = null) → Self
+        +<color:blue>prepareSvReload(amount: Int, date: ByteArray, time: ByteArray, free: ByteArray) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
-        +<color:blue>prepareSvDebit(amount: Int, date: ByteArray? = null, time: ByteArray? = null) → Self
+        +<color:blue>prepareSvDebit(amount: Int, date: ByteArray, time: ByteArray) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareInvalidate() → Self

@@ -2227,25 +2227,26 @@ in the crypto module.
 | Signature
 | `prepareSvDebit(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray? = null,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray` +
 `) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Debit* or *SV Undebit* command. It decreases the current SV balance by the supplied amount, or
   cancels a previous debit, according to the operation type chosen when the preceding *SV Get* command was called.
-  Amount: `0..32767` for debit, `0..32768` for undebit. The optional `date` and `time` data fields are set to zero when
-  they are not supplied.
+  Amount: `0..32767` for debit, `0..32768` for undebit. The `date` and `time` data fields are recorded in the SV debit
+  log.
 
   The key used is the *debit* key. Once processed, the data is available in the
   <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
 | `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
-  `date`   -- a 2-byte free value, or `null` to set it to zero. +
-  `time`   -- a 2-byte free value, or `null` to set it to zero.
+  `date`   -- a 2-byte free value. +
+  `time`   -- a 2-byte free value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`. +
-  *Argument* -- every provided argument is within range. +
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `amount` is in `0..32767` for a debit or in `0..32768` for an undebit, and `date` and `time` are
+  2 bytes long. +
   *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
@@ -2282,23 +2283,23 @@ in the crypto module.
 | Signature
 | `prepareSvReload(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray? = null,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray? = null,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}free: ByteArray` +
 `) -> Self`
 | Since          | 2.0
 | Description
-| Schedules an *SV Reload* command. Amount range: `-8388608..8388607`. The optional `date`, `time` and `free` data
-  fields are set to zero when they are not supplied. The key used is the *reload* key. Once processed, the data is
+| Schedules an *SV Reload* command. Amount range: `-8388608..8388607`. The `date`, `time` and `free` data fields are
+  recorded in the SV load log. The key used is the *reload* key. Once processed, the data is
   available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
 | `amount` -- the value to be reloaded, positive or negative integer in the range `-8388608..8388607`. +
-  `date`   -- a 2-byte free value, or `null` to set it to zero. +
-  `time`   -- a 2-byte free value, or `null` to set it to zero. +
-  `free`   -- a 2-byte free value, or `null` to set it to zero.
+  `date`   -- a 2-byte free value. +
+  `time`   -- a 2-byte free value. +
+  `free`   -- a 2-byte free value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`. +
-  *Argument* -- every provided argument is within range. +
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `amount` is in `-8388608..8388607`, and `date`, `time` and `free` are 2 bytes long. +
   *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===

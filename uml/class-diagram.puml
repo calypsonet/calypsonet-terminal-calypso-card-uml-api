@@ -262,7 +262,7 @@ package "transaction" as transaction {
         +prepareReadBinary(sfi: Byte, offset: Int, nbBytesToRead: Int) → Self
         +prepareReadCounter(sfi: Byte, nbCountersToRead: Int) → Self
 
-        +prepareSearchRecords(data: SearchCommandData<color:blue>, commandId: Int</color>) → Self
+        +prepareSearchRecords(<color:blue>commandId: Int</color>, data: SearchCommandData) → Self
 
         +prepareCheckPinStatus() → Self
 

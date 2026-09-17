@@ -283,8 +283,8 @@ not restated for each operation:
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
   (e.g. `List`, `Set`, `Map`) returns an empty collection rather than `null`.
 * *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
-* *Default values.* A parameter declared with a default value (for example `commandId: Int? = null`) MAY be
-  omitted by the caller, in which case the default value applies; the *Parameters* row states its meaning.
+* *Default values.* A parameter declared with a default value (for example `dfName: ByteArray? = null`) MAY
+  be omitted by the caller, in which case the default value applies; the *Parameters* row states its meaning.
 
 ==== Concurrency
 
@@ -3132,8 +3132,8 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 |===
 | Signature
 | `prepareSearchRecords(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}data: SearchCommandData,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}commandId: Int` +
+`{nbsp}{nbsp}{nbsp}{nbsp}commandId: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}data: SearchCommandData` +
 `) -> Self`
 | Since          | 1.1
 | Description
@@ -3149,8 +3149,8 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
   The following `processCommands()` does not fail whatever the existence of the targeted file or the validity of
   the record number and offset: the `CalypsoCard` may then simply not be updated (*best-effort* mode).
 | Parameters
-| `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the search criteria. +
-  `commandId` -- the application-supplied identifier of this command.
+| `commandId` -- the application-supplied identifier of this command. +
+  `data` (<<type_SearchCommandData,`SearchCommandData`>>) -- the search criteria.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Search Record Multiple* command is available for this card. +

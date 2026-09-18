@@ -3005,10 +3005,11 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds *Read Binary* commands.
 
-  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
-  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
-  targeted file or the validity of the offset and the number of bytes to read -- the `CalypsoCard` may then simply
-  not be filled. Inside a secure session (*strict* mode), it fails in those cases.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
+  outside a secure session: the `CalypsoCard` may then simply not be filled. For the validity of the offset and the number of
+  bytes to read, two behaviours apply depending on whether the command is placed inside a secure session. Outside a
+  secure session (*best-effort* mode), it does not fail whatever their validity. Inside a secure session (*strict*
+  mode), it fails if they are invalid.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3038,10 +3039,11 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Adds a *Read Records* command targeting the supplied counter. The record is read up to the counter location
   supplied as parameter, so all preceding counters are also read.
 
-  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
-  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
-  targeted file or counter -- the `CalypsoCard` may then simply not be filled. Inside a secure session (*strict*
-  mode), it fails if the targeted file or counter is not found.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
+  outside a secure session: the `CalypsoCard` may then simply not be filled. For the existence of the targeted counter, two
+  behaviours apply depending on whether the command is placed inside a secure session. Outside a secure session
+  (*best-effort* mode), it does not fail if the counter is not found. Inside a secure session (*strict* mode), it
+  fails in that case.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3100,10 +3102,11 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Read Records* command for one or more records.
 
-  Depending on whether the command is placed inside a secure session, two behaviours apply. Outside a secure
-  session (*best-effort* mode), the following `processCommands()` does not fail whatever the existence of the
-  targeted file or record -- the `CalypsoCard` may then simply not be filled. Inside a secure session (*strict*
-  mode), it fails if the targeted file or record is not found.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
+  outside a secure session: the `CalypsoCard` may then simply not be filled. For the existence of the targeted record, two
+  behaviours apply depending on whether the command is placed inside a secure session. Outside a secure session
+  (*best-effort* mode), it does not fail if the record is not found. Inside a secure session (*strict* mode), it
+  fails in that case.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3201,6 +3204,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Select File* command using a navigation control.
 
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
+  outside a secure session: the `CalypsoCard` may then simply not be updated.
+
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<type_ElementaryFile,`ElementaryFile.header`>>.
 | Parameters     | `selectFileControl` (<<type_SelectFileControl,`SelectFileControl`>>) -- a <<type_SelectFileControl,`SelectFileControl`>> enum entry.
@@ -3219,6 +3225,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
   an EF.
+
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
+  outside a secure session: the `CalypsoCard` may then simply not be updated.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and
@@ -3808,18 +3817,6 @@ The inconsistency falls into one of the following cases:
 | Namespace  | `calypso.card.transaction`
 | Since      | 2.0
 | Purpose    | Indicates that the provided PIN is invalid.
-|===
-
-[[type_SelectFile]]
-==== Select File
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SelectFile`
-| Kind       | Error
-| Namespace  | `calypso.card.transaction`
-| Since      | 1.4
-| Purpose    | Indicates that file selection failed because the file was not found (status word `6A82h`).
 |===
 
 [[type_SessionBufferOverflow]]

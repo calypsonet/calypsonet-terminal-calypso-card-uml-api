@@ -382,7 +382,7 @@ package "transaction" as transaction {
         +val fetchFirstMatchingResult: Boolean = false
     }
     ' Errors
-    exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nSelectFile\nCrypto\nCryptoIO" as errors <<error>> <<green>> {
+    exception "SessionBufferOverflow\nUnauthorizedKey\nInvalidPin\nInvalidCertificate\nInconsistentData\nInvalidCardSignature\nCardSignatureNotVerifiable\nCrypto\nCryptoIO" as errors <<error>> <<green>> {
         +val message: String
         +val cause: Any?
     }

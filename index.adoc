@@ -412,7 +412,7 @@ include::uml/architecture-overview.puml[]
 | Data model of a Calypso card: `CalypsoCard`, files, headers, SV logs and selection extension.
 
 | `calypso.card.transaction`               | Public API
-| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security setting carriers, `SearchCommandData`, `SvAction`, `SvOperation` and the family of errors.
+| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security setting carriers, `SearchCommandData`, `SvOperation` and the family of errors.
 
 | `calypso.card.transaction.spi`           | SPI
 | Marker interfaces implemented by crypto extensions (`SymmetricCryptoCardTransactionManagerFactory`, `AsymmetricCryptoCardTransactionManagerFactory`, certificate markers, `CardTransactionCryptoExtension`).
@@ -1307,7 +1307,8 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit,`SecureSymmetricCryptoTransactionManager.prepareSvUndebit`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecords]]
@@ -1324,7 +1325,8 @@ Failed write commands do not update the in-memory image.
 | See also       | <<op_CalypsoCard_getSvDebitLogAllRecordsRawData,`getSvDebitLogAllRecordsRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit,`SecureSymmetricCryptoTransactionManager.prepareSvUndebit`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogAllRecordsRawData]]
@@ -1355,7 +1357,8 @@ Failed write commands do not update the in-memory image.
 | See also       | <<op_CalypsoCard_getSvDebitLogLastRecordRawData,`getSvDebitLogLastRecordRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit,`SecureSymmetricCryptoTransactionManager.prepareSvUndebit`>>
 |===
 
 [[op_CalypsoCard_getSvDebitLogLastRecordRawData]]
@@ -1385,7 +1388,8 @@ Failed write commands do not update the in-memory image.
 | Errors         | None.
 | See also       | <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit,`SecureSymmetricCryptoTransactionManager.prepareSvUndebit`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecord]]
@@ -1402,7 +1406,8 @@ Failed write commands do not update the in-memory image.
 | See also       | <<op_CalypsoCard_getSvLoadLogRecordRawData,`getSvLoadLogRecordRawData`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvGet,`SecureSymmetricCryptoTransactionManager.prepareSvGet`>> +
                    <<op_SecureSymmetricCryptoTransactionManager_prepareSvDebit,`SecureSymmetricCryptoTransactionManager.prepareSvDebit`>> +
-                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>>
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvReload,`SecureSymmetricCryptoTransactionManager.prepareSvReload`>> +
+                   <<op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit,`SecureSymmetricCryptoTransactionManager.prepareSvUndebit`>>
 |===
 
 [[op_CalypsoCard_getSvLoadLogRecordRawData]]
@@ -2232,22 +2237,19 @@ in the crypto module.
 `) -> Self`
 | Since          | 2.0
 | Description
-| Schedules an *SV Debit* or *SV Undebit* command. It decreases the current SV balance by the supplied amount, or
-  cancels a previous debit, according to the operation type chosen when the preceding *SV Get* command was called.
-  Amount: `0..32767` for debit, `0..32768` for undebit. The `date` and `time` data fields are recorded in the SV debit
-  log.
+| Schedules an *SV Debit* command, which decreases the current SV balance by the supplied amount. Amount:
+  `0..32767`. The `date` and `time` data fields are recorded in the SV debit log.
 
   The key used is the *debit* key. Once processed, the data is available in the
   <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
 | Parameters
-| `amount` -- the amount to be subtracted (`0..32767`) or added (`0..32768`). +
+| `amount` -- the amount to be subtracted (`0..32767`). +
   `date`   -- a 2-byte free value. +
   `time`   -- a 2-byte free value.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `amount` is in `0..32767` for a debit or in `0..32768` for an undebit, and `date` and `time` are
-  2 bytes long. +
-  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+  *Argument* -- `amount` is in `0..32767`, and `date` and `time` are 2 bytes long. +
+  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
@@ -2256,19 +2258,13 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature
-| `prepareSvGet(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}svOperation: SvOperation,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}svAction: SvAction` +
-`) -> Self`
+| Signature      | `prepareSvGet(svOperation: SvOperation) -> Self`
 | Since          | 2.0
 | Description
 | Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV
   debit, undebit or reload. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>>
   through its dedicated SV data management operations.
-| Parameters
-| `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: debit or reload. +
-`svAction` (<<type_SvAction,`SvAction`>>)    -- the type of action: `DO` (a debit or a positive reload), `UNDO` (an undebit or a negative reload).
+| Parameters     | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: `DEBIT_UNDEBIT` for a debit or an undebit, `RELOAD` for a reload.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the SV feature is available for this card.
@@ -2300,7 +2296,37 @@ in the crypto module.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- `amount` is in `-8388608..8388607`, and `date`, `time` and `free` are 2 bytes long. +
-  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command, and it is consistent with the SV operation.
+  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command prepared with `SvOperation.RELOAD`.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
+|===
+
+[[op_SecureSymmetricCryptoTransactionManager_prepareSvUndebit]]
+===== Prepare SV Undebit
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `prepareSvUndebit(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}amount: Int,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}date: ByteArray,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}time: ByteArray` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Schedules an *SV Undebit* command, which cancels, totally or partially, a previous debit by increasing the current
+  SV balance by the supplied amount. Amount: `0..32768`. The `date` and `time` data fields are recorded in the SV debit
+  log.
+
+  The key used is the *debit* key. Once processed, the data is available in the
+  <<type_CalypsoCard,`CalypsoCard`>> through its dedicated SV data management operations.
+| Parameters
+| `amount` -- the amount to be added back (`0..32768`). +
+  `date`   -- a 2-byte free value. +
+  `time`   -- a 2-byte free value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `amount` is in `0..32768`, and `date` and `time` are 2 bytes long. +
+  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, and it follows an *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
@@ -3635,25 +3661,6 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | `CURRENT_DF`  | 1.0 | The current Calypso DF.
 |===
 
-[[type_SvAction]]
-==== SV Action
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Name       | `SvAction`
-| Kind       | Enumeration
-| Namespace  | `calypso.card.transaction`
-| Since      | 1.0
-| Purpose    | Direction of an SV action.
-|===
-
-[cols="^.^3,^.^1,.^5", options="header"]
-|===
-| Value  | Since | Description
-| `DO`   | 1.0 | In a `RELOAD`, load a positive amount; in a `DEBIT`, debit a positive amount.
-| `UNDO` | 1.0 | In a `RELOAD`, load a negative amount; in a `DEBIT`, cancel (totally or partially) a previous debit.
-|===
-
 [[type_SvOperation]]
 ==== SV Operation
 
@@ -3663,14 +3670,14 @@ Both symmetric modes share the same underlying cryptography and only differ in t
 | Kind       | Enumeration
 | Namespace  | `calypso.card.transaction`
 | Since      | 1.0
-| Purpose    | Type of Stored Value operation.
+| Purpose    | SV operation announced by the *SV Get* command: reload, or debit/undebit.
 |===
 
 [cols="^.^3,^.^1,.^5", options="header"]
 |===
-| Value     | Since | Description
-| `RELOAD`  | 1.0 | Increase the SV balance.
-| `DEBIT`   | 1.0 | Decrease the SV balance.
+| Value           | Since | Description
+| `RELOAD`        | 1.0   | Reload operation: increase the SV balance.
+| `DEBIT_UNDEBIT` | 1.0   | Debit or undebit operation: decrease the SV balance, or cancel a previous debit.
 |===
 
 [[type_WriteAccessLevel]]

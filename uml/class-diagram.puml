@@ -307,10 +307,12 @@ package "transaction" as transaction {
     interface "SecureSymmetricCryptoTransactionManager" as SecureSymmetricCryptoTransactionManager extends SecureTransactionManager {
         +prepareOpenSecureSession(writeAccessLevel: WriteAccessLevel) → Self
 
-        +prepareSvGet(svOperation: SvOperation, svAction: SvAction) → Self
+        +<color:blue>prepareSvGet(svOperation: SvOperation) → Self
         +<color:blue>prepareSvReload(amount: Int, date: ByteArray, time: ByteArray, free: ByteArray) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +<color:blue>prepareSvDebit(amount: Int, date: ByteArray, time: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
+        +<color:blue>prepareSvUndebit(amount: Int, date: ByteArray, time: ByteArray) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareInvalidate() → Self
@@ -333,11 +335,7 @@ package "transaction" as transaction {
 
     enum SvOperation <<green>> {
         +RELOAD
-        +DEBIT
-    }
-    enum SvAction <<green>> {
-        +DO
-        +UNDO
+        +<color:blue>DEBIT_UNDEBIT
     }
     interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
         +addPcaCertificate(pcaCertificate: PcaCertificate) → Self
@@ -422,7 +420,6 @@ SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide
 
 SecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
 SecureSymmetricCryptoTransactionManager .right.> SvOperation #C_USE : use >
-SecureSymmetricCryptoTransactionManager .right.> SvAction #C_USE : use >
 
 SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
 

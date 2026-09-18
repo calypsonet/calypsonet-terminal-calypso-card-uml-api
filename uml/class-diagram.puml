@@ -299,7 +299,7 @@ package "transaction" as transaction {
     interface "FreeTransactionManager" as FreeTransactionManager <<blue>> extends TransactionManager {
     }
     interface "SecureTransactionManager" as SecureTransactionManager extends TransactionManager {
-        +<E : CardTransactionCryptoExtension> getCryptoExtension(cryptoExtensionClass: Class<E>) → E
+        +<color:blue>getCryptoExtension() → CardTransactionCryptoExtension
 
         +prepareCloseSecureSession() → Self
         +prepareCancelSecureSession() → Self

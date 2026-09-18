@@ -255,7 +255,7 @@ Each operation defined in this document is described by a table of the form:
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature      | The operation's signature. A type parameter local to the operation precedes its name, with its constraint: `<E : Bound> name(...)`.
+| Signature      | The operation's signature.
 | Since          | The version of the API in which the operation was introduced.
 | Description    | A normative description of the operation's behaviour.
 | Parameters     | A description of each input parameter.
@@ -2348,15 +2348,19 @@ in the crypto module.
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Signature
-| `<E : CardTransactionCryptoExtension> getCryptoExtension(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}cryptoExtensionClass: Class<E>` +
-`) -> E`
+| Signature      | `getCryptoExtension() -> CardTransactionCryptoExtension`
 | Since          | 2.0
-| Description    | Returns the associated <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>>.
-| Parameters     | `cryptoExtensionClass` -- the class of the crypto extension.
-| Returns        | An `E : CardTransactionCryptoExtension`.
-| Pre-conditions | *Argument* -- every parameter is non-`null`.
+| Description
+| Returns the <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>> instance created for this
+  card transaction by the crypto module factory attached to the security setting. Successive calls return the same
+  instance. The caller converts the returned instance to the concrete extension type defined by the crypto module in
+  use.
+
+  Commands prepared through the crypto extension are queued together with the card commands, in call order, and are
+  processed by the same `processCommands()`. This allows card and crypto commands to be interleaved within a single
+  card transaction.
+| Returns        | The crypto extension of this card transaction.
+| Pre-conditions | None.
 | Errors         | None.
 |===
 

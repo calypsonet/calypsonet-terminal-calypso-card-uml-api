@@ -168,7 +168,7 @@ This specification covers:
 * the data model of a Calypso card (`CalypsoCard`, `ElementaryFile`, `FileHeader`, `DirectoryHeader`, Stored Value log records);
 * the selection extension (`CalypsoCardSelectionExtension`);
 * the family of transaction managers (Free, Secure Regular, Secure Extended, Secure PKI);
-* the *symmetric* and *asymmetric* security setting carriers;
+* the *symmetric* and *asymmetric* security settings carriers;
 * the *Stored Value* operations and *Search Record Multiple* support;
 * the SPIs implemented by *crypto modules* to plug into the secure transaction managers;
 * the family of errors raised during a Calypso transaction.
@@ -283,8 +283,6 @@ not restated for each operation:
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
   (e.g. `List`, `Set`, `Map`) returns an empty collection rather than `null`.
 * *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
-* *Default values.* A parameter declared with a default value (for example `dfName: ByteArray? = null`) MAY
-  be omitted by the caller, in which case the default value applies; the *Parameters* row states its meaning.
 
 ==== Concurrency
 
@@ -369,6 +367,7 @@ is backward-compatible per that API's evolution policy.
 | AID    | Application IDentifier
 | APDU   | Application Protocol Data Unit
 | CNA    | Calypso Networks Association
+| CSN    | Calypso Serial Number (Application Serial Number)
 | DF     | Dedicated File
 | EF     | Elementary File
 | FCI    | File Control Information
@@ -412,11 +411,86 @@ include::uml/architecture-overview.puml[]
 | Data model of a Calypso card: `CalypsoCard`, files, headers, SV logs and selection extension.
 
 | `calypso.card.transaction`               | Public API
-| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security setting carriers, `SearchCommandData`, `SvOperation` and the family of errors.
+| Transaction managers (Free / Secure Regular / Secure Extended / Secure PKI), security settings carriers, `SearchCommandData`, `SvOperation` and the family of errors.
 
 | `calypso.card.transaction.spi`           | SPI
 | Marker interfaces implemented by crypto extensions (`SymmetricCryptoCardTransactionManagerFactory`, `AsymmetricCryptoCardTransactionManagerFactory`, certificate markers, `CardTransactionCryptoExtension`).
 |===
+
+[[sec_maxduration]]
+=== Command exchange duration bounds
+
+As a countermeasure against relay attacks, the security settings allow the integrator to bound the duration of the
+most sensitive command exchanges: a relay adds a transmission delay, so that an abnormally long exchange can reveal that
+the card is not actually present in front of the reader. The bounds are declared through the `assign...MaxDuration...`
+operations of <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> and
+<<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>, each available in a CSN-based
+(`...ByCsn`) and an FCI-based (`...ByFci`) form.
+
+==== Measured duration
+
+Each bound applies to a single command exchange, measured from the transmission of the command to the reception of its
+response; the other commands of the secure session or of the Stored Value operation are not included. The bounded
+exchanges are:
+
+* the *Open Secure Session* command (`assignOpenSecureSessionMaxDuration...`);
+* the *Close Secure Session* command (`assignCloseSecureSessionMaxDuration...`);
+* the *SV Reload*, *SV Debit* or *SV Undebit* command (`assignSvCommandMaxDuration...`, symmetric security settings
+  only).
+
+The settings are recorded separately for each security settings instance and for each kind of bounded command
+exchange.
+
+==== Resolution rule
+
+For a given card, the applicable bound is determined as follows:
+
+. *CSN-based settings.* Each `...ByCsn(...)` call defines a *range* bounded by its `csnMin` and the immediately higher
+  declared `csnMin` (or `+∞` for the highest threshold). If the card's CSN belongs to a range and the `maxDuration`
+  of that range is not `Long.MAX_VALUE`, this value applies and the resolution stops.
+. *FCI-based settings.* Otherwise, the `...ByFci(...)` settings are evaluated in their declaration order and the first
+  one whose `fciRegex` matches the card's FCI applies; a `maxDuration` equal to `Long.MAX_VALUE` then means that no
+  bound applies.
+. Otherwise, no bound applies.
+
+CSN-based settings therefore act as *overrides* of the FCI-based settings. A default bound for every card is expressed
+by a last FCI-based setting with the expression `.*`, not by a CSN-based setting with the lowest `csnMin`, which would
+shadow every FCI-based setting. Assigning `Long.MAX_VALUE` to a CSN range hands the decision back to the FCI-based
+settings for the cards of that range. The CSN-based mechanism allows the integrator to introduce or tighten duration
+bounds progressively as new generations of cards (with higher CSNs) are issued.
+
+==== Card serial number
+
+The card serial number (CSN) is the Application Serial Number (see
+<<op_CalypsoCard_getApplicationSerialNumber,`getApplicationSerialNumber()`>>) interpreted as an unsigned 64-bit
+big-endian integer; `csnMin` is interpreted as the same unsigned 64-bit value, so that the comparison is unsigned.
+
+==== FCI matching
+
+* The FCI is the data returned by the *Select Application* command (see `IsoSmartCard.getSelectApplicationResponse()`
+  in <<ref_cna_tr,CNA-TR-API>>), excluding the status word. When no FCI is available, no FCI-based setting matches.
+* The FCI is represented as an uppercase hexadecimal string without separators (two characters per byte).
+* The match is complete: the whole string MUST match the expression, as if it were anchored at both ends. Since `.`
+  matches a single hexadecimal digit, a byte is matched by `..`.
+* To remain portable across implementation languages, the expression MUST be restricted to the following subset:
+  literal characters, `.`, character classes `[...]` (including ranges and negation), the quantifiers `*`, `+`, `?`,
+  `{n}`, `{n,}` and `{n,m}`, the alternation `|` and the groups `(...)`. Backreferences, lookaround assertions,
+  anchors and inline flags are excluded.
+
+==== FCI integrity
+
+The FCI is obtained during the card selection, outside any secure session, and is therefore not authenticated. When an
+expression filters on the startup information data contained in the FCI, the integrator MUST schedule a
+<<op_TransactionManager_prepareGetData,`prepareGetData(FCI_FOR_CURRENT_DF)`>> inside the secure session, so that the
+integrity of the FCI obtained during the selection is guaranteed by the session: the following `processCommands()`
+raises <<type_InconsistentData,`InconsistentData`>> if the returned FCI differs from the one obtained during the
+selection.
+
+==== Duplicates
+
+A `...ByCsn(...)` call with an already declared `csnMin` replaces the previous value. A `...ByFci(...)` call with an
+already declared `fciRegex` (identical character string) replaces the previous value and keeps its position in the
+evaluation order.
 
 [[sec_class_diagram]]
 === UML class diagram
@@ -497,14 +571,14 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | 1.0
 | Key indexes of the DF. Non-empty.
 
-| `kif`
+| `kifByAccessLevel`
 | `Map<WriteAccessLevel, Byte>`
 | --
 | 1.0
 | KIF of each write access level, indexed by <<type_WriteAccessLevel,`WriteAccessLevel`>>. Contains one entry
   per write access level.
 
-| `kvc`
+| `kvcByAccessLevel`
 | `Map<WriteAccessLevel, Byte>`
 | --
 | 1.0
@@ -816,19 +890,19 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 
 === API Interfaces
 
-[[type_AsymmetricCryptoSecuritySetting]]
-==== Asymmetric Crypto Security Setting
+[[type_AsymmetricCryptoSecuritySettings]]
+==== Asymmetric Crypto Security Settings
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name       | `AsymmetricCryptoSecuritySetting`
+| Name       | `AsymmetricCryptoSecuritySettings`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
 | Since      | 2.1
-| Purpose    | Security setting carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySetting`>>.
+| Purpose    | Security settings carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySettings,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySettings`>>.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_addCaCertificate]]
+[[op_AsymmetricCryptoSecuritySettings_addCaCertificate]]
 ===== Add CA Certificate
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -851,10 +925,10 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- the contained public key is not already registered.
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
-| See also       | <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`addPcaCertificate`>>
+| See also       | <<op_AsymmetricCryptoSecuritySettings_addPcaCertificate,`addPcaCertificate`>>
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_addCaCertificateParser]]
+[[op_AsymmetricCryptoSecuritySettings_addCaCertificateParser]]
 ===== Add CA Certificate Parser
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -874,7 +948,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | None.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_addCardCertificateParser]]
+[[op_AsymmetricCryptoSecuritySettings_addCardCertificateParser]]
 ===== Add Card Certificate Parser
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -894,7 +968,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | None.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_addPcaCertificate]]
+[[op_AsymmetricCryptoSecuritySettings_addPcaCertificate]]
 ===== Add PCA Certificate
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -919,28 +993,106 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
-===== Assign Open Secure Session Max Duration
+[[op_AsymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByCsn]]
+===== Assign Close Secure Session Max Duration By CSN
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignOpenSecureSessionMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByCsn(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the
+  range starting at `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByFci]]
+===== Assign Close Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignCloseSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose FCI matches
+  `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByCsn]]
+===== Assign Open Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByFci]]
+===== Assign Open Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
 | Errors         | None.
 |===
 
@@ -1602,23 +1754,23 @@ Failed write commands do not update the in-memory image.
 | Purpose    | Factory used to obtain instances of every public type provided by the API.
 |===
 
-[[op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySetting]]
-===== Create Asymmetric Crypto Security Setting
+[[op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySettings]]
+===== Create Asymmetric Crypto Security Settings
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `createAsymmetricCryptoSecuritySetting(` +
+| `createAsymmetricCryptoSecuritySettings(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory` +
-`) -> AsymmetricCryptoSecuritySetting`
+`) -> AsymmetricCryptoSecuritySettings`
 | Since          | 2.1
 | Description
-| Creates the <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>> that carries the
+| Creates the <<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>> that carries the
 asymmetric-key (PKI) cryptographic configuration required by
 <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`createSecurePkiModeTransactionManager`>>. The
 supplied factory provides the cryptographic module that performs those computations.
 | Parameters     | `cryptoCardTransactionManagerFactory` (<<type_AsymmetricCryptoCardTransactionManagerFactory,`AsymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
-| Returns        | An <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Returns        | An <<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>.
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- the factory is valid.
 | Errors         | None.
@@ -1653,7 +1805,7 @@ secure session.
 | Since          | 2.0
 | Description
 | Creates a <<type_FreeTransactionManager,`FreeTransactionManager`>> for exchanges with `card` (reached through
-`cardReader`) that require *no* cryptographic computation -- that is, no secure session and no security setting.
+`cardReader`) that require *no* cryptographic computation -- that is, no secure session and no security settings.
 For secured transactions, use one of the `createSecure*ModeTransactionManager` factories instead.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
@@ -1672,7 +1824,7 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 | `createSecureExtendedModeTransactionManager(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySettings: SymmetricCryptoSecuritySettings` +
 `) -> SecureExtendedModeTransactionManager`
 | Since          | 2.0
 | Description
@@ -1680,11 +1832,11 @@ For secured transactions, use one of the `createSecure*ModeTransactionManager` f
 symmetric-key secure session in *extended mode*, adding the operations available only on *Calypso Prime Extended*
 products (e.g. session encryption and early mutual authentication). For other products, use
 <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`createSecureRegularModeTransactionManager`>>.
-Cryptographic operations rely on the supplied `securitySetting`.
+Cryptographic operations rely on the supplied `securitySettings`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
-`securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
+`securitySettings` (<<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>>) -- the security settings to be used.
 | Returns        | A <<type_SecureExtendedModeTransactionManager,`SecureExtendedModeTransactionManager`>>.
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
@@ -1699,7 +1851,7 @@ Cryptographic operations rely on the supplied `securitySetting`.
 | `createSecurePkiModeTransactionManager(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: AsymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySettings: AsymmetricCryptoSecuritySettings` +
 `) -> SecurePkiModeTransactionManager`
 | Since          | 2.1
 | Description
@@ -1708,11 +1860,11 @@ in *PKI mode*, using asymmetric-key (PKI) cryptography. PKI mode is available on
 it (`CalypsoCard.isPkiModeSupported() == true`). For symmetric-key sessions, use
 <<op_CalypsoCardApiFactory_createSecureRegularModeTransactionManager,`createSecureRegularModeTransactionManager`>>
 or <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`createSecureExtendedModeTransactionManager`>>
-instead. Cryptographic operations rely on the supplied `securitySetting`.
+instead. Cryptographic operations rely on the supplied `securitySettings`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
-`securitySetting` (<<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
+`securitySettings` (<<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>) -- the security settings to be used.
 | Returns        | A <<type_SecurePkiModeTransactionManager,`SecurePkiModeTransactionManager`>>.
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- the card supports PKI mode (`isPkiModeSupported() == true`).
@@ -1728,7 +1880,7 @@ instead. Cryptographic operations rely on the supplied `securitySetting`.
 | `createSecureRegularModeTransactionManager(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cardReader: CardReader,` +
 `{nbsp}{nbsp}{nbsp}{nbsp}card: CalypsoCard,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}securitySetting: SymmetricCryptoSecuritySetting` +
+`{nbsp}{nbsp}{nbsp}{nbsp}securitySettings: SymmetricCryptoSecuritySettings` +
 `) -> SecureRegularModeTransactionManager`
 | Since          | 2.0
 | Description
@@ -1737,32 +1889,32 @@ symmetric-key secure session in *regular mode*, the baseline mode compatible wit
 *Calypso Prime Extended* features use
 <<op_CalypsoCardApiFactory_createSecureExtendedModeTransactionManager,`createSecureExtendedModeTransactionManager`>>,
 or <<op_CalypsoCardApiFactory_createSecurePkiModeTransactionManager,`createSecurePkiModeTransactionManager`>> for
-PKI cards. Cryptographic operations rely on the supplied `securitySetting`.
+PKI cards. Cryptographic operations rely on the supplied `securitySettings`.
 | Parameters
 | `cardReader` (`CardReader` (<<ref_cna_tr,CNA-TR-API>>)) -- the reader through which the card is reached. +
 `card` (<<type_CalypsoCard,`CalypsoCard`>>) -- the selected card on which to operate the transaction. +
-`securitySetting` (<<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>) -- the security setting to be used.
+`securitySettings` (<<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>>) -- the security settings to be used.
 | Returns        | A <<type_SecureRegularModeTransactionManager,`SecureRegularModeTransactionManager`>>.
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
 
-[[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting]]
-===== Create Symmetric Crypto Security Setting
+[[op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySettings]]
+===== Create Symmetric Crypto Security Settings
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `createSymmetricCryptoSecuritySetting(` +
+| `createSymmetricCryptoSecuritySettings(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory` +
-`) -> SymmetricCryptoSecuritySetting`
+`) -> SymmetricCryptoSecuritySettings`
 | Since          | 2.0
 | Description
-| Creates the <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> that carries the
+| Creates the <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> that carries the
 symmetric-key (e.g. SAM-backed) cryptographic configuration required by the regular- and extended-mode secure
 transaction managers. The supplied factory provides the cryptographic module that performs those computations.
 | Parameters     | `cryptoCardTransactionManagerFactory` (<<type_SymmetricCryptoCardTransactionManagerFactory,`SymmetricCryptoCardTransactionManagerFactory`>>) -- the factory of the crypto card transaction manager to be used.
-| Returns        | A <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
+| Returns        | A <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>>.
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- the factory is valid.
 | Errors         | None.
@@ -2198,11 +2350,11 @@ in the crypto module.
   session opening for optimisation, unless the pre-open mode is active or the read-merge optimisation has been
   disabled. This mechanism may in some cases be incompatible with the security constraints; it can then be
   disabled via
-  <<op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening,`SymmetricCryptoSecuritySetting.disableReadOnSessionOpening`>>.
+  <<op_SymmetricCryptoSecuritySettings_disableReadOnSessionOpening,`SymmetricCryptoSecuritySettings.disableReadOnSessionOpening`>>.
 | Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *State* -- a <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>> is available, no secure session opening is already prepared, and no secure session is already open.
+  *State* -- a <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> is available, no secure session opening is already prepared, and no secure session is already open.
 | Errors         | None.
 | See also       | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
@@ -2352,7 +2504,7 @@ in the crypto module.
 | Since          | 2.0
 | Description
 | Returns the <<type_CardTransactionCryptoExtension,`CardTransactionCryptoExtension`>> instance created for this
-  card transaction by the crypto module factory attached to the security setting. Successive calls return the same
+  card transaction by the crypto module factory attached to the security settings. Successive calls return the same
   instance. The caller converts the returned instance to the concrete extension type defined by the crypto module in
   use.
 
@@ -2386,7 +2538,7 @@ in the crypto module.
 | Since          | 2.0
 | Description
 | Schedules a *Close Secure Session* command. The ratification mechanism is disabled by default but MAY be enabled
-via <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting.enableRatificationMechanism`>>. In
+via <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings.enableRatificationMechanism`>>. In
 this case, a ratification command MUST be added after the *Close Secure Session* command when in contactless
 mode.
 | Returns        | The current instance (`Self`).
@@ -2394,19 +2546,19 @@ mode.
 | Errors         | None.
 |===
 
-[[type_SymmetricCryptoSecuritySetting]]
-==== Symmetric Crypto Security Setting
+[[type_SymmetricCryptoSecuritySettings]]
+==== Symmetric Crypto Security Settings
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
-| Name       | `SymmetricCryptoSecuritySetting`
+| Name       | `SymmetricCryptoSecuritySettings`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
 | Since      | 2.0
-| Purpose    | Security setting carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySetting,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySetting`>>.
+| Purpose    | Security settings carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySettings,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySettings`>>.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_addAuthorizedSessionKey]]
+[[op_SymmetricCryptoSecuritySettings_addAuthorizedSessionKey]]
 ===== Add Authorized Session Key
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2426,7 +2578,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_addAuthorizedSvKey]]
+[[op_SymmetricCryptoSecuritySettings_addAuthorizedSvKey]]
 ===== Add Authorized SV Key
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2446,7 +2598,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignDefaultKif]]
+[[op_SymmetricCryptoSecuritySettings_assignDefaultKif]]
 ===== Assign Default KIF
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2466,7 +2618,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignDefaultKvc]]
+[[op_SymmetricCryptoSecuritySettings_assignDefaultKvc]]
 ===== Assign Default KVC
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2486,7 +2638,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignKif]]
+[[op_SymmetricCryptoSecuritySettings_assignKif]]
 ===== Assign KIF
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2508,57 +2660,160 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
-===== Assign Open Secure Session Max Duration
+[[op_SymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByCsn]]
+===== Assign Close Secure Session Max Duration By CSN
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignOpenSecureSessionMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByCsn(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration]]
-===== Assign SV Operation Max Duration
+[[op_SymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByFci]]
+===== Assign Close Secure Session Max Duration By FCI
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignSvOperationMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByFci(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_authorizeSvNegativeBalance]]
+[[op_SymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByCsn]]
+===== Assign Open Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByFci]]
+===== Assign Open Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySettings_assignSvCommandMaxDurationByCsn]]
+===== Assign SV Command Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignSvCommandMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySettings_assignSvCommandMaxDurationByFci]]
+===== Assign SV Command Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignSvCommandMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySettings_authorizeSvNegativeBalance]]
 ===== Authorize SV Negative Balance
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2571,7 +2826,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_disableReadOnSessionOpening]]
+[[op_SymmetricCryptoSecuritySettings_disableReadOnSessionOpening]]
 ===== Disable Read On Session Opening
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2586,7 +2841,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_enableMultipleSession]]
+[[op_SymmetricCryptoSecuritySettings_enableMultipleSession]]
 ===== Enable Multiple Session
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2599,7 +2854,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_enablePinPlainTransmission]]
+[[op_SymmetricCryptoSecuritySettings_enablePinPlainTransmission]]
 ===== Enable PIN Plain Transmission
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2612,7 +2867,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_enableRatificationMechanism]]
+[[op_SymmetricCryptoSecuritySettings_enableRatificationMechanism]]
 ===== Enable Ratification Mechanism
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2625,7 +2880,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_enableSvLoadAndDebitLog]]
+[[op_SymmetricCryptoSecuritySettings_enableSvLoadAndDebitLog]]
 ===== Enable SV Load And Debit Log
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2638,7 +2893,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_initCryptoContextForNextTransaction]]
+[[op_SymmetricCryptoSecuritySettings_initCryptoContextForNextTransaction]]
 ===== Init Crypto Context For Next Transaction
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2658,7 +2913,7 @@ mode.
 <<type_CryptoIO,`CryptoIO`>> -- if a communication error with the crypto module occurred (e.g. timeout with the reader or the computing unit, network error, etc.).
 |===
 
-[[op_SymmetricCryptoSecuritySetting_setPinModificationCipheringKey]]
+[[op_SymmetricCryptoSecuritySettings_setPinModificationCipheringKey]]
 ===== Set PIN Modification Ciphering Key
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2678,7 +2933,7 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_setPinVerificationCipheringKey]]
+[[op_SymmetricCryptoSecuritySettings_setPinVerificationCipheringKey]]
 ===== Set PIN Verification Ciphering Key
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
@@ -2697,16 +2952,6 @@ mode.
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
 |===
-
-[[sec_csnmin]]
-[NOTE]
-====
-*`csnMin` combination rule.* When several `assignOpenSecureSessionMaxDuration(...)` or
-`assignSvOperationMaxDuration(...)` calls are made with different `csnMin` values, each call defines a *range*
-bounded by its `csnMin` and the immediately higher declared `csnMin` (or `+∞` for the highest threshold).
-For a given card, the range to which its CSN belongs determines the applied bound.
-This mechanism allows the integrator to introduce or tighten duration bounds progressively as new generations of cards (with higher CSNs) are issued.
-====
 
 [[type_TransactionManager]]
 ==== Transaction Manager
@@ -2861,7 +3106,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Signature
 | `prepareDecreaseCounters(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToDecValueMap: Map<Int, Int>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}decrementValues: Map<Int, Int>` +
 `) -> Self`
 | Since          | 1.1
 | Description
@@ -2872,7 +3117,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
   and data management operations.
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
-`counterNumberToDecValueMap` -- the map containing the counter numbers to be decremented and their associated decrement values.
+`decrementValues`           -- the decrement values to apply, indexed by the numbers of the counters to be decremented.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
@@ -2900,7 +3145,11 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Since          | 1.0
 | Description
 | Adds one or more *Get Data* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
-  modes.
+  modes, except with the tag `FCI_FOR_CURRENT_DF`.
+
+  With the tag `FCI_FOR_CURRENT_DF` inside a secure session, the command is used to check the integrity of the FCI
+  obtained in response to the *Select Application* command: the following `processCommands()` raises
+  <<type_InconsistentData,`InconsistentData`>> if the returned FCI differs from that response.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<type_ElementaryFile,`ElementaryFile.header`>> or
@@ -2909,7 +3158,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Get Data* command is supported for the provided tag. +
-  *State* -- no secure session is open.
+  *State* -- no secure session is open, unless `tag` is `FCI_FOR_CURRENT_DF`.
 | Errors         | None.
 |===
 
@@ -2950,7 +3199,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Signature
 | `prepareIncreaseCounters(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}sfi: Byte,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}counterNumberToIncValueMap: Map<Int, Int>` +
+`{nbsp}{nbsp}{nbsp}{nbsp}incrementValues: Map<Int, Int>` +
 `) -> Self`
 | Since          | 1.1
 | Description
@@ -2961,7 +3210,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
   and data management operations.
 | Parameters
 | `sfi`                       -- the SFI of the EF. +
-`counterNumberToIncValueMap` -- the map containing the counter numbers to be incremented and their associated increment values.
+`incrementValues`           -- the increment values to apply, indexed by the numbers of the counters to be incremented.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
 | Errors         | None.
@@ -3363,7 +3612,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Verify PIN* command. This command MAY be performed both inside and outside a secure session. The PIN
   code is transmitted in plain text or enciphered, according to the parameter set in the
-  <<type_SymmetricCryptoSecuritySetting,`SymmetricCryptoSecuritySetting`>>.
+  <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>>.
 
   Once processed, the PIN status is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getPinAttemptRemaining,`getPinAttemptRemaining`>> and
@@ -3455,7 +3704,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since      | 2.1
-| Purpose    | Marker for a CA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificate,`AsymmetricCryptoSecuritySetting.addCaCertificate`>>.
+| Purpose    | Marker for a CA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySettings_addCaCertificate,`AsymmetricCryptoSecuritySettings.addCaCertificate`>>.
 |===
 
 [[type_CaCertificateParser]]
@@ -3467,7 +3716,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since      | 2.1
-| Purpose    | Marker for a CA certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCaCertificateParser,`AsymmetricCryptoSecuritySetting.addCaCertificateParser`>>.
+| Purpose    | Marker for a CA certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySettings_addCaCertificateParser,`AsymmetricCryptoSecuritySettings.addCaCertificateParser`>>.
 |===
 
 [[type_CardCertificate]]
@@ -3479,7 +3728,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since      | 2.1
-| Purpose    | Marker for a card certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Consumed by the asymmetric crypto extension when authenticating a card; it is not registered directly through <<type_AsymmetricCryptoSecuritySetting,`AsymmetricCryptoSecuritySetting`>>.
+| Purpose    | Marker for a card certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Consumed by the asymmetric crypto extension when authenticating a card; it is not registered directly through <<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>.
 |===
 
 [[type_CardCertificateParser]]
@@ -3491,7 +3740,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since      | 2.1
-| Purpose    | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addCardCertificateParser,`AsymmetricCryptoSecuritySetting.addCardCertificateParser`>>.
+| Purpose    | Marker for a card certificate parser exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySettings_addCardCertificateParser,`AsymmetricCryptoSecuritySettings.addCardCertificateParser`>>.
 |===
 
 [[type_CardTransactionCryptoExtension]]
@@ -3515,7 +3764,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Kind       | Marker interface (SPI)
 | Namespace  | `calypso.card.transaction.spi`
 | Since      | 2.1
-| Purpose    | Marker for a self-signed PCA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySetting_addPcaCertificate,`AsymmetricCryptoSecuritySetting.addPcaCertificate`>>.
+| Purpose    | Marker for a self-signed PCA certificate exposed by a <<ref_cna_tcca,CNA-TCCA-API>> extension. Registered through <<op_AsymmetricCryptoSecuritySettings_addPcaCertificate,`AsymmetricCryptoSecuritySettings.addPcaCertificate`>>.
 |===
 
 `PcaCertificate`, `CaCertificate` and `CardCertificate` declare no operation at the API level.

@@ -9,13 +9,13 @@ versions:
     files:
       diagram:
         name: "class-diagram.svg"
-        size: "163 kB"
+        size: "167 kB"
       html:
         name: "YYMMDD-SP-CNATerminalAPI-CalypsoCard_v3.0.0-SNAPSHOT.html"
         size: "1.9 MB"
       pdf:
         name: "YYMMDD-SP-CNATerminalAPI-CalypsoCard_v3.0.0-SNAPSHOT.pdf"
-        size: "3.6 MB"
+        size: "3.9 MB"
   - version: "2.2.0"
     status: stable
     files:

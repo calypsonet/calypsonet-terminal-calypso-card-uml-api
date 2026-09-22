@@ -77,13 +77,13 @@ class "CalypsoCardApiProperties" as ApiProperties <<constants>> <<green>> {
 interface "CalypsoCardApiFactory" as CalypsoCardApiFactory <<blue>> {
     +createCalypsoCardSelectionExtension() → CalypsoCardSelectionExtension
 
-    +createSymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) → SymmetricCryptoSecuritySetting
-    +createAsymmetricCryptoSecuritySetting(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) → AsymmetricCryptoSecuritySetting
+    +<color:blue>createSymmetricCryptoSecuritySettings(cryptoCardTransactionManagerFactory: SymmetricCryptoCardTransactionManagerFactory) → SymmetricCryptoSecuritySettings
+    +<color:blue>createAsymmetricCryptoSecuritySettings(cryptoCardTransactionManagerFactory: AsymmetricCryptoCardTransactionManagerFactory) → AsymmetricCryptoSecuritySettings
 
     +createFreeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard) → FreeTransactionManager
-    +createSecureRegularModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) → SecureRegularModeTransactionManager
-    +createSecureExtendedModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: SymmetricCryptoSecuritySetting) → SecureExtendedModeTransactionManager
-    +createSecurePkiModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySetting: AsymmetricCryptoSecuritySetting) → SecurePkiModeTransactionManager
+    +<color:blue>createSecureRegularModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySettings: SymmetricCryptoSecuritySettings) → SecureRegularModeTransactionManager
+    +<color:blue>createSecureExtendedModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySettings: SymmetricCryptoSecuritySettings) → SecureExtendedModeTransactionManager
+    +<color:blue>createSecurePkiModeTransactionManager(cardReader: <back:yellow>CardReader</back>, card: CalypsoCard, securitySettings: AsymmetricCryptoSecuritySettings) → SecurePkiModeTransactionManager
 
 }
 enum WriteAccessLevel <<green>> {
@@ -185,8 +185,8 @@ package "card" as card {
         +val accessConditions: ByteArray
         +val keyIndexes: ByteArray
 
-        +val kif: Map<WriteAccessLevel, Byte>
-        +val kvc: Map<WriteAccessLevel, Byte>
+        +<color:blue>val kifByAccessLevel: Map<WriteAccessLevel, Byte>
+        +<color:blue>val kvcByAccessLevel: Map<WriteAccessLevel, Byte>
     }
     class "ElementaryFile" as ElementaryFile <<data>> <<green>> {
         +val sfi: Byte
@@ -274,9 +274,9 @@ package "transaction" as transaction {
         +prepareWriteBinary(sfi: Byte, offset: Int, data: ByteArray) → Self
 
         +prepareIncreaseCounter(sfi: Byte, counterNumber: Int, incValue: Int) → Self
-        +prepareIncreaseCounters(sfi: Byte, counterNumberToIncValueMap: Map<Int, Int>) → Self
+        +prepareIncreaseCounters(sfi: Byte, <color:blue>incrementValues: Map<Int, Int></color>) → Self
         +prepareDecreaseCounter(sfi: Byte, counterNumber: Int, decValue: Int) → Self
-        +prepareDecreaseCounters(sfi: Byte, counterNumberToDecValueMap: Map<Int, Int>) → Self
+        +prepareDecreaseCounters(sfi: Byte, <color:blue>decrementValues: Map<Int, Int></color>) → Self
         +prepareSetCounter(sfi: Byte, counterNumber: Int, newValue: Int) → Self
 
         +prepareSvReadAllLogs() → Self
@@ -337,7 +337,7 @@ package "transaction" as transaction {
         +RELOAD
         +<color:blue>DEBIT_UNDEBIT
     }
-    interface "AsymmetricCryptoSecuritySetting" as AsymmetricCryptoSecuritySetting <<blue>> {
+    interface "<color:blue>AsymmetricCryptoSecuritySettings" as AsymmetricCryptoSecuritySettings <<blue>> {
         +addPcaCertificate(pcaCertificate: PcaCertificate) → Self
         {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
         +addCaCertificate(caCertificate: CaCertificate) → Self
@@ -351,7 +351,7 @@ package "transaction" as transaction {
 		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
 		+<color:blue>assignCloseSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
     }
-    interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
+    interface "<color:blue>SymmetricCryptoSecuritySettings" as SymmetricCryptoSecuritySettings <<blue>> {
         +enableMultipleSession() → Self
         +enableRatificationMechanism() → Self
         +enablePinPlainTransmission() → Self
@@ -428,12 +428,12 @@ SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide
 SecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
 SecureSymmetricCryptoTransactionManager .right.> SvOperation #C_USE : use >
 
-SymmetricCryptoSecuritySetting ..> WriteAccessLevel #C_USE : use >
+SymmetricCryptoSecuritySettings ..> WriteAccessLevel #C_USE : use >
 
-AsymmetricCryptoSecuritySetting .up.> PcaCertificate #C_USE : use >
-AsymmetricCryptoSecuritySetting .up.> CaCertificate #C_USE : use >
-AsymmetricCryptoSecuritySetting .up.> CaCertificateParser #C_USE : use >
-AsymmetricCryptoSecuritySetting .up.> CardCertificateParser #C_USE : use >
+AsymmetricCryptoSecuritySettings .up.> PcaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySettings .up.> CaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySettings .up.> CaCertificateParser #C_USE : use >
+AsymmetricCryptoSecuritySettings .up.> CardCertificateParser #C_USE : use >
 
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
@@ -454,8 +454,8 @@ FileHeader ..> ElementaryFileType #C_USE : use >
 
 ' == LAYOUT ==
 
-'SymmetricCryptoSecuritySetting -[hidden]- AsymmetricCryptoSecuritySetting
-AsymmetricCryptoSecuritySetting -[hidden]left- errors
+'SymmetricCryptoSecuritySettings -[hidden]- AsymmetricCryptoSecuritySettings
+AsymmetricCryptoSecuritySettings -[hidden]left- errors
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
 PcaCertificate -[hidden]right- CaCertificate

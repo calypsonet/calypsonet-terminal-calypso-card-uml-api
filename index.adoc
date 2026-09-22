@@ -283,8 +283,6 @@ not restated for each operation:
 * *Collections.* Unless the return type is marked nullable (`T?`), an operation whose return type is a collection
   (e.g. `List`, `Set`, `Map`) returns an empty collection rather than `null`.
 * *Fluent composition.* Builder-style operations return the current instance so that calls can be chained.
-* *Default values.* A parameter declared with a default value (for example `dfName: ByteArray? = null`) MAY
-  be omitted by the caller, in which case the default value applies; the *Parameters* row states its meaning.
 
 ==== Concurrency
 
@@ -369,6 +367,7 @@ is backward-compatible per that API's evolution policy.
 | AID    | Application IDentifier
 | APDU   | Application Protocol Data Unit
 | CNA    | Calypso Networks Association
+| CSN    | Calypso Serial Number (Application Serial Number)
 | DF     | Dedicated File
 | EF     | Elementary File
 | FCI    | File Control Information
@@ -919,28 +918,106 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
 |===
 
-[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
-===== Assign Open Secure Session Max Duration
+[[op_AsymmetricCryptoSecuritySetting_assignCloseSecureSessionMaxDurationByCsn]]
+===== Assign Close Secure Session Max Duration By CSN
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignOpenSecureSessionMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByCsn(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open PKI secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the
+  range starting at `csnMin`. See <<sec_maxduration,the maximum duration resolution rule>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySetting_assignCloseSecureSessionMaxDurationByFci]]
+===== Assign Close Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignCloseSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose FCI matches
+  `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,the maximum duration
+  resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,the maximum duration resolution rule>>.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDurationByCsn]]
+===== Assign Open Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,the maximum duration resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDurationByFci]]
+===== Assign Open Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,the maximum duration
+  resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,the maximum duration resolution rule>>.
 | Errors         | None.
 |===
 
@@ -2508,53 +2585,156 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDuration]]
-===== Assign Open Secure Session Max Duration
+[[op_SymmetricCryptoSecuritySetting_assignCloseSecureSessionMaxDurationByCsn]]
+===== Assign Close Secure Session Max Duration By CSN
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignOpenSecureSessionMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByCsn(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an open secure session for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF. See <<sec_csnmin,the `csnMin` combination rule>>.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,the maximum duration resolution rule>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an open secure session, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySetting_assignSvOperationMaxDuration]]
-===== Assign SV Operation Max Duration
+[[op_SymmetricCryptoSecuritySetting_assignCloseSecureSessionMaxDurationByFci]]
+===== Assign Close Secure Session Max Duration By FCI
 
 [cols="^.^1h,.^5", grid=rows, frame=all]
 |===
 | Signature
-| `assignSvOperationMaxDuration(` +
+| `assignCloseSecureSessionMaxDurationByFci(` +
 `{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}dfName: ByteArray? = null` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of a Stored Value operation for cards whose CSN is >= `csnMin` and, when `dfName` is
-  supplied, whose application DF matches `dfName`; when `dfName` is `null`, the setting applies to every application
-  DF.
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,the maximum duration
+  resolution rule>>.
 | Parameters
-| `maxDuration` -- the maximum duration of a Stored Value operation, in milliseconds. +
-  `csnMin` -- the lowest card serial number (CSN) the setting applies to. +
-  `dfName` -- the application DF name the setting applies to, or `null` to apply it to every application DF.
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every non-nullable parameter is non-`null`.
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,the maximum duration resolution rule>>.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDurationByCsn]]
+===== Assign Open Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,the maximum duration resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySetting_assignOpenSecureSessionMaxDurationByFci]]
+===== Assign Open Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,the maximum duration
+  resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,the maximum duration resolution rule>>.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySetting_assignSvCommandMaxDurationByCsn]]
+===== Assign SV Command Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignSvCommandMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,the maximum duration resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySetting_assignSvCommandMaxDurationByFci]]
+===== Assign SV Command Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignSvCommandMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,the maximum duration
+  resolution rule>>.
+| Parameters
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,the maximum duration resolution rule>>.
 | Errors         | None.
 |===
 
@@ -2698,14 +2878,54 @@ mode.
 | Errors         | None.
 |===
 
-[[sec_csnmin]]
+[[sec_maxduration]]
 [NOTE]
 ====
-*`csnMin` combination rule.* When several `assignOpenSecureSessionMaxDuration(...)` or
-`assignSvOperationMaxDuration(...)` calls are made with different `csnMin` values, each call defines a *range*
-bounded by its `csnMin` and the immediately higher declared `csnMin` (or `+∞` for the highest threshold).
-For a given card, the range to which its CSN belongs determines the applied bound.
-This mechanism allows the integrator to introduce or tighten duration bounds progressively as new generations of cards (with higher CSNs) are issued.
+*Maximum duration resolution rule.* The maximum duration settings are recorded separately for each security setting
+instance and for each kind of bounded command exchange (*Open Secure Session*; *Close Secure Session*; *SV Reload*,
+*SV Debit* or *SV Undebit*). For a given card, the applicable bound is determined as follows:
+
+. *CSN-based settings.* Each `...ByCsn(...)` call defines a *range* bounded by its `csnMin` and the immediately higher
+  declared `csnMin` (or `+∞` for the highest threshold). If the card's CSN belongs to a range and the `maxDuration`
+  of that range is not `Long.MAX_VALUE`, this value applies and the resolution stops.
+. *FCI-based settings.* Otherwise, the `...ByFci(...)` settings are evaluated in their declaration order and the first
+  one whose `fciRegex` matches the card's FCI applies; a `maxDuration` equal to `Long.MAX_VALUE` then means that no
+  bound applies.
+. Otherwise, no bound applies.
+
+CSN-based settings therefore act as *overrides* of the FCI-based settings. A default bound for every card is expressed
+by a last FCI-based setting with the expression `.*`, not by a CSN-based setting with the lowest `csnMin`, which would
+shadow every FCI-based setting. Assigning `Long.MAX_VALUE` to a CSN range hands the decision back to the FCI-based
+settings for the cards of that range. The CSN-based mechanism allows the integrator to introduce or tighten duration
+bounds progressively as new generations of cards (with higher CSNs) are issued.
+
+*Measured duration.* Each bound applies to a single command exchange, measured from the transmission of the command to
+the reception of its response; the other commands of the secure session or of the Stored Value operation are not
+included.
+
+*CSN.* The card serial number is the Application Serial Number (see
+<<op_CalypsoCard_getApplicationSerialNumber,`getApplicationSerialNumber()`>>) interpreted as an unsigned 64-bit
+big-endian integer; `csnMin` is interpreted as the same unsigned 64-bit value, so that the comparison is unsigned.
+
+*FCI matching.*
+
+* The FCI is the data returned by the *Select Application* command (see `IsoSmartCard.getSelectApplicationResponse()`
+  in <<ref_cna_tr,CNA-TR-API>>), excluding the status word. When no FCI is available, no FCI-based setting matches.
+* The FCI is represented as an uppercase hexadecimal string without separators (two characters per byte).
+* The match is complete: the whole string MUST match the expression, as if it were anchored at both ends. Since `.`
+  matches a single hexadecimal digit, a byte is matched by `..`.
+* To remain portable across implementation languages, the expression MUST be restricted to the following subset:
+  literal characters, `.`, character classes `[...]` (including ranges and negation), the quantifiers `*`, `+`, `?`,
+  `{n}`, `{n,}` and `{n,m}`, the alternation `|` and the groups `(...)`. Backreferences, lookaround assertions,
+  anchors and inline flags are excluded.
+* The FCI is obtained during the card selection, outside any secure session, and is therefore not authenticated. When
+  an expression filters on the startup information data contained in the FCI, the integrator MUST schedule a
+  <<op_TransactionManager_prepareGetData,`prepareGetData(FCI_FOR_CURRENT_DF)`>> inside the secure session, so that the integrity of the FCI obtained during the selection is guaranteed
+  by the session (see <<type_InconsistentData,`InconsistentData`>>).
+
+*Duplicates.* A `...ByCsn(...)` call with an already declared `csnMin` replaces the previous value. A
+`...ByFci(...)` call with an already declared `fciRegex` (identical character string) replaces the previous value
+and keeps its position in the evaluation order.
 ====
 
 [[type_TransactionManager]]
@@ -2900,7 +3120,11 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Since          | 1.0
 | Description
 | Adds one or more *Get Data* commands. *Security warning:* this command MUST NOT be used within a secure session, in both contact and contactless
-  modes.
+  modes, except with the tag `FCI_FOR_CURRENT_DF`.
+
+  With the tag `FCI_FOR_CURRENT_DF` inside a secure session, the command is used to check the integrity of the FCI
+  obtained in response to the *Select Application* command: the following `processCommands()` raises
+  <<type_InconsistentData,`InconsistentData`>> if the returned FCI differs from that response.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<type_ElementaryFile,`ElementaryFile.header`>> or
@@ -2909,7 +3133,7 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Get Data* command is supported for the provided tag. +
-  *State* -- no secure session is open.
+  *State* -- no secure session is open, unless `tag` is `FCI_FOR_CURRENT_DF`.
 | Errors         | None.
 |===
 

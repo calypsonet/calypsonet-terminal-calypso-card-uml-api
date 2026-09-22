@@ -346,7 +346,10 @@ package "transaction" as transaction {
         +addCaCertificateParser(caCertificateParser: CaCertificateParser) → Self
         +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → Self
 
-		+<color:blue>assignOpenSecureSessionMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
+		+<color:blue>assignOpenSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
+		+<color:blue>assignOpenSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
+		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
+		+<color:blue>assignCloseSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
     }
     interface "SymmetricCryptoSecuritySetting" as SymmetricCryptoSecuritySetting <<blue>> {
         +enableMultipleSession() → Self
@@ -366,8 +369,12 @@ package "transaction" as transaction {
         +setPinVerificationCipheringKey(kif: Byte, kvc: Byte) → Self
         +setPinModificationCipheringKey(kif: Byte, kvc: Byte) → Self
 
-		+<color:blue>assignOpenSecureSessionMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
-		+<color:blue>assignSvOperationMaxDuration(maxDuration: Long, csnMin: Long, dfName: ByteArray? = null) → Self
+		+<color:blue>assignOpenSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
+		+<color:blue>assignOpenSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
+		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
+		+<color:blue>assignCloseSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
+		+<color:blue>assignSvCommandMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
+		+<color:blue>assignSvCommandMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
 
         +initCryptoContextForNextTransaction() → Unit
         {method} <size:10><color:#7F8C8D>    ⚠ errors: Crypto, CryptoIO</color></size>

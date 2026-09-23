@@ -780,10 +780,11 @@ table.tableblock th p {
 <ul class="sectlevel3">
 <li><a href="#_measured_duration">4.3.1. Measured duration</a></li>
 <li><a href="#_resolution_rule">4.3.2. Resolution rule</a></li>
-<li><a href="#_card_serial_number">4.3.3. Card serial number</a></li>
-<li><a href="#_fci_matching">4.3.4. FCI matching</a></li>
-<li><a href="#_fci_integrity">4.3.5. FCI integrity</a></li>
-<li><a href="#_duplicates">4.3.6. Duplicates</a></li>
+<li><a href="#_behaviour_on_overrun">4.3.3. Behaviour on overrun</a></li>
+<li><a href="#_card_serial_number">4.3.4. Card serial number</a></li>
+<li><a href="#_fci_matching">4.3.5. FCI matching</a></li>
+<li><a href="#_fci_integrity">4.3.6. FCI integrity</a></li>
+<li><a href="#_duplicates">4.3.7. Duplicates</a></li>
 </ul>
 </li>
 <li><a href="#sec_class_diagram">4.4. UML class diagram</a></li>
@@ -1923,7 +1924,27 @@ bounds progressively as new generations of cards (with higher CSNs) are issued.<
 </div>
 </div>
 <div class="sect3">
-<h4 id="_card_serial_number"><a class="anchor" href="#_card_serial_number"></a><a class="link" href="#_card_serial_number">4.3.3. Card serial number</a></h4>
+<h4 id="_behaviour_on_overrun"><a class="anchor" href="#_behaviour_on_overrun"></a><a class="link" href="#_behaviour_on_overrun">4.3.3. Behaviour on overrun</a></h4>
+<div class="paragraph">
+<p>When the effective duration of a bounded command exchange exceeds the applicable bound, the exchange is reported as
+failed and the error is propagated to the application as an <code>InvalidCardResponse</code> (<a href="#ref_cna_tr">CNA-TR-API</a>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>A secure session is open.</strong> The session MUST be cancelled automatically before the error is propagated, so that no
+modification performed during the session is validated by the card.</p>
+</li>
+<li>
+<p><strong>No secure session is open</strong> (a Stored Value command executed outside a session). There is nothing to cancel: only
+the error is propagated, and the ticketing application decides what to do according to its own context (for example
+retrying the operation, rejecting the card or raising an alert).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_card_serial_number"><a class="anchor" href="#_card_serial_number"></a><a class="link" href="#_card_serial_number">4.3.4. Card serial number</a></h4>
 <div class="paragraph">
 <p>The card serial number (CSN) is the Application Serial Number (see
 <a href="#op_CalypsoCard_getApplicationSerialNumber"><code>getApplicationSerialNumber()</code></a>) interpreted as an unsigned 64-bit
@@ -1931,7 +1952,7 @@ big-endian integer; <code>csnMin</code> is interpreted as the same unsigned 64-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fci_matching"><a class="anchor" href="#_fci_matching"></a><a class="link" href="#_fci_matching">4.3.4. FCI matching</a></h4>
+<h4 id="_fci_matching"><a class="anchor" href="#_fci_matching"></a><a class="link" href="#_fci_matching">4.3.5. FCI matching</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1955,7 +1976,7 @@ anchors and inline flags are excluded.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fci_integrity"><a class="anchor" href="#_fci_integrity"></a><a class="link" href="#_fci_integrity">4.3.5. FCI integrity</a></h4>
+<h4 id="_fci_integrity"><a class="anchor" href="#_fci_integrity"></a><a class="link" href="#_fci_integrity">4.3.6. FCI integrity</a></h4>
 <div class="paragraph">
 <p>The FCI is obtained during the card selection, outside any secure session, and is therefore not authenticated. When an
 expression filters on the startup information data contained in the FCI, the integrator MUST schedule a
@@ -1966,7 +1987,7 @@ selection.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_duplicates"><a class="anchor" href="#_duplicates"></a><a class="link" href="#_duplicates">4.3.6. Duplicates</a></h4>
+<h4 id="_duplicates"><a class="anchor" href="#_duplicates"></a><a class="link" href="#_duplicates">4.3.7. Duplicates</a></h4>
 <div class="paragraph">
 <p>A <code>&#8230;&#8203;ByCsn(&#8230;&#8203;)</code> call with an already declared <code>csnMin</code> replaces the previous value. A <code>&#8230;&#8203;ByFci(&#8230;&#8203;)</code> call with an
 already declared <code>fciRegex</code> (identical character string) replaces the previous value and keeps its position in the

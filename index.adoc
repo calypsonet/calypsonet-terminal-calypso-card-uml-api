@@ -459,6 +459,17 @@ shadow every FCI-based setting. Assigning `Long.MAX_VALUE` to a CSN range hands 
 settings for the cards of that range. The CSN-based mechanism allows the integrator to introduce or tighten duration
 bounds progressively as new generations of cards (with higher CSNs) are issued.
 
+==== Behaviour on overrun
+
+When the effective duration of a bounded command exchange exceeds the applicable bound, the exchange is reported as
+failed and the error is propagated to the application as an `InvalidCardResponse` (<<ref_cna_tr,CNA-TR-API>>).
+
+* *A secure session is open.* The session MUST be cancelled automatically before the error is propagated, so that no
+  modification performed during the session is validated by the card.
+* *No secure session is open* (a Stored Value command executed outside a session). There is nothing to cancel: only
+  the error is propagated, and the ticketing application decides what to do according to its own context (for example
+  retrying the operation, rejecting the card or raising an alert).
+
 ==== Card serial number
 
 The card serial number (CSN) is the Application Serial Number (see

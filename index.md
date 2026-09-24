@@ -9,7 +9,7 @@ versions:
     files:
       diagram:
         name: "class-diagram.svg"
-        size: "167 kB"
+        size: "168 kB"
       html:
         name: "YYMMDD-SP-CNATerminalAPI-CalypsoCard_v3.0.0-SNAPSHOT.html"
         size: "1.9 MB"

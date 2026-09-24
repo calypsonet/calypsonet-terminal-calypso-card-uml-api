@@ -1107,6 +1107,46 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Errors         | None.
 |===
 
+[[op_AsymmetricCryptoSecuritySettings_authorizeFileNotFoundError]]
+===== Authorize File Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeFileNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a file does not exist (status word `6A82h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_AsymmetricCryptoSecuritySettings_authorizeRecordNotFoundError,`authorizeRecordNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
+[[op_AsymmetricCryptoSecuritySettings_authorizeRecordNotFoundError]]
+===== Authorize Record Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeRecordNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a record does not exist (status word `6A83h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_AsymmetricCryptoSecuritySettings_authorizeFileNotFoundError,`authorizeFileNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
 [[type_CalypsoCard]]
 ==== Calypso Card
 
@@ -2824,6 +2864,46 @@ mode.
 | Errors         | None.
 |===
 
+[[op_SymmetricCryptoSecuritySettings_authorizeFileNotFoundError]]
+===== Authorize File Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeFileNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a file does not exist (status word `6A82h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_SymmetricCryptoSecuritySettings_authorizeRecordNotFoundError,`authorizeRecordNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
+[[op_SymmetricCryptoSecuritySettings_authorizeRecordNotFoundError]]
+===== Authorize Record Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeRecordNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a record does not exist (status word `6A83h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_SymmetricCryptoSecuritySettings_authorizeFileNotFoundError,`authorizeFileNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
 [[op_SymmetricCryptoSecuritySettings_authorizeSvNegativeBalance]]
 ===== Authorize SV Negative Balance
 
@@ -3265,11 +3345,13 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds *Read Binary* commands.
 
-  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
-  outside a secure session: the `CalypsoCard` may then simply not be filled. For the validity of the offset and the number of
-  bytes to read, two behaviours apply depending on whether the command is placed inside a secure session. Outside a
-  secure session (*best-effort* mode), it does not fail whatever their validity. Inside a secure session (*strict*
-  mode), it fails if they are invalid.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`) when the
+  command is placed outside a secure session. Inside a secure session, it fails unless `authorizeFileNotFoundError()`
+  has been called on the security settings; the `CalypsoCard` may then simply not be filled.
+
+  For the validity of the offset and the number of bytes to read, two behaviours apply depending on whether the
+  command is placed inside a secure session. Outside a secure session (*best-effort* mode), it does not fail whatever
+  their validity. Inside a secure session (*strict* mode), it fails if they are invalid.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3299,11 +3381,13 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Adds a *Read Records* command targeting the supplied counter. The record is read up to the counter location
   supplied as parameter, so all preceding counters are also read.
 
-  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
-  outside a secure session: the `CalypsoCard` may then simply not be filled. For the existence of the targeted counter, two
-  behaviours apply depending on whether the command is placed inside a secure session. Outside a secure session
-  (*best-effort* mode), it does not fail if the counter is not found. Inside a secure session (*strict* mode), it
-  fails in that case.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`) when the
+  command is placed outside a secure session. Inside a secure session, it fails unless `authorizeFileNotFoundError()`
+  has been called on the security settings; the `CalypsoCard` may then simply not be filled.
+
+  For the existence of the targeted counter, the same distinction applies: outside a secure session
+  (*best-effort* mode), the command does not fail; inside a secure session, it fails unless `authorizeRecordNotFoundError()`
+  has been called on the security settings.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3362,11 +3446,13 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Read Records* command for one or more records.
 
-  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
-  outside a secure session: the `CalypsoCard` may then simply not be filled. For the existence of the targeted record, two
-  behaviours apply depending on whether the command is placed inside a secure session. Outside a secure session
-  (*best-effort* mode), it does not fail if the record is not found. Inside a secure session (*strict* mode), it
-  fails in that case.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`) when the
+  command is placed outside a secure session. Inside a secure session, it fails unless `authorizeFileNotFoundError()`
+  has been called on the security settings; the `CalypsoCard` may then simply not be filled.
+
+  For the existence of the targeted record, the same distinction applies: outside a secure session
+  (*best-effort* mode), the command does not fail; inside a secure session, it fails unless `authorizeRecordNotFoundError()`
+  has been called on the security settings.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through its dedicated file
   and data management operations.
@@ -3464,8 +3550,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Description
 | Adds a *Select File* command using a navigation control.
 
-  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
-  outside a secure session: the `CalypsoCard` may then simply not be updated.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`) when the
+  command is placed outside a secure session. Inside a secure session, it fails unless `authorizeFileNotFoundError()`
+  has been called on the security settings; the `CalypsoCard` may then simply not be updated.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<type_ElementaryFile,`ElementaryFile.header`>>.
@@ -3486,8 +3573,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Adds a *Select File* command targeting an EF by LID. *Caution:* the command fails if the selected file is not
   an EF.
 
-  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`), inside or
-  outside a secure session: the `CalypsoCard` may then simply not be updated.
+  The following `processCommands()` does not fail if the targeted file is not found (status word `6A82h`) when the
+  command is placed outside a secure session. Inside a secure session, it fails unless `authorizeFileNotFoundError()`
+  has been called on the security settings; the `CalypsoCard` may then simply not be updated.
 
   Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>> through
   <<op_CalypsoCard_getFileBySfi,`getFileBySfi`>> / <<op_CalypsoCard_getFileByLid,`getFileByLid`>> and

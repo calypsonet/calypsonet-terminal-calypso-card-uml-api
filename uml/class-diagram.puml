@@ -346,6 +346,9 @@ package "transaction" as transaction {
         +addCaCertificateParser(caCertificateParser: CaCertificateParser) → Self
         +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → Self
 
+		+<color:blue>authorizeFileNotFoundError() → Self
+		+<color:blue>authorizeRecordNotFoundError() → Self
+
 		+<color:blue>assignOpenSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
 		+<color:blue>assignOpenSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
 		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
@@ -357,6 +360,8 @@ package "transaction" as transaction {
         +enablePinPlainTransmission() → Self
         +enableSvLoadAndDebitLog() → Self
         +authorizeSvNegativeBalance() → Self
+        +<color:blue>authorizeFileNotFoundError() → Self
+        +<color:blue>authorizeRecordNotFoundError() → Self
         +disableReadOnSessionOpening() → Self
 
         +assignKif(writeAccessLevel: WriteAccessLevel, kvc: Byte, kif: Byte) → Self

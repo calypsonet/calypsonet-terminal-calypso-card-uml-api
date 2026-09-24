@@ -439,6 +439,9 @@ exchanges are:
 * the *SV Reload*, *SV Debit* or *SV Undebit* command (`assignSvCommandMaxDuration...`, symmetric security settings
   only).
 
+Durations are expressed in microseconds. The effective resolution of the measurement depends on the reader and on
+the execution platform, and a bound finer than that resolution cannot be relied upon.
+
 The settings are recorded separately for each security settings instance and for each kind of bounded command
 exchange.
 
@@ -2480,10 +2483,10 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
+| Sets the maximum duration (in microseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
   `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in microseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
   `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
@@ -2503,13 +2506,13 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+| Sets the maximum duration (in microseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
   settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
   the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
   guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
   duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in microseconds, or `Long.MAX_VALUE` for no bound. +
   `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
@@ -2531,10 +2534,10 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
+| Sets the maximum duration (in microseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
   `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in microseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
   `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
@@ -2554,13 +2557,13 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+| Sets the maximum duration (in microseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
   settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
   the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
   guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
   duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in microseconds, or `Long.MAX_VALUE` for no bound. +
   `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
@@ -2737,10 +2740,10 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose CSN falls within the range starting at
+| Sets the maximum duration (in microseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose CSN falls within the range starting at
   `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in microseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
   `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
@@ -2760,13 +2763,13 @@ mode.
 `) -> Self`
 | Since          | 3.0
 | Description
-| Sets the maximum duration (in milliseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+| Sets the maximum duration (in microseconds) of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
   settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
   the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
   guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
   duration bounds>>.
 | Parameters
-| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+| `maxDuration` -- the maximum duration of an *SV Reload*, *SV Debit* or *SV Undebit* command exchange, in microseconds, or `Long.MAX_VALUE` for no bound. +
   `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +

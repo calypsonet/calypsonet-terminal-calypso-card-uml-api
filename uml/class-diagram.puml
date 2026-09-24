@@ -337,15 +337,7 @@ package "transaction" as transaction {
         +RELOAD
         +<color:blue>DEBIT_UNDEBIT
     }
-    interface "<color:blue>AsymmetricCryptoSecuritySettings" as AsymmetricCryptoSecuritySettings <<blue>> {
-        +addPcaCertificate(pcaCertificate: PcaCertificate) → Self
-        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
-        +addCaCertificate(caCertificate: CaCertificate) → Self
-        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
-
-        +addCaCertificateParser(caCertificateParser: CaCertificateParser) → Self
-        +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → Self
-
+    interface "<color:blue>SecuritySettings" as SecuritySettings {
 		+<color:blue>authorizeFileNotFoundError() → Self
 		+<color:blue>authorizeRecordNotFoundError() → Self
 
@@ -354,14 +346,22 @@ package "transaction" as transaction {
 		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
 		+<color:blue>assignCloseSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
     }
-    interface "<color:blue>SymmetricCryptoSecuritySettings" as SymmetricCryptoSecuritySettings <<blue>> {
+    interface "<color:blue>AsymmetricCryptoSecuritySettings" as AsymmetricCryptoSecuritySettings <<blue>> extends SecuritySettings {
+        +addPcaCertificate(pcaCertificate: PcaCertificate) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
+        +addCaCertificate(caCertificate: CaCertificate) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: InvalidCertificate</color></size>
+
+        +addCaCertificateParser(caCertificateParser: CaCertificateParser) → Self
+        +addCardCertificateParser(cardCertificateParser: CardCertificateParser) → Self
+
+    }
+    interface "<color:blue>SymmetricCryptoSecuritySettings" as SymmetricCryptoSecuritySettings <<blue>> extends SecuritySettings {
         +enableMultipleSession() → Self
         +enableRatificationMechanism() → Self
         +enablePinPlainTransmission() → Self
         +enableSvLoadAndDebitLog() → Self
         +authorizeSvNegativeBalance() → Self
-        +<color:blue>authorizeFileNotFoundError() → Self
-        +<color:blue>authorizeRecordNotFoundError() → Self
         +disableReadOnSessionOpening() → Self
 
         +assignKif(writeAccessLevel: WriteAccessLevel, kvc: Byte, kif: Byte) → Self
@@ -374,10 +374,6 @@ package "transaction" as transaction {
         +setPinVerificationCipheringKey(kif: Byte, kvc: Byte) → Self
         +setPinModificationCipheringKey(kif: Byte, kvc: Byte) → Self
 
-		+<color:blue>assignOpenSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
-		+<color:blue>assignOpenSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
-		+<color:blue>assignCloseSecureSessionMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
-		+<color:blue>assignCloseSecureSessionMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
 		+<color:blue>assignSvCommandMaxDurationByCsn(maxDuration: Long, csnMin: Long) → Self
 		+<color:blue>assignSvCommandMaxDurationByFci(maxDuration: Long, fciRegex: String) → Self
 
@@ -399,11 +395,11 @@ package "transaction" as transaction {
         +val cause: Any?
     }
     package "spi" as spi {
+        interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
+        }
+        interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
+        }
         interface "AsymmetricCryptoCardTransactionManagerFactory" as AsymmetricCryptoCardTransactionManagerFactory <<red>> {
-        }
-        interface "CaCertificateParser" as CaCertificateParser <<red>> {
-        }
-        interface "CardCertificateParser" as CardCertificateParser <<red>> {
         }
         interface "PcaCertificate" as PcaCertificate <<red>> {
         }
@@ -411,9 +407,9 @@ package "transaction" as transaction {
         }
         interface "CardCertificate" as CardCertificate <<red>> {
         }
-        interface "SymmetricCryptoCardTransactionManagerFactory" as SymmetricCryptoCardTransactionManagerFactory <<red>> {
+        interface "CaCertificateParser" as CaCertificateParser <<red>> {
         }
-        interface "CardTransactionCryptoExtension" as CardTransactionCryptoExtension <<red>> {
+        interface "CardCertificateParser" as CardCertificateParser <<red>> {
         }
     }
 }
@@ -428,22 +424,22 @@ TransactionManager .up.> PutDataTag #C_USE : use >
 TransactionManager .right.> SearchCommandData #C_USE : use >
 TransactionManager .right.> SecureSessionState #C_LINK : provide >
 
-SecureTransactionManager .....> CardTransactionCryptoExtension #C_LINK : provide >
+SecureTransactionManager ....> CardTransactionCryptoExtension #C_LINK : provide >
 
-SecureSymmetricCryptoTransactionManager .up.> WriteAccessLevel #C_USE : use >
+SecureSymmetricCryptoTransactionManager ...> WriteAccessLevel #C_USE : use >
 SecureSymmetricCryptoTransactionManager .right.> SvOperation #C_USE : use >
 
-SymmetricCryptoSecuritySettings ..> WriteAccessLevel #C_USE : use >
+SymmetricCryptoSecuritySettings .up.> WriteAccessLevel #C_USE : use >
 
-AsymmetricCryptoSecuritySettings .up.> PcaCertificate #C_USE : use >
-AsymmetricCryptoSecuritySettings .up.> CaCertificate #C_USE : use >
-AsymmetricCryptoSecuritySettings .up.> CaCertificateParser #C_USE : use >
-AsymmetricCryptoSecuritySettings .up.> CardCertificateParser #C_USE : use >
+AsymmetricCryptoSecuritySettings .up..> PcaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySettings .up..> CaCertificate #C_USE : use >
+AsymmetricCryptoSecuritySettings .up..> CaCertificateParser #C_USE : use >
+AsymmetricCryptoSecuritySettings .up..> CardCertificateParser #C_USE : use >
 
 
 CalypsoCardSelectionExtension .up.> SelectFileControl #C_USE : use >
 CalypsoCardSelectionExtension .up.> GetDataTag #C_USE : use >
-CalypsoCardSelectionExtension ...> WriteAccessLevel #C_USE : use >
+CalypsoCardSelectionExtension ..> WriteAccessLevel #C_USE : use >
 
 CalypsoCard ..> DirectoryHeader #C_LINK : provide >
 CalypsoCard ..> ElementaryFile #C_LINK : provide >
@@ -451,7 +447,7 @@ CalypsoCard .right.> CalypsoCardProductType #C_LINK : provide >
 CalypsoCard ..> SvLoadLogRecord #C_LINK : provide >
 CalypsoCard ..> SvDebitLogRecord #C_LINK : provide >
 
-DirectoryHeader .left.> WriteAccessLevel #C_USE : use >
+DirectoryHeader ..> WriteAccessLevel #C_USE : use >
 
 ElementaryFile ..> FileHeader #C_USE : use >
 
@@ -459,8 +455,7 @@ FileHeader ..> ElementaryFileType #C_USE : use >
 
 ' == LAYOUT ==
 
-'SymmetricCryptoSecuritySettings -[hidden]- AsymmetricCryptoSecuritySettings
-AsymmetricCryptoSecuritySettings -[hidden]left- errors
+AsymmetricCryptoSecuritySettings -[hidden]right- errors
 
 AsymmetricCryptoCardTransactionManagerFactory -[hidden]- PcaCertificate
 PcaCertificate -[hidden]right- CaCertificate

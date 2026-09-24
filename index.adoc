@@ -423,7 +423,8 @@ include::uml/architecture-overview.puml[]
 As a countermeasure against relay attacks, the security settings allow the integrator to bound the duration of the
 most sensitive command exchanges: a relay adds a transmission delay, so that an abnormally long exchange can reveal that
 the card is not actually present in front of the reader. The bounds are declared through the `assign...MaxDuration...`
-operations of <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> and
+operations of <<type_SecuritySettings,`SecuritySettings`>>, the parent of
+<<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> and
 <<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>, each available in a CSN-based
 (`...ByCsn`) and an FCI-based (`...ByFci`) form.
 
@@ -909,6 +910,7 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
 | Name       | `AsymmetricCryptoSecuritySettings`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
+| Extends    | <<type_SecuritySettings,`SecuritySettings`>>
 | Since      | 2.1
 | Purpose    | Security settings carrier for PKI Calypso card transactions. An instance is obtained via <<op_CalypsoCardApiFactory_createAsymmetricCryptoSecuritySettings,`CalypsoCardApiFactory.createAsymmetricCryptoSecuritySettings`>>.
 |===
@@ -1002,149 +1004,6 @@ include::uml/class-diagram.puml[Terminal Calypso Card API class diagram]
   *Argument* -- the certificate is valid. +
   *State* -- the contained public key is not already registered.
 | Errors         | <<type_InvalidCertificate,`InvalidCertificate`>> -- if the check of the supplied certificate failed.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByCsn]]
-===== Assign Close Secure Session Max Duration By CSN
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignCloseSecureSessionMaxDurationByCsn(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the
-  range starting at `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
-  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByFci]]
-===== Assign Close Secure Session Max Duration By FCI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignCloseSecureSessionMaxDurationByFci(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange of a PKI secure session for the cards whose FCI matches
-  `fciRegex`. The FCI-based
-  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
-  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
-  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
-  duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
-  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive. +
-  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
-  <<sec_maxduration,Command exchange duration bounds>>.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByCsn]]
-===== Assign Open Secure Session Max Duration By CSN
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDurationByCsn(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose CSN falls within the range starting at
-  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
-  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByFci]]
-===== Assign Open Secure Session Max Duration By FCI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDurationByFci(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange of a PKI secure session for the cards whose FCI matches `fciRegex`. The FCI-based
-  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
-  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
-  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
-  duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
-  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive. +
-  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
-  <<sec_maxduration,Command exchange duration bounds>>.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_authorizeFileNotFoundError]]
-===== Authorize File Not Found Error
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `authorizeFileNotFoundError() -> Self`
-| Since          | 3.0
-| Description
-| Allows the card to answer that a file does not exist (status word `6A82h`) to a read or select command executed *inside* a secure
-  session without failing the transaction: the affected command is simply not applied to the
-  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
-  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
-
-  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
-  in advance. See <<op_AsymmetricCryptoSecuritySettings_authorizeRecordNotFoundError,`authorizeRecordNotFoundError()`>>.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_AsymmetricCryptoSecuritySettings_authorizeRecordNotFoundError]]
-===== Authorize Record Not Found Error
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `authorizeRecordNotFoundError() -> Self`
-| Since          | 3.0
-| Description
-| Allows the card to answer that a record does not exist (status word `6A83h`) to a read or select command executed *inside* a secure
-  session without failing the transaction: the affected command is simply not applied to the
-  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
-  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
-
-  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
-  in advance. See <<op_AsymmetricCryptoSecuritySettings_authorizeFileNotFoundError,`authorizeFileNotFoundError()`>>.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | None.
-| Errors         | None.
 |===
 
 [[type_CalypsoCard]]
@@ -2597,6 +2456,160 @@ mode.
 | Errors         | None.
 |===
 
+[[type_SecuritySettings]]
+==== Security Settings
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Name       | `SecuritySettings`
+| Kind       | Interface
+| Namespace  | `calypso.card.transaction`
+| Since      | 3.0
+| Purpose    | Settings shared by every Calypso card secure transaction, whatever the cryptographic nature of the secure session: duration bounds of the bounded command exchanges (see <<sec_maxduration,Command exchange duration bounds>>) and tolerance of a missing file or record inside a secure session. Implemented by <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> and <<type_AsymmetricCryptoSecuritySettings,`AsymmetricCryptoSecuritySettings`>>.
+|===
+
+[[op_SecuritySettings_assignCloseSecureSessionMaxDurationByCsn]]
+===== Assign Close Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignCloseSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SecuritySettings_assignCloseSecureSessionMaxDurationByFci]]
+===== Assign Close Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignCloseSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
+| Errors         | None.
+|===
+
+[[op_SecuritySettings_assignOpenSecureSessionMaxDurationByCsn]]
+===== Assign Open Secure Session Max Duration By CSN
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByCsn(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
+  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
+  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive.
+| Errors         | None.
+|===
+
+[[op_SecuritySettings_assignOpenSecureSessionMaxDurationByFci]]
+===== Assign Open Secure Session Max Duration By FCI
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature
+| `assignOpenSecureSessionMaxDurationByFci(` +
+`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
+`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
+`) -> Self`
+| Since          | 3.0
+| Description
+| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
+  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
+  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
+  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
+  duration bounds>>.
+| Parameters
+| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
+  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | *Argument* -- every parameter is non-`null`. +
+  *Argument* -- `maxDuration` is strictly positive. +
+  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
+  <<sec_maxduration,Command exchange duration bounds>>.
+| Errors         | None.
+|===
+
+[[op_SecuritySettings_authorizeFileNotFoundError]]
+===== Authorize File Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeFileNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a file does not exist (status word `6A82h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_SecuritySettings_authorizeRecordNotFoundError,`authorizeRecordNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
+[[op_SecuritySettings_authorizeRecordNotFoundError]]
+===== Authorize Record Not Found Error
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `authorizeRecordNotFoundError() -> Self`
+| Since          | 3.0
+| Description
+| Allows the card to answer that a record does not exist (status word `6A83h`) to a read or select command executed *inside* a secure
+  session without failing the transaction: the affected command is simply not applied to the
+  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
+  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
+
+  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
+  in advance. See <<op_SecuritySettings_authorizeFileNotFoundError,`authorizeFileNotFoundError()`>>.
+| Returns        | The current instance (`Self`).
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
 [[type_SymmetricCryptoSecuritySettings]]
 ==== Symmetric Crypto Security Settings
 
@@ -2605,6 +2618,7 @@ mode.
 | Name       | `SymmetricCryptoSecuritySettings`
 | Kind       | Interface
 | Namespace  | `calypso.card.transaction`
+| Extends    | <<type_SecuritySettings,`SecuritySettings`>>
 | Since      | 2.0
 | Purpose    | Security settings carrier for symmetric-key Calypso card transactions (e.g. SAM-backed). An instance is obtained via <<op_CalypsoCardApiFactory_createSymmetricCryptoSecuritySettings,`CalypsoCardApiFactory.createSymmetricCryptoSecuritySettings`>>.
 |===
@@ -2711,108 +2725,6 @@ mode.
 | Errors         | None.
 |===
 
-[[op_SymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByCsn]]
-===== Assign Close Secure Session Max Duration By CSN
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignCloseSecureSessionMaxDurationByCsn(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose CSN falls within the range starting at
-  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
-  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySettings_assignCloseSecureSessionMaxDurationByFci]]
-===== Assign Close Secure Session Max Duration By FCI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignCloseSecureSessionMaxDurationByFci(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Close Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
-  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
-  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
-  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
-  duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Close Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
-  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive. +
-  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
-  <<sec_maxduration,Command exchange duration bounds>>.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByCsn]]
-===== Assign Open Secure Session Max Duration By CSN
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDurationByCsn(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}csnMin: Long` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose CSN falls within the range starting at
-  `csnMin`. See <<sec_maxduration,Command exchange duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` to defer to the FCI-based settings for this range. +
-  `csnMin` -- the lowest card serial number (CSN) of the range, compared as an unsigned 64-bit value.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySettings_assignOpenSecureSessionMaxDurationByFci]]
-===== Assign Open Secure Session Max Duration By FCI
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature
-| `assignOpenSecureSessionMaxDurationByFci(` +
-`{nbsp}{nbsp}{nbsp}{nbsp}maxDuration: Long,` +
-`{nbsp}{nbsp}{nbsp}{nbsp}fciRegex: String` +
-`) -> Self`
-| Since          | 3.0
-| Description
-| Sets the maximum duration (in milliseconds) of the *Open Secure Session* command exchange for the cards whose FCI matches `fciRegex`. The FCI-based
-  settings are evaluated in declaration order and only when no CSN-based setting applies. When `fciRegex` filters on
-  the startup information data, a `prepareGetData(FCI_FOR_CURRENT_DF)` MUST be scheduled inside the secure session to
-  guarantee the integrity of the FCI obtained during the selection. See <<sec_maxduration,Command exchange
-  duration bounds>>.
-| Parameters
-| `maxDuration` -- the maximum duration of the *Open Secure Session* command exchange, in milliseconds, or `Long.MAX_VALUE` for no bound. +
-  `fciRegex` -- the regular expression matched against the whole FCI, represented as an uppercase hexadecimal string.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *Argument* -- `maxDuration` is strictly positive. +
-  *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
-  <<sec_maxduration,Command exchange duration bounds>>.
-| Errors         | None.
-|===
-
 [[op_SymmetricCryptoSecuritySettings_assignSvCommandMaxDurationByCsn]]
 ===== Assign SV Command Max Duration By CSN
 
@@ -2861,46 +2773,6 @@ mode.
   *Argument* -- `maxDuration` is strictly positive. +
   *Argument* -- `fciRegex` is a valid regular expression within the portable subset defined by
   <<sec_maxduration,Command exchange duration bounds>>.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySettings_authorizeFileNotFoundError]]
-===== Authorize File Not Found Error
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `authorizeFileNotFoundError() -> Self`
-| Since          | 3.0
-| Description
-| Allows the card to answer that a file does not exist (status word `6A82h`) to a read or select command executed *inside* a secure
-  session without failing the transaction: the affected command is simply not applied to the
-  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
-  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
-
-  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
-  in advance. See <<op_SymmetricCryptoSecuritySettings_authorizeRecordNotFoundError,`authorizeRecordNotFoundError()`>>.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_SymmetricCryptoSecuritySettings_authorizeRecordNotFoundError]]
-===== Authorize Record Not Found Error
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `authorizeRecordNotFoundError() -> Self`
-| Since          | 3.0
-| Description
-| Allows the card to answer that a record does not exist (status word `6A83h`) to a read or select command executed *inside* a secure
-  session without failing the transaction: the affected command is simply not applied to the
-  <<type_CalypsoCard,`CalypsoCard`>>, and the session continues. Default: disabled, the session then failing in that
-  case. Outside a secure session, this status word never fails the transaction, whatever this setting.
-
-  This setting is useful for heterogeneous card fleets, where the presence of a file or of a record cannot be known
-  in advance. See <<op_SymmetricCryptoSecuritySettings_authorizeFileNotFoundError,`authorizeFileNotFoundError()`>>.
-| Returns        | The current instance (`Self`).
-| Pre-conditions | None.
 | Errors         | None.
 |===
 

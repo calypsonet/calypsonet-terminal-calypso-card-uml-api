@@ -109,6 +109,8 @@ enum "PutDataTag" as PutDataTag <<green>> {
     +CARD_KEY_PAIR
     +CARD_CERTIFICATE
     +CA_CERTIFICATE
+    +APPLICATION_AID
+    +STORED_VALUE_LINK
 }
 package "card" as card {
     interface "«<back:yellow>CardSelectionExtension</back>»\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {

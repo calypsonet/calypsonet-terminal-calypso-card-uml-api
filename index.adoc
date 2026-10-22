@@ -3193,15 +3193,28 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 `{nbsp}{nbsp}{nbsp}{nbsp}data: ByteArray` +
 `) -> Self`
 | Since          | 2.1
-| Description    | Adds one or more *Put Data* commands. *MUST be called outside a secure session.*
+| Description
+a| Adds one or more *Put Data* commands. The secure session requirement depends on the tag:
+
+* `CARD_KEY_PAIR`, `CARD_CERTIFICATE` and `CA_CERTIFICATE`: the command MUST be prepared *outside* a secure
+session;
+* `APPLICATION_AID` and `STORED_VALUE_LINK`: the command MUST be prepared *within* a secure session opened in
+symmetric crypto mode, that is while <<op_TransactionManager_getSecureSessionState,`getSecureSessionState()`>>
+returns one of the `SYMMETRIC_*` values. The card additionally requires the session to be opened with the
+`PERSONALIZATION` write access level (issuer key); otherwise it rejects the command and the following
+`processCommands()` fails.
+
+The expected data also depends on the tag: the new AID (5 to 16 bytes) for `APPLICATION_AID`, and the AID of the
+Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `STORED_VALUE_LINK`.
 | Parameters
 | `tag` (<<type_PutDataTag,`PutDataTag`>>)  -- the data type to inject. +
 `data` -- the data to inject.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- the *Put Data* command is supported for the provided tag. +
-  *Argument* -- `data` is not empty. +
-  *State* -- no secure session is open.
+  *Argument* -- the length of `data` is consistent with the supplied tag. +
+  *State* -- no secure session is open, except for `APPLICATION_AID` and `STORED_VALUE_LINK`, which require a
+  secure session opened in symmetric crypto mode.
 | Errors         | None.
 |===
 
@@ -3841,10 +3854,17 @@ Their concrete content is exposed through the <<ref_cna_tcca,CNA-TCCA-API>> exte
 
 [cols="^.^3,^.^1,.^5", options="header"]
 |===
-| Value             | Since | Description
-| `CARD_KEY_PAIR`   | 2.1 | Card key pair.
-| `CARD_CERTIFICATE`| 2.1 | Card certificate.
-| `CA_CERTIFICATE`  | 2.1 | CA certificate.
+| Value               | Since | Description
+| `CARD_KEY_PAIR`     | 2.1 | Card key pair.
+| `CARD_CERTIFICATE`  | 2.1 | Card certificate.
+| `CA_CERTIFICATE`    | 2.1 | CA certificate.
+| `APPLICATION_AID`   | 2.3
+| New AID of the current application (tag `4Fh`). The data is the new AID value (5 to 16 bytes). The new AID
+  applies to the next selections of the application; it does not change the DF name already exposed by the
+  <<type_CalypsoCard,`CalypsoCard`>>.
+| `STORED_VALUE_LINK` | 2.3
+| Link of the current application to a Stored Value application of the same card (tag `D0h`). The data is the AID
+  of the Stored Value application to link (5 to 16 bytes), or an empty `ByteArray` to cancel the existing link.
 |===
 
 [[type_SecureSessionState]]

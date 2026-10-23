@@ -261,6 +261,7 @@ package "transaction" as transaction {
 
         +prepareGetData(tag: GetDataTag) → Self
         +preparePutData(tag: PutDataTag, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareReadRecord(sfi: Byte, recordNumber: Int) → Self
         +prepareReadRecords(sfi: Byte, fromRecordNumber: Int, toRecordNumber: Int, recordSize: Int) → Self
@@ -273,17 +274,27 @@ package "transaction" as transaction {
         +prepareCheckPinStatus() → Self
 
         +prepareAppendRecord(sfi: Byte, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareUpdateRecord(sfi: Byte, recordNumber: Int, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareWriteRecord(sfi: Byte, recordNumber: Int, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareUpdateBinary(sfi: Byte, offset: Int, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareWriteBinary(sfi: Byte, offset: Int, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareIncreaseCounter(sfi: Byte, counterNumber: Int, incValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareIncreaseCounters(sfi: Byte, <color:blue>incrementValues: Map<Int, Int></color>) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareDecreaseCounter(sfi: Byte, counterNumber: Int, decValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareDecreaseCounters(sfi: Byte, <color:blue>decrementValues: Map<Int, Int></color>) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareSetCounter(sfi: Byte, counterNumber: Int, newValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareSvReadAllLogs() → Self
 

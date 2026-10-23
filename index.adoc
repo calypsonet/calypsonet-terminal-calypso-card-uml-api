@@ -2099,7 +2099,8 @@ The mechanism is *ineffective* if:
   <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`prepareEarlyMutualAuthentication`>>
   and `prepareActivateEncryption` calls consecutively (in any order).
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Pre-conditions | *State* -- a secure session is open and the encryption is not already active. +
+  *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>> +
                    <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>>
@@ -2119,7 +2120,8 @@ The mechanism is *ineffective* if:
 
   NOTE: `prepareCloseSecureSession()` automatically stops the encryption.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Pre-conditions | *State* -- a secure session is open and the encryption is active. +
+  *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                    <<op_SecureExtendedModeTransactionManager_prepareEarlyMutualAuthentication,`SecureExtendedModeTransactionManager.prepareEarlyMutualAuthentication`>> +
@@ -2138,7 +2140,8 @@ The mechanism is *ineffective* if:
 this feature penalises the execution time of the secure session and SHOULD be used only when needed (e.g. before
 sending sensitive commands).
 | Returns        | The current instance (`Self`).
-| Pre-conditions | *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
+| Pre-conditions | *State* -- a secure session is open. +
+  *Capability* -- the *Manage Secure Session* command is available for this context, that is, both the card and the cryptographic module support the extended mode.
 | Errors         | None.
 | See also       | <<op_SecureExtendedModeTransactionManager_prepareActivateEncryption,`SecureExtendedModeTransactionManager.prepareActivateEncryption`>> +
                    <<op_SecureExtendedModeTransactionManager_prepareDeactivateEncryption,`SecureExtendedModeTransactionManager.prepareDeactivateEncryption`>>
@@ -2168,7 +2171,7 @@ sending sensitive commands).
 | Schedules an *Open Secure Session* command in PKI mode. If the next prepared command is a *Read One Record* or
 *Read One Or More Counters*, it will be merged with the session opening for optimisation.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | None.
+| Pre-conditions | *State* -- no secure session is already open.
 | Errors         | None.
 |===
 
@@ -2268,7 +2271,7 @@ in the crypto module.
 | Parameters     | `writeAccessLevel` (<<type_WriteAccessLevel,`WriteAccessLevel`>>) -- the write access level to be used.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
-  *State* -- a <<type_SymmetricCryptoSecuritySettings,`SymmetricCryptoSecuritySettings`>> is available, no secure session opening is already prepared, and no secure session is already open.
+  *State* -- no secure session opening is already prepared, and no secure session is already open.
 | Errors         | None.
 | See also       | <<op_CalypsoCardSelectionExtension_preparePreOpenSecureSession,`CalypsoCardSelectionExtension.preparePreOpenSecureSession`>>
 |===
@@ -3012,7 +3015,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareChangePin]]
@@ -3081,7 +3086,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareDecreaseCounters]]
@@ -3106,7 +3113,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 `decrementValues`           -- the decrement values to apply, indexed by the numbers of the counters to be decremented.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareGenerateAsymmetricKeyPair]]
@@ -3118,7 +3127,8 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Since          | 2.1
 | Description    | Adds a *Generate Asymmetric Key Pair* command. The public part can be retrieved via `prepareGetData(GetDataTag.CARD_PUBLIC_KEY)`.
 | Returns        | The current instance (`Self`).
-| Pre-conditions | None.
+| Pre-conditions | *State* -- no secure session is open. +
+  *Capability* -- the card supports the PKI mode.
 | Errors         | None.
 |===
 
@@ -3174,7 +3184,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareIncreaseCounters]]
@@ -3199,7 +3211,9 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 `incrementValues`           -- the increment values to apply, indexed by the numbers of the counters to be incremented.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_preparePutData]]
@@ -3235,7 +3249,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
   *Argument* -- the length of `data` is consistent with the supplied tag. +
   *State* -- no secure session is open, except for `APPLICATION_AID` and `STORED_VALUE_LINK`, which require a
   secure session opened in symmetric crypto mode.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- with the tags `APPLICATION_AID`
+  and `STORED_VALUE_LINK`, if the command would overflow the modifications buffer of the secure session and
+  the multiple-session mode is not allowed.
 |===
 
 [[op_TransactionManager_prepareReadBinary]]
@@ -3526,7 +3542,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *State* -- the current counter value is known. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareSvReadAllLogs]]
@@ -3579,7 +3597,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareUpdateRecord]]
@@ -3606,7 +3626,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareVerifyPin]]
@@ -3658,7 +3680,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Capability* -- this command is supported by this card. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 [[op_TransactionManager_prepareWriteRecord]]
@@ -3685,7 +3709,9 @@ Stored Value application to link (5 to 16 bytes) or an empty `ByteArray` for `ST
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- every supplied argument is within range.
-| Errors         | None.
+| Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the
+  modifications buffer of a secure session open in symmetric crypto mode and the multiple-session mode is not
+  allowed.
 |===
 
 === SPI Interfaces

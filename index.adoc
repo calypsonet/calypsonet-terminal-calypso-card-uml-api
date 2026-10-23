@@ -347,6 +347,7 @@ is backward-compatible per that API's evolution policy.
 |===
 | Term              | Definition
 
+| Anti-passback     | Minimum delay imposed by the transport operator between two uses of the same card.
 | Calypso Card      | Smart card compliant with the Calypso specifications.
 | Secure Session    | Authenticated and integrity-protected exchange between the terminal and the card.
 | Regular Mode      | Secure session mode compatible with every Calypso product.
@@ -2856,6 +2857,9 @@ Whether to enable the mechanism depends on which terminal resumes an interrupted
 carried by the card itself. Typical case: several gates on the same access line of a network.
 * *Leave it disabled* when the resumption is necessarily handled by the *same* terminal, which keeps the context of
 the interrupted transaction. Typical case: a remote ticket reloading server.
+
+The mechanism can only be used within the anti-passback delay defined by the transport operator: beyond this delay,
+an unratified session can no longer be handled as the resumption of an interrupted transaction.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.

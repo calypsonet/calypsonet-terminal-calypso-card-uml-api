@@ -2840,10 +2840,26 @@ mode.
 |===
 | Signature      | `enableRatificationMechanism() -> Self`
 | Since          | 2.0
-| Description    | Enables the ratification mechanism to handle early card removal preventing reception of the closing ACK.
+| Description
+a| Enables the ratification mechanism, which handles an early card removal preventing the terminal from receiving
+the acknowledgement of the *Close Secure Session* command. Default: disabled.
+
+When enabled, a ratification command is added after the closing command in contactless mode. The card considers the
+secure session *ratified* only once it has processed that command: if the card is removed beforehand, the session
+stays unratified in the card, which thus keeps the proof that the terminal may not have been informed of the
+outcome. On cards where ratification happens on deselect, no ratification command is required (see
+<<op_CalypsoCard_isRatificationOnDeselectSupported,`CalypsoCard.isRatificationOnDeselectSupported`>>).
+
+Whether to enable the mechanism depends on which terminal resumes an interrupted transaction:
+
+* *Enable it* when the resumption MAY be handled by *another* terminal, since the proof of the interruption is then
+carried by the card itself. Typical case: several gates on the same access line of a network.
+* *Leave it disabled* when the resumption is necessarily handled by the *same* terminal, which keeps the context of
+the interrupted transaction. Typical case: a remote ticket reloading server.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.
+| See also       | <<op_SecureTransactionManager_prepareCloseSecureSession,`SecureTransactionManager.prepareCloseSecureSession`>>, <<op_CalypsoCard_isRatificationOnDeselectSupported,`CalypsoCard.isRatificationOnDeselectSupported`>>
 |===
 
 [[op_SymmetricCryptoSecuritySettings_enableSvLoadAndDebitLog]]

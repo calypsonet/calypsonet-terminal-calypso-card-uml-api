@@ -2318,7 +2318,10 @@ in the crypto module.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- `amount` is in `0..32767`, and `date` and `time` are 2 bytes long. +
-  *State* -- the new value is non-negative or negative balances are allowed, no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`.
+  *State* -- the new value is non-negative or negative balances are allowed,
+  no other SV command has been prepared inside the same secure session, and the command immediately follows an
+  *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`: no other command, prepared or already processed, comes between them, and
+  the channel has remained open since the *SV Get*.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
@@ -2330,8 +2333,8 @@ in the crypto module.
 | Signature      | `prepareSvGet(svOperation: SvOperation) -> Self`
 | Since          | 2.0
 | Description
-| Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST precede any SV
-  debit, undebit or reload. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>>
+| Schedules an *SV Get* command, which reads the Stored Value data (balance and logs) that MUST *immediately*
+  precede any SV debit, undebit or reload: no other command may be prepared between them. Once processed, the data is available in the <<type_CalypsoCard,`CalypsoCard`>>
   through its dedicated SV data management operations.
 | Parameters     | `svOperation` (<<type_SvOperation,`SvOperation`>>) -- the nature of the intended operation: `DEBIT_UNDEBIT` for a debit or an undebit, `RELOAD` for a reload.
 | Returns        | The current instance (`Self`).
@@ -2365,7 +2368,9 @@ in the crypto module.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- `amount` is in `-8388608..8388607`, and `date`, `time` and `free` are 2 bytes long. +
-  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, it follows an *SV Get* command prepared with `SvOperation.RELOAD`.
+  *State* -- no other SV command has been prepared inside the same secure session, and the command immediately follows an
+  *SV Get* command prepared with `SvOperation.RELOAD`: no other command, prepared or already processed, comes between them, and
+  the channel has remained open since the *SV Get*.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
@@ -2395,7 +2400,9 @@ in the crypto module.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | *Argument* -- every parameter is non-`null`. +
   *Argument* -- `amount` is in `0..32768`, and `date` and `time` are 2 bytes long. +
-  *State* -- no other SV command has been prepared inside the same secure session, the SV command comes first in the list of prepared commands, and it follows an *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`.
+  *State* -- no other SV command has been prepared inside the same secure session, and the command immediately follows an
+  *SV Get* command prepared with `SvOperation.DEBIT_UNDEBIT`: no other command, prepared or already processed, comes between them, and
+  the channel has remained open since the *SV Get*.
 | Errors         | <<type_SessionBufferOverflow,`SessionBufferOverflow`>> -- if the command would overflow the modifications buffer and the multiple-session mode is not allowed.
 |===
 
@@ -2818,7 +2825,13 @@ mode.
 |===
 | Signature      | `enableMultipleSession() -> Self`
 | Since          | 2.0
-| Description    | Enables multiple-session mode to handle more changes than the session buffer allows.
+| Description
+a| Enables multiple-session mode to handle more changes than the session buffer allows. Default: disabled.
+
+When a command would overflow the modifications buffer, the current secure session is closed and a new one is opened
+to carry that command. If the split occurs on an SV debit, undebit or reload, the *SV Get* command it follows MUST be
+re-issued in the new session, immediately before it, so that the SV command still immediately follows its *SV Get*
+and remains the only SV command of the session it is executed in.
 | Returns        | The current instance (`Self`).
 | Pre-conditions | None.
 | Errors         | None.

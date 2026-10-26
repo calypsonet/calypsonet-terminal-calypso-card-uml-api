@@ -1,8 +1,6 @@
 @startuml
 title
-    <img:assets/logos/calypso.svg{scale=0.2}>
-
-    Terminal Calypso Card API 3.0.+ (2026-06-15)
+    <#transparent,#transparent>|<img:assets/logos/calypso.svg{scale=0.16}>|<size:16> </size>%newline()  Terminal Calypso Card API 3.0 — UML Class Diagram |
 end title
 
 ' == THEME (class) ==
@@ -27,6 +25,9 @@ skinparam stereotypeEBorderColor #EB937F
 
 skinparam ClassBorderThickness 2
 skinparam ArrowThickness 2
+
+' Compact header
+skinparam TitleFontSize 16
 
 ' Yellow
 skinparam ClassBackgroundColor #FEFECE
@@ -54,19 +55,22 @@ hide <<grey>> stereotype
 
 ' == CONTENT ==
 
+<style>
+legend {
+  BackGroundColor transparent
+  LineColor transparent
+  LineThickness 0
+  Padding 0
+  Margin 8
+  FontSize 11
+}
+</style>
 legend top
-    * __External public API references__
-    *** <back:yellow>**Calypsonet Terminal Reader API**</back>
-    * __Text__
-    *** <color:blue><b>New element added since the last version
-    *** <color:red><s><b>Element marked as deprecated since the last version
-    *** <s><b>Element marked as deprecated
-    *** <color:grey><b>Work in progress...
-    * __Object__
-    *** <back:#EBF5FB><color:#3498DB><b>Factory or interface provided by the factory
-    *** <back:#FEFECE><color:#D4AC0D><b>Interface that cannot be instantiated directly by the factory
-    *** <back:#FDEDEC><color:#E74C3C><b>SPI (Service Provider Interface) to be provided by the end-user
-    *** <back:#E9F7EF><color:#27AE60><b>Data, constants, enumeration or error
+<#F2F3F4,#D7DBDD>|= External public API references |= Text styles |= Object colors |
+<#FFFFFF,#D7DBDD>| <back:yellow>**Calypsonet Terminal Reader API**</back> | <color:blue>**Element**</color> new since the last version |<#EBF5FB> <color:#3498DB>Factory or interface provided by the factory</color> |
+<#FFFFFF,#D7DBDD>| | <color:red><s>**Element**</s></color> deprecated since the last version |<#FEFECE> <color:#D4AC0D>Interface that cannot be instantiated directly by the factory</color> |
+<#FFFFFF,#D7DBDD>| | <s>**Element**</s> deprecated |<#FDEDEC> <color:#E74C3C>SPI (Service Provider Interface) to be provided by the end-user</color> |
+<#FFFFFF,#D7DBDD>| | <color:grey>**Element**</color> work in progress |<#E9F7EF> <color:#27AE60>Data, constants, enumeration or error</color> |
 end legend
 
 package "calypso.card" as calypsoCard {
@@ -109,6 +113,8 @@ enum "PutDataTag" as PutDataTag <<green>> {
     +CARD_KEY_PAIR
     +CARD_CERTIFICATE
     +CA_CERTIFICATE
+    +APPLICATION_AID
+    +STORED_VALUE_LINK
 }
 package "card" as card {
     interface "«<back:yellow>CardSelectionExtension</back>»\nCalypsoCardSelectionExtension" as CalypsoCardSelectionExtension <<blue>> {
@@ -255,6 +261,7 @@ package "transaction" as transaction {
 
         +prepareGetData(tag: GetDataTag) → Self
         +preparePutData(tag: PutDataTag, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareReadRecord(sfi: Byte, recordNumber: Int) → Self
         +prepareReadRecords(sfi: Byte, fromRecordNumber: Int, toRecordNumber: Int, recordSize: Int) → Self
@@ -267,17 +274,27 @@ package "transaction" as transaction {
         +prepareCheckPinStatus() → Self
 
         +prepareAppendRecord(sfi: Byte, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareUpdateRecord(sfi: Byte, recordNumber: Int, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareWriteRecord(sfi: Byte, recordNumber: Int, recordData: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareUpdateBinary(sfi: Byte, offset: Int, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareWriteBinary(sfi: Byte, offset: Int, data: ByteArray) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareIncreaseCounter(sfi: Byte, counterNumber: Int, incValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareIncreaseCounters(sfi: Byte, <color:blue>incrementValues: Map<Int, Int></color>) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareDecreaseCounter(sfi: Byte, counterNumber: Int, decValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareDecreaseCounters(sfi: Byte, <color:blue>decrementValues: Map<Int, Int></color>) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
         +prepareSetCounter(sfi: Byte, counterNumber: Int, newValue: Int) → Self
+        {method} <size:10><color:#7F8C8D>    ⚠ errors: SessionBufferOverflow</color></size>
 
         +prepareSvReadAllLogs() → Self
 
@@ -287,7 +304,7 @@ package "transaction" as transaction {
         +prepareGenerateAsymmetricKeyPair() → Self
 
         +<color:blue>getSecureSessionState() → SecureSessionState
-        +getTransactionAuditData() → List<ByteArray>
+        +<color:blue>getExchangedApdus() → List<ByteArray>
     }
     enum "<color:blue>SecureSessionState" as SecureSessionState <<green>> {
         +<color:blue>NO_SESSION
@@ -469,5 +486,9 @@ package calypsoCard #C_GREY1 {}
 package calypsoCard.card #C_GREY2 {}
 package calypsoCard.transaction #C_GREY2 {}
 package calypsoCard.transaction.spi #C_GREY3 {}
+
+center footer
+<size:10><color:#566573>Terminal Calypso Card API 3.0 (2026-07-20) — CNA-TCC-API — Copyright © Calypso Networks Association — CC BY-ND 4.0 (https://creativecommons.org/licenses/by-nd/4.0/) — https://docs.terminal-api.calypsonet.org</color></size>
+end footer
 
 @enduml

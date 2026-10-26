@@ -2980,6 +2980,25 @@ Multi-channel operations (`processCommandsAndCloseChannel`, `closeChannel`) are 
 
 NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBufferOverflow`>> if the command would overflow the modification buffer and the multiple-session mode is not allowed.
 
+[[op_TransactionManager_getExchangedApdus]]
+===== Get Exchanged APDUs
+
+[cols="^.^1h,.^5", grid=rows, frame=all]
+|===
+| Signature      | `getExchangedApdus() -> List<ByteArray>`
+| Since          | 1.2
+| Description
+a| Returns the APDU commands and responses exchanged with the card and with the crypto module since the beginning of
+the transaction, in chronological order. Intended for logging and diagnosis; the content is not interpreted by the
+API.
+
+NOTE: The name `getTransactionAuditData`, used up to version 2.3, is reserved for a future operation returning
+genuine transaction audit data.
+| Returns        | A `List<ByteArray>`; empty if no exchange has taken place.
+| Pre-conditions | None.
+| Errors         | None.
+|===
+
 [[op_TransactionManager_getSecureSessionState]]
 ===== Get Secure Session State
 
@@ -2989,19 +3008,6 @@ NOTE: Every write operation MAY raise <<type_SessionBufferOverflow,`SessionBuffe
 | Since          | 3.0
 | Description    | Returns the state of the secure session at the moment of the call.
 | Returns        | A <<type_SecureSessionState,`SecureSessionState`>> value; `NO_SESSION` if no secure session is open.
-| Pre-conditions | None.
-| Errors         | None.
-|===
-
-[[op_TransactionManager_getTransactionAuditData]]
-===== Get Transaction Audit Data
-
-[cols="^.^1h,.^5", grid=rows, frame=all]
-|===
-| Signature      | `getTransactionAuditData() -> List<ByteArray>`
-| Since          | 1.2
-| Description    | Returns the audit data of the transaction (every APDU exchange with the card and the crypto module).
-| Returns        | A `List<ByteArray>`; empty if no exchange has taken place.
 | Pre-conditions | None.
 | Errors         | None.
 |===

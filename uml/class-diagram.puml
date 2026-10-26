@@ -304,7 +304,7 @@ package "transaction" as transaction {
         +prepareGenerateAsymmetricKeyPair() → Self
 
         +<color:blue>getSecureSessionState() → SecureSessionState
-        +getTransactionAuditData() → List<ByteArray>
+        +<color:blue>getExchangedApdus() → List<ByteArray>
     }
     enum "<color:blue>SecureSessionState" as SecureSessionState <<green>> {
         +<color:blue>NO_SESSION

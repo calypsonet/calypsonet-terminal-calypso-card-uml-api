@@ -3,20 +3,20 @@ layout: default
 title: "calypsonet-terminal-calypso-card-api-spec"
 repository: "calypsonet-terminal-calypso-card-api-spec"
 doc_name: "Terminal Calypso Card API"
-latest_stable: "2.2.0"
-latest_stable_path: ""
+latest_stable: "3.0.0"
+latest_stable_path: "latest-stable/"
 versions:
-  - version: "3.0.0-SNAPSHOT"
-    status: snapshot
+  - version: "3.0.0"
+    status: stable
     files:
       diagram:
-        name: "class-diagram.svg"
+        name: "261028-SP-CNATerminalAPI-CalypsoCard_v3.0.0-class-diagram.svg"
         size: "176 kB"
       html:
-        name: "261028-SP-CNATerminalAPI-CalypsoCard_v3.0.0-SNAPSHOT.html"
+        name: "261028-SP-CNATerminalAPI-CalypsoCard_v3.0.0.html"
         size: "1.9 MB"
       pdf:
-        name: "261028-SP-CNATerminalAPI-CalypsoCard_v3.0.0-SNAPSHOT.pdf"
+        name: "261028-SP-CNATerminalAPI-CalypsoCard_v3.0.0.pdf"
         size: "3.9 MB"
   - version: "2.2.0"
     status: stable
